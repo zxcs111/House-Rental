@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\LoginController;
 
 // Home route
 Route::get('/', function () {
@@ -31,3 +32,7 @@ Route::get('/blog', function () {
 Route::get('/contact', function () {
     return view('contact'); // Replace with your actual view
 })->name('contact');
+
+
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [LoginController::class, 'login']);
