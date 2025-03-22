@@ -189,7 +189,7 @@
                         </div>
                         <div class="registration form">
                             <header>Signup</header>
-                            <form method="POST" action="{{ route('login') }}">
+                            <form method="POST" action="{{ route('register') }}">
                                 @csrf
                                 <input type="text" name="name" placeholder="Enter your name" required>
                                 <input type="email" name="email" placeholder="Enter your email" required>
@@ -209,6 +209,7 @@
         </div>
     </div>
 </section>
+
 
 </body>
 </html>

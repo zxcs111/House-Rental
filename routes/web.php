@@ -8,7 +8,7 @@ Route::get('/', function () {
     return view('welcome'); // Make sure you have a view file named 'welcome.blade.php'
 })->name('home');
 
-// You can add additional routes for other pages as needed
+// Additional routes for other pages
 Route::get('/about', function () {
     return view('about'); // Replace with your actual view
 })->name('about');
@@ -33,6 +33,10 @@ Route::get('/contact', function () {
     return view('contact'); // Replace with your actual view
 })->name('contact');
 
-
+// Login and Registration routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
+Route::post('/register', [LoginController::class, 'register'])->name('register');
+Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+Route::get('/profile', [LoginController::class, 'profile'])->name('profile')->middleware('auth');
+Route::post('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update')->middleware('auth');
