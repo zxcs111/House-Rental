@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="{{ asset('user-template/css/open-iconic-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/animate.css') }}">
@@ -24,26 +25,53 @@
   </head>
   <body>
     
-	  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-	    <div class="container">
-	      <a class="navbar-brand" href="index.html">Stay<span> Haven</span></a>
-	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-	        <span class="oi oi-menu"></span> Menu
-	      </button>
+  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="{{ route('home') }}">Stay<span> Haven</span></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
 
-	      <div class="collapse navbar-collapse" id="ftco-nav">
-	        <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
-                <li class="nav-item active"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
-                <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
-                <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
-                <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Login</a></li>
-            </ul>
-	      </div>
-	    </div>
-	  </nav>
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
+                    <li class="nav-item active"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
+                    <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
+                    <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
+                    <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
+
+                    <!-- Conditional Rendering for Login/Profile -->
+                    @auth
+                        <!-- Display User Profile Icon if Logged In -->
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <!-- Circular Profile Picture or Default Icon -->
+                              @if(Auth::user()->profile_picture)
+                                  <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                              @else
+                                  <i class="fas fa-user-circle" style="font-size: 24px;"></i> <!-- Default Icon -->
+                              @endif
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
+                              <a class="dropdown-item" href="{{ route('logout') }}"
+                                  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                  Logout
+                              </a>
+                              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                  @csrf
+                              </form>
+                          </div>
+                      </li>
+                    @else
+                        <!-- Display Login Button if Not Logged In -->
+                        <li class="nav-item"><a href="{{ route('login') }}" class="nav-link">Login</a></li>
+                    @endauth
+                </ul>
+            </div>
+        </div>
+    </nav>
     <!-- END nav -->
     
     <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('user-template/images/services-landing.jpg');" data-stellar-background-ratio="0.5">
@@ -59,61 +87,61 @@
     </section>
 
     <section class="ftco-section">
-        <div class="container">
-            <div class="row justify-content-center mb-5">
-                <div class="col-md-7 text-center heading-section ftco-animate">
-                    <span class="subheading">Services</span>
-                    <h2 class="mb-3">Our Latest Services</h2>
+    <div class="container">
+        <div class="row justify-content-center mb-5">
+            <div class="col-md-7 text-center heading-section ftco-animate">
+                <span class="subheading">Services</span>
+                <h2 class="mb-3">Our Latest Services</h2>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="services services-2 w-100 text-center">
+                    <div class="icon d-flex align-items-center justify-content-center">
+                        <span class="bi bi-house-heart" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                    </div>
+                    <div class="text w-100">
+                        <h3 class="heading mb-2">Relaxing Retreats</h3>
+                        <p>Experience tranquility in our serene accommodations designed for ultimate relaxation and comfort.</p>
+                    </div>
                 </div>
             </div>
-            <div class="row text-center">
-                <div class="col-md-3">
-                    <div class="services services-2 w-100 text-center">
-                        <div class="icon d-flex align-items-center justify-content-center">
-                            <span class="bi bi-house-door-fill" style="font-size: 2rem;"></span>
-                        </div>
-                        <div class="text w-100">
-                            <h3 class="heading mb-2">Relaxing Retreats</h3>
-                            <p>Experience tranquility in our serene accommodations designed for ultimate relaxation and comfort.</p>
-                        </div>
+            <div class="col-md-3">
+                <div class="services services-2 w-100 text-center">
+                    <div class="icon d-flex align-items-center justify-content-center">
+                        <span class="bi bi-person-check" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                    </div>
+                    <div class="text w-100">
+                        <h3 class="heading mb-2">Personalized Getaways</h3>
+                        <p>Custom-tailored stay packages that let you unwind and recharge in a peaceful environment.</p>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="services services-2 w-100 text-center">
-                        <div class="icon d-flex align-items-center justify-content-center">
-                            <span class="bi bi-person-fill" style="font-size: 2rem;"></span>
-                        </div>
-                        <div class="text w-100">
-                            <h3 class="heading mb-2">Personalized Getaways</h3>
-                            <p>Custom-tailored stay packages that let you unwind and recharge in a peaceful environment.</p>
-                        </div>
+            </div>
+            <div class="col-md-3">
+                <div class="services services-2 w-100 text-center">
+                    <div class="icon d-flex align-items-center justify-content-center">
+                        <span class="bi bi-map" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                    </div>
+                    <div class="text w-100">
+                        <h3 class="heading mb-2">Serene City Tours</h3>
+                        <p>Explore the charm of the city while enjoying a restful stay at Stay Haven, where comfort meets adventure.</p>
                     </div>
                 </div>
-                <div class="col-md-3">
-                    <div class="services services-2 w-100 text-center">
-                        <div class="icon d-flex align-items-center justify-content-center">
-                            <span class="bi bi-map-fill" style="font-size: 2rem;"></span>
-                        </div>
-                        <div class="text w-100">
-                            <h3 class="heading mb-2">Serene City Tours</h3>
-                            <p>Explore the charm of the city while enjoying a restful stay at Stay Haven, where comfort meets adventure.</p>
-                        </div>
+            </div>
+            <div class="col-md-3">
+                <div class="services services-2 w-100 text-center">
+                    <div class="icon d-flex align-items-center justify-content-center">
+                        <span class="bi bi-car-front" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="services services-2 w-100 text-center">
-                        <div class="icon d-flex align-items-center justify-content-center">
-                            <span class="bi bi-geo-alt" style="font-size: 2rem;"></span>
-                        </div>
-                        <div class="text w-100">
-                            <h3 class="heading mb-2">Luxury Transport Services</h3>
-                            <p>Experience effortless travel with our premium transport options tailored for your convenience during your stay.</p>
-                        </div>
+                    <div class="text w-100">
+                        <h3 class="heading mb-2">Luxury Transport Services</h3>
+                        <p>Experience effortless travel with our premium transport options tailored for your convenience during your stay.</p>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 		
 		<section class="ftco-section ftco-intro" style="background-image: url(user-template/images/services-landing.jpg);">
 			<div class="overlay"></div>

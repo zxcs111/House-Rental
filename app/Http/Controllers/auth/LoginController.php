@@ -12,102 +12,86 @@ use Intervention\Image\Facades\Image;
 
 class LoginController extends Controller
 {
-    // Show the login/registration form
     public function showLoginForm()
     {
-        return view('auth.login'); // Updated path to reflect the correct folder structure
+        return view('auth.login'); 
     }
 
-    // Handle login request
     public function login(Request $request)
     {
-        // Validate the login request
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
         ]);
 
-        // Attempt to log the user in
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password], $request->remember)) {
-            // If successful, redirect to intended location
-            return redirect()->intended('/'); // or any other page
+        if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'role' => ['landlord', 'tenant']], $request->remember)) {
+            return redirect()->route('home')->with('success', 'Login successful!');
         }
 
-        // If unsuccessful, redirect back to the login with input
         return back()->withInput($request->only('email', 'remember'))->withErrors(['email' => 'Invalid credentials.']);
     }
 
-    // Handle registration request
+
     public function register(Request $request)
     {
-        // Validate the registration request
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|in:tenant,landlord',
         ]);
 
-        // Create the user
-        User::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role,
         ]);
 
-        // Log the user in after registration
         Auth::attempt(['email' => $request->email, 'password' => $request->password]);
 
-        // Redirect to the home page with a success message
-        return redirect()->route('login')->with('success', 'Registration successful!');
+        if ($user->role === 'tenant') {
+            return redirect()->route('home')->with('success', 'Registration successful!');
+        }
+        return redirect()->route('home')->with('success', 'Registration successful!');
     }
 
-    // Show the profile page
     public function profile()
     {
-        return view('auth.profile'); // Render the profile view
+        return view('auth.profile'); 
     }
 
-    // Handle profile updates
     public function updateProfile(Request $request)
     {
-        // Validate the request
         $request->validate([
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max
+            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
             'first_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'phone_number' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255', // Add this line
+            'address' => 'nullable|string|max:255', 
         ]);
 
-        // Get the authenticated user
         /** @var User $user */
         $user = Auth::user();
 
-        // Handle profile picture upload
         if ($request->hasFile('profile_picture')) {
-            // Delete the old profile picture if it exists
             if ($user->profile_picture) {
                 Storage::delete('public/profile/' . $user->profile_picture);
             }
 
-            // Store the new profile picture in the storage/app/public/profile folder
             $path = $request->file('profile_picture')->store('profile', 'public');
-            $user->profile_picture = $path; // Save the path in the database
+            $user->profile_picture = $path; 
         }
 
-        // Update personal information
         $user->first_name = $request->input('first_name', $user->first_name);
         $user->last_name = $request->input('last_name', $user->last_name);
         $user->phone_number = $request->input('phone_number', $user->phone_number);
-        $user->address = $request->input('address', $user->address); // Add this line
-
-        // Save the user
+        $user->address = $request->input('address', $user->address); 
         $user->save();
 
         return redirect()->route('profile')->with('success', 'Profile updated successfully!');
     }
 
-    // Handle logout request
     public function logout(Request $request)
     {
         Auth::logout();

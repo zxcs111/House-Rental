@@ -122,7 +122,7 @@
 			    						<span class="cat">Luxury Home</span>
 			    						<p class="price ml-auto">$500 <span>/night</span></p>
 		    						</div>
-		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Rent now</a> <a href="#" class="btn btn-secondary py-2 ml-1">Details</a></p>
+		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Rent now</a> <a href="{{ route('house-detail') }}" class="btn btn-secondary py-2 ml-1">Details</a></p>
 		    					</div>
 		    				</div>
     					</div>
@@ -136,7 +136,7 @@
 			    						<span class="cat">Luxury Cabin</span>
 			    						<p class="price ml-auto">$550 <span>/night</span></p>
 		    						</div>
-		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Rent now</a> <a href="#" class="btn btn-secondary py-2 ml-1">Details</a></p>
+		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Rent now</a> <a href="{{ route('house-detail') }}" class="btn btn-secondary py-2 ml-1">Details</a></p>
 		    					</div>
 		    				</div>
     					</div>
@@ -150,7 +150,7 @@
 			    						<span class="cat">Waterfront Property</span>
 			    						<p class="price ml-auto">$650 <span>/night</span></p>
 		    						</div>
-		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Rent now</a> <a href="#" class="btn btn-secondary py-2 ml-1">Details</a></p>
+		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Rent now</a> <a href="{{ route('house-detail', ['id' => 1]) }}" class="btn btn-secondary py-2 ml-1">Details</a>
 		    					</div>
 		    				</div>
     					</div>
@@ -164,7 +164,7 @@
 			    						<span class="cat">Modern Home</span>
 			    						<p class="price ml-auto">$700 <span>/night</span></p>
 		    						</div>
-		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Rent now</a> <a href="#" class="btn btn-secondary py-2 ml-1">Details</a></p>
+		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Rent now</a> <a href="{{ route('house-detail') }}" class="btn btn-secondary py-2 ml-1">Details</a></p>
 		    					</div>
 		    				</div>
     					</div>
@@ -186,7 +186,7 @@
 
                 <p>Discover your perfect home with Stay Haven, where a variety of stunning properties await you. Our experienced team is dedicated to helping you find the ideal space that suits your lifestyle and needs.</p>
                 <p>Whether you’re looking for a cozy apartment in the city or a spacious house in the suburbs, we have the right options for you. Explore our listings to find the perfect place to call home.</p>
-                <p><a href="#" class="btn btn-primary py-3 px-4">View Available Properties</a></p>
+                <p><a href="{{ route ('houses') }}" class="btn btn-primary py-3 px-4">View Available Properties</a></p>
             </div>
 					</div>
 				</div>
@@ -285,7 +285,7 @@
                   <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
                 </div>
                 <h3 class="heading mt-2"><a href="#">Top 10 Luxury Stays That Redefine Comfort</a></h3>
-                <p><a href="#" class="btn btn-primary">Read more</a></p>
+                <p><a href="{{ route ('blog') }}" class="btn btn-primary">Read more</a></p>
               </div>
             </div>
           </div>
@@ -300,7 +300,7 @@
                   <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
                 </div>
                 <h3 class="heading mt-2"><a href="#">How to Choose the Perfect Stay for Your Vacation</a></h3>
-                <p><a href="#" class="btn btn-primary">Read more</a></p>
+                <p><a href="{{ route ('blog') }}" class="btn btn-primary">Read more</a></p>
               </div>
             </div>
           </div>
@@ -312,10 +312,10 @@
               	<div class="meta mb-3">
                   <div><a href="#">Oct. 29, 2019</a></div>
                   <div><a href="#">Admin</a></div>
-                  <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
+                  <div><a href="" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
                 </div>
                 <h3 class="heading mt-2"><a href="#">5 Essential Tips for a Luxurious Stay Experience</a></h3>
-                <p><a href="#" class="btn btn-primary">Read more</a></p>
+                <p><a href="{{ route ('blog') }}" class="btn btn-primary">Read more</a></p>
               </div>
             </div>
           </div>

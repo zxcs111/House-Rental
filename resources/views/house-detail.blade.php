@@ -22,34 +22,62 @@
   </head>
   <body>
     
-	  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-	    <div class="container">
-	      <a class="navbar-brand" href="index.html">Stay<span> Haven</span></a>
-	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-	        <span class="oi oi-menu"></span> Menu
-	      </button>
+  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="{{ route('home') }}">Stay<span> Haven</span></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
 
-	      <div class="collapse navbar-collapse" id="ftco-nav">
-          <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
-                <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
-                <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
-                <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
-            </ul>
-	      </div>
-	    </div>
-	  </nav>
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
+                    <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
+                    <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
+                    <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
+
+                    <!-- Conditional Rendering for Login/Profile -->
+                    @auth
+					<!-- Display User Profile Icon if Logged In -->
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							<!-- Circular Profile Picture or Default Icon -->
+							@if(Auth::user()->profile_picture)
+								<img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+							@else
+								<i class="fas fa-user-circle" style="font-size: 24px;"></i> <!-- Default Icon -->
+							@endif
+						</a>
+						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+							<a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
+							<a class="dropdown-item" href="{{ route('logout') }}"
+								onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+								Logout
+							</a>
+							<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+								@csrf
+							</form>
+						</div>
+					</li>
+				@else
+					<!-- Display Login Button if Not Logged In -->
+					<li class="nav-item"><a href="{{ route('login') }}" class="nav-link">Login</a></li>
+				@endauth
+                </ul>
+            </div>
+        </div>
+    </nav>
     <!-- END nav -->
     
-    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('images/bg_3.jpg');" data-stellar-background-ratio="0.5">
+    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('user-template/images/house-detail.jpg');" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
       <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
           <div class="col-md-9 ftco-animate pb-5">
-          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Car details <i class="ion-ios-arrow-forward"></i></span></p>
-            <h1 class="mb-3 bread">Car Details</h1>
+          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>House Details <i class="ion-ios-arrow-forward"></i></span></p>
+            <h1 class="mb-3 bread">House Details</h1>
           </div>
         </div>
       </div>
@@ -61,7 +89,7 @@
       	<div class="row justify-content-center">
       		<div class="col-md-12">
       			<div class="car-details">
-      				<div class="img rounded" style="background-image: url(images/bg_1.jpg);"></div>
+      				<div class="img rounded" style="background-image: url(user-template/images/bg_1.jpg);"></div>
       				<div class="text text-center">
       					<span class="subheading">Cheverolet</span>
       					<h2>Mercedes Grand Sedan</h2>
@@ -349,7 +377,7 @@
         <div class="row">
         	<div class="col-md-4">
     				<div class="car-wrap rounded ftco-animate">
-    					<div class="img rounded d-flex align-items-end" style="background-image: url(images/car-1.jpg);">
+    					<div class="img rounded d-flex align-items-end" style="background-image: url(user-template/images/car-1.jpg);">
     					</div>
     					<div class="text">
     						<h2 class="mb-0"><a href="car-single.html">Mercedes Grand Sedan</a></h2>
@@ -363,7 +391,7 @@
     			</div>
     			<div class="col-md-4">
     				<div class="car-wrap rounded ftco-animate">
-    					<div class="img rounded d-flex align-items-end" style="background-image: url(images/car-2.jpg);">
+    					<div class="img rounded d-flex align-items-end" style="background-image: url(user-template/images/car-2.jpg);">
     					</div>
     					<div class="text">
     						<h2 class="mb-0"><a href="car-single.html">Range Rover</a></h2>
@@ -377,7 +405,7 @@
     			</div>
     			<div class="col-md-4">
     				<div class="car-wrap rounded ftco-animate">
-    					<div class="img rounded d-flex align-items-end" style="background-image: url(images/car-3.jpg);">
+    					<div class="img rounded d-flex align-items-end" style="background-image: url(user-template/images/car-3.jpg);">
     					</div>
     					<div class="text">
     						<h2 class="mb-0"><a href="car-single.html">Mercedes Grand Sedan</a></h2>
@@ -399,7 +427,7 @@
         <div class="row mb-5">
           <div class="col-md">
             <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2"><a href="#" class="logo">Car<span>book</span></a></h2>
+              <h2 class="ftco-heading-2"><a href="#" class="logo">Stay<span> Haven</span></a></h2>
               <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
               <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
                 <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>

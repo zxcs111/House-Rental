@@ -26,6 +26,7 @@ class User extends Authenticatable
         'last_name',      
         'phone_number',   
         'address', 
+        'role', 
     ];
 
     /**
@@ -49,5 +50,11 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // In App\Models\User.php
+    public function scopeFilterByRole($query, $role)
+    {
+        return $query->where('role', $role);
     }
 }

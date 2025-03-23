@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('user-template/css/open-iconic-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/animate.css') }}">
@@ -23,26 +24,53 @@
   </head>
   <body>
     
-	  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-	    <div class="container">
-	      <a class="navbar-brand" href="index.html">Stay<span> Haven</span></a>
-	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-	        <span class="oi oi-menu"></span> Menu
-	      </button>
+  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="{{ route('home') }}">Stay<span> Haven</span></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
 
-	      <div class="collapse navbar-collapse" id="ftco-nav">
-	        <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
-                <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
-                <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                <li class="nav-item active"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
-                <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
-                <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Login</a></li>
-            </ul>
-	      </div>
-	    </div>
-	  </nav>
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
+                    <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
+                    <li class="nav-item active"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
+                    <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
+
+                    <!-- Conditional Rendering for Login/Profile -->
+                    @auth
+                        <!-- Display User Profile Icon if Logged In -->
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <!-- Circular Profile Picture or Default Icon -->
+                              @if(Auth::user()->profile_picture)
+                                  <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                              @else
+                                  <i class="fas fa-user-circle" style="font-size: 24px;"></i> <!-- Default Icon -->
+                              @endif
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
+                              <a class="dropdown-item" href="{{ route('logout') }}"
+                                  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                  Logout
+                              </a>
+                              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                  @csrf
+                              </form>
+                          </div>
+                      </li>
+                    @else
+                        <!-- Display Login Button if Not Logged In -->
+                        <li class="nav-item"><a href="{{ route('login') }}" class="nav-link">Login</a></li>
+                    @endauth
+                </ul>
+            </div>
+        </div>
+    </nav>
     <!-- END nav -->
     
     <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('user-template/images/blog-landing.jpg');" data-stellar-background-ratio="0.5">
@@ -72,7 +100,7 @@
                 </div>
                 <h3 class="heading mt-2"><a href="#">Top 10 Luxury Stays That Redefine Comfort</a></h3>
                 <p>Discover the ultimate in luxury travel with our curated list of the top 10 luxury stays around the world. Each destination offers unparalleled comfort, exquisite amenities, and unique experiences that promise to make your vacation unforgettable.</p>
-                <p><a href="blog-single.html" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
+                <p><a href="{{ route('blog-details') }}" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
               </div>
             </div>
           </div>
@@ -88,7 +116,7 @@
                 </div>
                 <h3 class="heading mt-2"><a href="#">How to Choose the Perfect Stay for Your Vacation</a></h3>
                 <p>Choosing the right accommodation can make or break your travel experience. In this post, we share essential tips and considerations to help you select the perfect stay that matches your needs, preferences, and budget.</p>
-                <p><a href="blog-single.html" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
+                <p><a href="{{ route('blog-details') }}" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
               </div>
             </div>
           </div>
@@ -104,7 +132,7 @@
                 </div>
                 <h3 class="heading mt-2"><a href="#">5 Essential Tips for a Luxurious Stay Experience</a></h3>
                 <p>Elevate your travel experience with our five essential tips for enjoying a luxurious stay. Learn how to take full advantage of amenities, services, and local attractions to make the most of your getaway.</p>
-                <p><a href="blog-single.html" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
+                <p><a href="{{ route('blog-details') }}" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
               </div>
             </div>
           </div>
@@ -120,7 +148,7 @@
                 </div>
                 <h3 class="heading mt-2"><a href="#">The Ultimate Guide to Luxurious Accommodation</a></h3>
                 <p>Immerse yourself in the world of luxury with our ultimate guide to top-notch accommodations. From opulent amenities to personalized services, learn how to choose the perfect stay that promises an unforgettable experience at Stay Haven.</p>
-                <p><a href="blog-single.html" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
+                <p><a href="{{ route('blog-details') }}" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
               </div>
             </div>
           </div>

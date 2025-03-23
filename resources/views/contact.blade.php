@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('user-template/css/open-iconic-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/animate.css') }}">
@@ -23,26 +24,53 @@
   </head>
   <body>
     
-	  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-	    <div class="container">
-	      <a class="navbar-brand" href="index.html">Stay<span> Haven</span></a>
-	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-	        <span class="oi oi-menu"></span> Menu
-	      </button>
+  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+        <div class="container">
+            <a class="navbar-brand" href="{{ route('home') }}">Stay<span> Haven</span></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="oi oi-menu"></span> Menu
+            </button>
 
-	      <div class="collapse navbar-collapse" id="ftco-nav">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
-                <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
-                <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
-                <li class="nav-item active"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
-                <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Login</a></li>
-            </ul>
-	      </div>
-	    </div>
-	  </nav>
+            <div class="collapse navbar-collapse" id="ftco-nav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
+                    <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
+                    <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
+                    <li class="nav-item active"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
+
+                    <!-- Conditional Rendering for Login/Profile -->
+                    @auth
+                        <!-- Display User Profile Icon if Logged In -->
+                        <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              <!-- Circular Profile Picture or Default Icon -->
+                              @if(Auth::user()->profile_picture)
+                                  <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                              @else
+                                  <i class="fas fa-user-circle" style="font-size: 24px;"></i> <!-- Default Icon -->
+                              @endif
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
+                              <a class="dropdown-item" href="{{ route('logout') }}"
+                                  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                  Logout
+                              </a>
+                              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                  @csrf
+                              </form>
+                          </div>
+                      </li>
+                    @else
+                        <!-- Display Login Button if Not Logged In -->
+                        <li class="nav-item"><a href="{{ route('login') }}" class="nav-link">Login</a></li>
+                    @endauth
+                </ul>
+            </div>
+        </div>
+    </nav>
     <!-- END nav -->
     
     <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('user-template/images/contact-landing.jpg');" data-stellar-background-ratio="0.5">

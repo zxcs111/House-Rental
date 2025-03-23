@@ -2,11 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\HouseController;
+use Illuminate\Support\Facades\Auth;
+
+use App\Http\Controllers\Admin\AdminController;
 
 // Home route
 Route::get('/', function () {
     return view('welcome'); // Make sure you have a view file named 'welcome.blade.php'
 })->name('home');
+
 
 // Additional routes for other pages
 Route::get('/about', function () {
@@ -40,3 +45,19 @@ Route::post('/register', [LoginController::class, 'register'])->name('register')
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/profile', [LoginController::class, 'profile'])->name('profile')->middleware('auth');
 Route::post('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update')->middleware('auth');
+
+Route::get('/house-detail', [HouseController::class, 'showHouseDetail'])->name('house-detail');
+
+Route::get('/blog-details', function () {
+    return view('blog-details'); 
+})->name('blog-details');
+
+
+Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.submit');
+
+// Admin Logout Route
+Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+
+// Admin Dashboard Route
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
