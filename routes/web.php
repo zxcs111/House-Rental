@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HouseController;
 use Illuminate\Support\Facades\Auth;
-
+use App\Http\Controllers\Landlord\PropertyListingController;
 use App\Http\Controllers\Admin\AdminController;
 
 // Home route
@@ -61,3 +61,13 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.lo
 
 // Admin Dashboard Route
 Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+
+Route::middleware('auth')->group(function () {
+    // Property Listing Routes
+    Route::get('/property/listing', [PropertyListingController::class, 'index'])->name('property.listing');
+    Route::post('/property/store', [PropertyListingController::class, 'store'])->name('property.store');
+    Route::get('/property/edit/{id}', [PropertyListingController::class, 'edit'])->name('property.edit');
+    Route::put('/property/update/{id}', [PropertyListingController::class, 'update'])->name('property.update');
+    Route::delete('/property/delete/{id}', [PropertyListingController::class, 'destroy'])->name('property.delete');
+});
