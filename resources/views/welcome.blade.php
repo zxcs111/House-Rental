@@ -113,79 +113,57 @@
       </div>
     </div>
 
-
     <section class="ftco-section ftco-no-pt bg-light">
-    	<div class="container">
-    		<div class="row justify-content-center">
-          <div class="col-md-12 heading-section text-center ftco-animate mb-5">
-          	<span class="subheading">What we offer</span>
-            <h2 class="mb-2">Feeatured Houses</h2>
+      <div class="container">
+          <div class="row justify-content-center">
+              <div class="col-md-12 heading-section text-center ftco-animate mb-5">
+                  <span class="subheading">What we offer</span>
+                  <h2 class="mb-2">Available Properties</h2>
+              </div>
           </div>
-        </div>
-    		<div class="row">
-    			<div class="col-md-12">
-    				<div class="carousel-car owl-carousel">
-    					<div class="item">
-    						<div class="car-wrap rounded ftco-animate">
-		    					<div class="img rounded d-flex align-items-end" style="background-image: url('user-template/images/featured-image1.jpg')">
-		    					</div>
-		    					<div class="text">
-		    						<h2 class="mb-0"><a href="#">Grand Serenity Villa</a></h2>
-		    						<div class="d-flex mb-3">
-			    						<span class="cat">Luxury Home</span>
-			    						<p class="price ml-auto">$500 <span>/night</span></p>
-		    						</div>
-		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Rent now</a> <a href="{{ route('house-detail') }}" class="btn btn-secondary py-2 ml-1">Details</a></p>
-		    					</div>
-		    				</div>
-    					</div>
-    					<div class="item">
-    						<div class="car-wrap rounded ftco-animate">
-		    					<div class="img rounded d-flex align-items-end" style="background-image: url('user-template/images/featured-image2.jpg')">
-		    					</div>
-		    					<div class="text">
-		    						<h2 class="mb-0"><a href="#">Whispering Pines Retreat</a></h2>
-		    						<div class="d-flex mb-3">
-			    						<span class="cat">Luxury Cabin</span>
-			    						<p class="price ml-auto">$550 <span>/night</span></p>
-		    						</div>
-		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Rent now</a> <a href="{{ route('house-detail') }}" class="btn btn-secondary py-2 ml-1">Details</a></p>
-		    					</div>
-		    				</div>
-    					</div>
-    					<div class="item">
-    						<div class="car-wrap rounded ftco-animate">
-		    					<div class="img rounded d-flex align-items-end" style="background-image: url('user-template/images/featured-image3.jpg')">
-		    					</div>
-		    					<div class="text">
-		    						<h2 class="mb-0"><a href="#">Crystal Lake House</a></h2>
-		    						<div class="d-flex mb-3">
-			    						<span class="cat">Waterfront Property</span>
-			    						<p class="price ml-auto">$650 <span>/night</span></p>
-		    						</div>
-		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Rent now</a> <a href="{{ route('house-detail', ['id' => 1]) }}" class="btn btn-secondary py-2 ml-1">Details</a>
-		    					</div>
-		    				</div>
-    					</div>
-    					<div class="item">
-    						<div class="car-wrap rounded ftco-animate">
-		    					<div class="img rounded d-flex align-items-end" style="background-image: url('user-template/images/featured-image4.jpg')">
-		    					</div>
-		    					<div class="text">
-		    						<h2 class="mb-0"><a href="#">Harmonious Haven</a></h2>
-		    						<div class="d-flex mb-3">
-			    						<span class="cat">Modern Home</span>
-			    						<p class="price ml-auto">$700 <span>/night</span></p>
-		    						</div>
-		    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Rent now</a> <a href="{{ route('house-detail') }}" class="btn btn-secondary py-2 ml-1">Details</a></p>
-		    					</div>
-		    				</div>
-    					</div>
-    				</div>
-    			</div>
-    		</div>
-    	</div>
-    </section>
+          <div class="row">
+              <div class="col-md-12">
+                  @if($featuredProperties->isEmpty())
+                      <div class="col-md-12 text-center">
+                          <p>No properties available at the moment. Please check back later.</p>
+                      </div>
+                  @else
+                      <div class="carousel-car owl-carousel">
+                          @foreach($featuredProperties as $property)
+                          <div class="item">
+                              <div class="car-wrap rounded ftco-animate">
+                                  <div class="img rounded d-flex align-items-end" style="background-image: url('{{ $property->main_image ? asset('storage/' . $property->main_image) : asset('user-template/images/house-placeholder.jpg') }}');">
+                                  </div>
+                                  <div class="text">
+                                      <h2 class="mb-0"><a href="{{ route('house-detail', $property->id) }}">{{ $property->title }}</a></h2>
+                                      <div class="d-flex mb-3">
+                                          <span class="cat">{{ $property->property_type }}</span>
+                                          <p class="price ml-auto">${{ number_format($property->price, 2) }} <span>/month</span></p>
+                                      </div>
+                                      <p class="d-flex mb-0 d-block">
+                                          @auth
+                                              @if(Auth::user()->role === 'tenant')
+                                                  <a href="#" class="btn btn-primary py-2 mr-1">Rent now</a>
+                                              @endif
+                                          @else
+                                              <a href="#" class="btn btn-primary py-2 mr-1">Rent now</a>
+                                          @endauth
+                                          <a href="{{ route('house-detail', $property->id) }}" class="btn btn-secondary py-2 ml-1">Details</a>
+                                      </p>
+                                  </div>
+                              </div>
+                          </div>
+                          @endforeach
+                      </div>
+                  @endif
+                  <div class="text-center mt-4">
+                      <a href="{{ route('houses') }}" class="btn btn-primary">View All Properties</a>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </section>
+  
 
     <section class="ftco-section ftco-about">
 			<div class="container">

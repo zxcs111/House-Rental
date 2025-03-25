@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Stay Haven - House Details</title>
+    <title>Stay Haven - {{ $property->title }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('user-template/css/open-iconic-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/animate.css') }}">
@@ -23,61 +24,74 @@
   <body>
     
   <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">Stay<span> Haven</span></a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="oi oi-menu"></span> Menu
-            </button>
+      <div class="container">
+          <a class="navbar-brand" href="{{ route('home') }}">Stay<span> Haven</span></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="oi oi-menu"></span> Menu
+          </button>
 
-            <div class="collapse navbar-collapse" id="ftco-nav">
-                <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
-                    <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
-                    <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                    <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
-                    <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
+          <div class="collapse navbar-collapse" id="ftco-nav">
+              <ul class="navbar-nav ml-auto">
+                  @auth
+                      @if(Auth::user()->role === 'tenant')
+                          <!-- Tenant Menu Items -->
+                          <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                          <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
+                          <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
+                          <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
+                          <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
+                          <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
+                      @elseif(Auth::user()->role === 'landlord')
+                          <!-- Landlord Menu Items -->
+                          <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                          <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
+                          <li class="nav-item"><a href="{{ route('property.listing') }}" class="nav-link">Property Listing</a></li>
 
-                    <!-- Conditional Rendering for Login/Profile -->
-                    @auth
-					<!-- Display User Profile Icon if Logged In -->
-					<li class="nav-item dropdown">
-						<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<!-- Circular Profile Picture or Default Icon -->
-							@if(Auth::user()->profile_picture)
-								<img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
-							@else
-								<i class="fas fa-user-circle" style="font-size: 24px;"></i> <!-- Default Icon -->
-							@endif
-						</a>
-						<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-							<a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
-							<a class="dropdown-item" href="{{ route('logout') }}"
-								onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-								Logout
-							</a>
-							<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-								@csrf
-							</form>
-						</div>
-					</li>
-				@else
-					<!-- Display Login Button if Not Logged In -->
-					<li class="nav-item"><a href="{{ route('login') }}" class="nav-link">Login</a></li>
-				@endauth
-                </ul>
-            </div>
-        </div>
-    </nav>
+                      @endif
+                      
+                      <!-- Profile Dropdown (Common for both roles) -->
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              @if(Auth::user()->profile_picture)
+                                  <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                              @else
+                                  <i class="fas fa-user-circle" style="font-size: 24px;"></i>
+                              @endif
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
+                              <a class="dropdown-item" href="{{ route('logout') }}"
+                                  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                  Logout
+                              </a>
+                              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                  @csrf
+                              </form>
+                          </div>
+                      </li>
+                  @else
+                      <!-- Default Menu Items (for non-logged in users) -->
+                      <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                      <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
+                      <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
+                      <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
+                      <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
+                      <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
+                      <li class="nav-item"><a href="{{ route('login') }}" class="nav-link">Login</a></li>
+                  @endauth
+              </ul>
+          </div>
+      </div>
+  </nav>
     <!-- END nav -->
     
-    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('user-template/images/house-detail.jpg');" data-stellar-background-ratio="0.5">
+    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('{{ $property->main_image ? asset('storage/' . $property->main_image) : asset('user-template/images/house-detail.jpg') }}');" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
       <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
           <div class="col-md-9 ftco-animate pb-5">
-          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>House Details <i class="ion-ios-arrow-forward"></i></span></p>
-            <h1 class="mb-3 bread">House Details</h1>
+          	<p class="breadcrumbs"><span class="mr-2"><a href="{{ route('home') }}">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>House Details <i class="ion-ios-arrow-forward"></i></span></p>
+            <h1 class="mb-3 bread">{{ $property->title }}</h1>
           </div>
         </div>
       </div>
@@ -89,10 +103,10 @@
       	<div class="row justify-content-center">
       		<div class="col-md-12">
       			<div class="car-details">
-      				<div class="img rounded" style="background-image: url(user-template/images/bg_1.jpg);"></div>
+      				<div class="img rounded" style="background-image: url('{{ $property->main_image ? asset('storage/' . $property->main_image) : asset('user-template/images/bg_1.jpg') }}');"></div>
       				<div class="text text-center">
-      					<span class="subheading">Cheverolet</span>
-      					<h2>Mercedes Grand Sedan</h2>
+      					<span class="subheading">{{ $property->property_type }}</span>
+      					<h2>{{ $property->title }}</h2>
       				</div>
       			</div>
       		</div>
@@ -102,11 +116,11 @@
             <div class="media block-6 services">
               <div class="media-body py-md-4">
               	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-dashboard"></span></div>
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-bed"></span></div>
 	              	<div class="text">
 		                <h3 class="heading mb-0 pl-3">
-		                	Mileage
-		                	<span>40,000</span>
+		                	Bedrooms
+		                	<span>{{ $property->bedrooms }}</span>
 		                </h3>
 	                </div>
                 </div>
@@ -117,11 +131,11 @@
             <div class="media block-6 services">
               <div class="media-body py-md-4">
               	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-pistons"></span></div>
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-bathtub"></span></div>
 	              	<div class="text">
 		                <h3 class="heading mb-0 pl-3">
-		                	Transmission
-		                	<span>Manual</span>
+		                	Bathrooms
+		                	<span>{{ $property->bathrooms }}</span>
 		                </h3>
 	                </div>
                 </div>
@@ -132,11 +146,11 @@
             <div class="media block-6 services">
               <div class="media-body py-md-4">
               	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-car-seat"></span></div>
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-blueprint"></span></div>
 	              	<div class="text">
 		                <h3 class="heading mb-0 pl-3">
-		                	Seats
-		                	<span>5 Adults</span>
+		                	Area
+		                	<span>{{ number_format($property->square_feet) }} sqft</span>
 		                </h3>
 	                </div>
                 </div>
@@ -147,11 +161,11 @@
             <div class="media block-6 services">
               <div class="media-body py-md-4">
               	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-backpack"></span></div>
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-home"></span></div>
 	              	<div class="text">
 		                <h3 class="heading mb-0 pl-3">
-		                	Luggage
-		                	<span>4 Bags</span>
+		                	Type
+		                	<span>{{ $property->property_type }}</span>
 		                </h3>
 	                </div>
                 </div>
@@ -162,11 +176,11 @@
             <div class="media block-6 services">
               <div class="media-body py-md-4">
               	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-diesel"></span></div>
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-money"></span></div>
 	              	<div class="text">
 		                <h3 class="heading mb-0 pl-3">
-		                	Fuel
-		                	<span>Petrol</span>
+		                	Price
+		                	<span>${{ number_format($property->price, 2) }}/mo</span>
 		                </h3>
 	                </div>
                 </div>
@@ -179,7 +193,6 @@
 						<div class="bd-example bd-example-tabs">
 							<div class="d-flex justify-content-center">
 							  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-
 							    <li class="nav-item">
 							      <a class="nav-link active" id="pills-description-tab" data-toggle="pill" href="#pills-description" role="tab" aria-controls="pills-description" aria-expanded="true">Features</a>
 							    </li>
@@ -197,37 +210,36 @@
 						    	<div class="row">
 						    		<div class="col-md-4">
 						    			<ul class="features">
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Airconditions</li>
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Child Seat</li>
-						    				<li class="check"><span class="ion-ios-checkmark"></span>GPS</li>
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Luggage</li>
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Music</li>
+                                        @foreach($property->amenities ? json_decode($property->amenities) : [] as $index => $amenity)
+                                            @if($index % 3 == 0)
+                                                <li class="check"><span class="ion-ios-checkmark"></span>{{ $amenity }}</li>
+                                            @endif
+                                        @endforeach
 						    			</ul>
 						    		</div>
 						    		<div class="col-md-4">
 						    			<ul class="features">
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Seat Belt</li>
-						    				<li class="remove"><span class="ion-ios-close"></span>Sleeping Bed</li>
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Water</li>
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Bluetooth</li>
-						    				<li class="remove"><span class="ion-ios-close"></span>Onboard computer</li>
+                                        @foreach($property->amenities ? json_decode($property->amenities) : [] as $index => $amenity)
+                                            @if($index % 3 == 1)
+                                                <li class="check"><span class="ion-ios-checkmark"></span>{{ $amenity }}</li>
+                                            @endif
+                                        @endforeach
 						    			</ul>
 						    		</div>
 						    		<div class="col-md-4">
 						    			<ul class="features">
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Audio input</li>
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Long Term Trips</li>
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Car Kit</li>
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Remote central locking</li>
-						    				<li class="check"><span class="ion-ios-checkmark"></span>Climate control</li>
+                                        @foreach($property->amenities ? json_decode($property->amenities) : [] as $index => $amenity)
+                                            @if($index % 3 == 2)
+                                                <li class="check"><span class="ion-ios-checkmark"></span>{{ $amenity }}</li>
+                                            @endif
+                                        @endforeach
 						    			</ul>
 						    		</div>
 						    	</div>
 						    </div>
 
 						    <div class="tab-pane fade" id="pills-manufacturer" role="tabpanel" aria-labelledby="pills-manufacturer-tab">
-						      <p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life One day however a small line of blind text by the name of Lorem Ipsum decided to leave for the far World of Grammar.</p>
-									<p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then she continued her way.</p>
+						      <p>{{ $property->description }}</p>
 						    </div>
 
 						    <div class="tab-pane fade" id="pills-review" role="tabpanel" aria-labelledby="pills-review-tab">
@@ -235,7 +247,7 @@
 							   		<div class="col-md-7">
 							   			<h3 class="head">23 Reviews</h3>
 							   			<div class="review d-flex">
-									   		<div class="user-img" style="background-image: url(images/person_1.jpg)"></div>
+									   		<div class="user-img" style="background-image: url(user-template/images/person_1.jpg)"></div>
 									   		<div class="desc">
 									   			<h4>
 									   				<span class="text-left">Jacob Webb</span>
@@ -255,7 +267,7 @@
 									   		</div>
 									   	</div>
 									   	<div class="review d-flex">
-									   		<div class="user-img" style="background-image: url(images/person_2.jpg)"></div>
+									   		<div class="user-img" style="background-image: url(user-template/images/person_2.jpg)"></div>
 									   		<div class="desc">
 									   			<h4>
 									   				<span class="text-left">Jacob Webb</span>
@@ -275,7 +287,7 @@
 									   		</div>
 									   	</div>
 									   	<div class="review d-flex">
-									   		<div class="user-img" style="background-image: url(images/person_3.jpg)"></div>
+									   		<div class="user-img" style="background-image: url(user-template/images/person_3.jpg)"></div>
 									   		<div class="desc">
 									   			<h4>
 									   				<span class="text-left">Jacob Webb</span>
@@ -366,61 +378,6 @@
       </div>
     </section>
 
-    <section class="ftco-section ftco-no-pt">
-    	<div class="container">
-    		<div class="row justify-content-center">
-          <div class="col-md-12 heading-section text-center ftco-animate mb-5">
-          	<span class="subheading">Choose Car</span>
-            <h2 class="mb-2">Related Cars</h2>
-          </div>
-        </div>
-        <div class="row">
-        	<div class="col-md-4">
-    				<div class="car-wrap rounded ftco-animate">
-    					<div class="img rounded d-flex align-items-end" style="background-image: url(user-template/images/car-1.jpg);">
-    					</div>
-    					<div class="text">
-    						<h2 class="mb-0"><a href="car-single.html">Mercedes Grand Sedan</a></h2>
-    						<div class="d-flex mb-3">
-	    						<span class="cat">Cheverolet</span>
-	    						<p class="price ml-auto">$500 <span>/day</span></p>
-    						</div>
-    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Book now</a> <a href="car-single.html" class="btn btn-secondary py-2 ml-1">Details</a></p>
-    					</div>
-    				</div>
-    			</div>
-    			<div class="col-md-4">
-    				<div class="car-wrap rounded ftco-animate">
-    					<div class="img rounded d-flex align-items-end" style="background-image: url(user-template/images/car-2.jpg);">
-    					</div>
-    					<div class="text">
-    						<h2 class="mb-0"><a href="car-single.html">Range Rover</a></h2>
-    						<div class="d-flex mb-3">
-	    						<span class="cat">Subaru</span>
-	    						<p class="price ml-auto">$500 <span>/day</span></p>
-    						</div>
-    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Book now</a> <a href="car-single.html" class="btn btn-secondary py-2 ml-1">Details</a></p>
-    					</div>
-    				</div>
-    			</div>
-    			<div class="col-md-4">
-    				<div class="car-wrap rounded ftco-animate">
-    					<div class="img rounded d-flex align-items-end" style="background-image: url(user-template/images/car-3.jpg);">
-    					</div>
-    					<div class="text">
-    						<h2 class="mb-0"><a href="car-single.html">Mercedes Grand Sedan</a></h2>
-    						<div class="d-flex mb-3">
-	    						<span class="cat">Cheverolet</span>
-	    						<p class="price ml-auto">$500 <span>/day</span></p>
-    						</div>
-    						<p class="d-flex mb-0 d-block"><a href="#" class="btn btn-primary py-2 mr-1">Book now</a> <a href="car-single.html" class="btn btn-secondary py-2 ml-1">Details</a></p>
-    					</div>
-    				</div>
-    			</div>
-        </div>
-    	</div>
-    </section>
-    
 
     <footer class="ftco-footer ftco-bg-dark ftco-section">
       <div class="container">
@@ -475,7 +432,6 @@
         </div>
         <div class="row">
           <div class="col-md-12 text-center">
-
             <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
   Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
   <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
