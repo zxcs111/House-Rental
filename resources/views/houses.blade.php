@@ -99,11 +99,11 @@
     </section>
 		
 
-	<section class="ftco-section bg-light">
+    <section class="ftco-section bg-light">
     <div class="container">
         <div class="row">
-            @foreach($properties as $property)
-            <div class="col-md-4">
+          @foreach($properties->where('status', 'available') as $property)
+              <div class="col-md-4">
                 <div class="car-wrap rounded ftco-animate">
                     <div class="img rounded d-flex align-items-end" style="background-image: url('{{ $property->main_image ? asset('storage/' . $property->main_image) : asset('user-template/images/house-placeholder.jpg') }}');">
                     </div>
@@ -115,11 +115,13 @@
                         </div>
                         <p class="d-flex mb-0 d-block">
                             @auth
-                                @if(Auth::user()->role === 'tenant')
-                                    <a href="#" class="btn btn-primary py-2 mr-1">Rent now</a>
+                            @if(Auth::user()->role === 'tenant' && $property->status === 'available')
+                                <a href="{{ route('payment.form', $property->id) }}" class="btn btn-primary py-2 mr-1">Rent now</a>
+                                @elseif(Auth::user()->role === 'tenant')
+                                    <button class="btn btn-secondary py-2 mr-1" disabled>Already Rented</button>
                                 @endif
                             @else
-                                <a href="#" class="btn btn-primary py-2 mr-1">Rent now</a>
+                                <a href="{{ route('login') }}" class="btn btn-primary py-2 mr-1">Login to Rent</a>
                             @endauth
                             <a href="{{ route('house-detail', ['id' => $property->id]) }}" class="btn btn-secondary py-2 ml-1">Details</a>
                         </p>
@@ -128,6 +130,7 @@
             </div>
             @endforeach
         </div>
+
         <div class="row mt-5">
             <div class="col text-center">
                 <div class="block-27">
@@ -199,7 +202,17 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-12 text-center">
+          <div class="row mt-4">
+              <div class="col-md-12 text-center">
+                  @auth
+                      @if(Auth::user()->role === 'tenant')
+                          <a href="{{ route('payment.form', $property->id) }}" class="btn btn-primary btn-lg px-5 py-3">Rent This Property Now</a>
+                      @endif
+                  @else
+                      <a href="{{ route('login') }}" class="btn btn-primary btn-lg px-5 py-3">Login to Rent This Property</a>
+                  @endauth
+              </div>
+          </div>
 
             <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
   Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>

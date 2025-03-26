@@ -23,11 +23,9 @@
     
     <!-- Additional CSS for the property listing -->
     <style>
-
       .edit-property {
           cursor: pointer;
       }
-
       .property-image {
         width: 80px;
         height: 60px;
@@ -45,6 +43,19 @@
         font-size: 0.9rem;
         font-weight: 500;
       }
+      .badge-pending {
+        background-color: #ffc107;
+        color: #212529;
+      }
+      .badge-available {
+        background-color: #28a745;
+      }
+      .badge-rented {
+        background-color: #6c757d;
+      }
+      .badge-maintenance {
+        background-color: #dc3545;
+      }
       .table-responsive {
         overflow-x: auto;
       }
@@ -57,6 +68,12 @@
       }
       #createPropertyModal .modal-dialog {
         max-width: 800px;
+      }
+      .update-status {
+          transition: all 0.3s ease;
+      }
+      .update-status:hover {
+          transform: scale(1.05);
       }
     </style>
   </head>
@@ -191,10 +208,14 @@
                               {{ number_format($property->square_feet) }} sqft
                             </td>
                             <td>
-                              @if($property->is_available)
-                                <span class="badge badge-success">Available</span>
-                              @else
-                                <span class="badge badge-secondary">Unavailable</span>
+                              @if($property->status === 'pending')
+                                <span class="badge badge-pending">Pending Approval</span>
+                              @elseif($property->status === 'available')
+                                <span class="badge badge-available">Available</span>
+                              @elseif($property->status === 'rented')
+                                <span class="badge badge-rented">Rented</span>
+                              @elseif($property->status === 'maintenance')
+                                <span class="badge badge-maintenance">Under Maintenance</span>
                               @endif
                             </td>
                             <td>
@@ -216,6 +237,7 @@
                                   </form>
                               </div>
                           </td>
+                          </tr>
                         @endforeach
                       </tbody>
                     </table>
@@ -228,7 +250,7 @@
       </div>
     </section>
 
-    <!-- Create Property Modal -->
+<!-- Create Property Modal -->
 <div class="modal fade" id="createPropertyModal" tabindex="-1" role="dialog" aria-labelledby="createPropertyModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -241,6 +263,7 @@
       <form id="createPropertyForm" action="{{ route('property.store') }}" method="POST" enctype="multipart/form-data">
       @csrf
       <input type="hidden" name="_method" value="POST">
+      <input type="hidden" name="status" value="pending"> <!-- Default status for new properties -->
         <div class="modal-body">
           <div class="row">
             <div class="col-md-6">
@@ -319,19 +342,13 @@
           </div>
           
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-6">
               <div class="form-group">
                 <label for="square_feet">Square Feet*</label>
                 <input type="number" class="form-control" id="square_feet" name="square_feet" min="0" required>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="form-group">
-                <label for="year_built">Year Built</label>
-                <input type="number" class="form-control" id="year_built" name="year_built" min="1800" max="{{ date('Y') }}">
-              </div>
-            </div>
-            <div class="col-md-4">
+            <div class="col-md-6">
               <div class="form-group">
                 <label for="available_from">Available From</label>
                 <input type="date" class="form-control" id="available_from" name="available_from">
@@ -403,14 +420,6 @@
                 <input type="file" class="form-control-file" id="gallery_images" name="gallery_images[]" multiple accept="image/*">
                 <small class="form-text text-muted">You can upload multiple images at once.</small>
               </div>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="is_available" name="is_available" value="1" checked>
-              <label class="form-check-label" for="is_available">Property is currently available for rent</label>
-              <input type="hidden" name="is_available" value="0"> <!-- This ensures a false value when unchecked -->
             </div>
           </div>
         </div>
@@ -577,9 +586,29 @@ $(document).ready(function() {
                 modal.find('#bedrooms').val(data.bedrooms);
                 modal.find('#bathrooms').val(data.bathrooms);
                 modal.find('#square_feet').val(data.square_feet);
-                modal.find('#year_built').val(data.year_built);
                 modal.find('#available_from').val(data.available_from);
-                modal.find('#is_available').prop('checked', data.is_available);
+                
+                // Show status dropdown only for available/maintenance properties
+                if (data.status === 'available' || data.status === 'maintenance') {
+                  const statusHtml = `
+                    <div class="form-group">
+                        <label for="status">Status*</label>
+                        <select class="form-control" id="status" name="status" required>
+                            <option value="available" ${data.status === 'available' ? 'selected' : ''}>Available</option>
+                            <option value="maintenance" ${data.status === 'maintenance' ? 'selected' : ''}>Under Maintenance</option>
+                        </select>
+                    </div>
+                `;
+                // Insert before the amenities section
+                $('.form-group:has(label:contains("Amenities"))').before(statusHtml);
+            } else {
+                    // For pending or rented properties, keep status hidden
+                    $('<input>').attr({
+                        type: 'hidden',
+                        name: 'status',
+                        value: data.status
+                    }).appendTo(modal.find('form'));
+                }
                 
                 // Show current main image if exists
                 if (data.main_image) {
@@ -675,9 +704,16 @@ $(document).ready(function() {
         }
         
         // Create the status badge
-        const statusBadge = property.is_available 
-            ? '<span class="badge badge-success">Available</span>'
-            : '<span class="badge badge-secondary">Unavailable</span>';
+        let statusBadge;
+        if (property.status === 'pending') {
+            statusBadge = '<span class="badge badge-pending">Pending Approval</span>';
+        } else if (property.status === 'available') {
+            statusBadge = '<span class="badge badge-available">Available</span>';
+        } else if (property.status === 'rented') {
+            statusBadge = '<span class="badge badge-rented">Rented</span>';
+        } else if (property.status === 'maintenance') {
+            statusBadge = '<span class="badge badge-maintenance">Under Maintenance</span>';
+        }
         
         // Create the image cell
         const imageCell = property.main_image
@@ -789,6 +825,9 @@ $(document).ready(function() {
         $('.is-invalid').removeClass('is-invalid');
         $('.invalid-feedback').remove();
         $('input[name="amenities[]"]').prop('checked', false);
+        
+        // Remove any dynamically added status field
+        $('#status').closest('.form-group').remove();
         
         // Reset form action and method
         $('#createPropertyForm').attr('action', '/property/store');

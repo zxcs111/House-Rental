@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\Storage;
 
 class PropertyListingController extends Controller
 {
-    /**
-     * Check if the authenticated user is a landlord
-     */
     private function authorizeLandlord()
     {
         if (Auth::user()->role !== 'landlord') {
@@ -36,12 +33,13 @@ class PropertyListingController extends Controller
         
         $property = Property::create(array_merge($validated, [
             'user_id' => Auth::id(),
-            'amenities' => json_encode($request->amenities ?? [])
+            'status' => 'pending', // Default status for new properties
+            'amenities' => json_encode($request->amenities ?? []) // Removed the misplaced semicolon here
         ]));
 
         return response()->json([
             'success' => true,
-            'message' => 'Property created successfully!',
+            'message' => 'Property created successfully! It will be available after admin approval.',
             'property' => $property,
             'isNew' => true
         ]);
@@ -54,6 +52,14 @@ class PropertyListingController extends Controller
         
         $validated = $this->validatePropertyData($request, true);
         $validated = $this->handleImageUploads($request, $validated, $property);
+        
+        // Only update status if it's provided and property is already approved
+        if ($request->has('status') && 
+            ($property->status === 'available' || $property->status === 'maintenance')) {
+            $validated['status'] = $request->status;
+        } else {
+            unset($validated['status']);
+        }
         
         $property->update(array_merge($validated, [
             'amenities' => json_encode($request->amenities ?? [])
@@ -72,7 +78,33 @@ class PropertyListingController extends Controller
         $this->authorizeLandlord();
         $property = Property::where('user_id', Auth::id())->findOrFail($id);
         return response()->json($property);
-    }   
+    }
+
+    public function updateStatus(Request $request, $id)
+{
+    $this->authorizeLandlord();
+    $property = Property::where('user_id', Auth::id())->findOrFail($id);
+    
+    $request->validate([
+        'status' => 'required|in:available,maintenance'
+    ]);
+    
+    // Only allow changing between available and maintenance for approved properties
+    if ($property->status === 'available' || $property->status === 'maintenance') {
+        $property->update(['status' => $request->status]);
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Property status updated successfully!',
+            'property' => $property
+        ]);
+    }
+    
+    return response()->json([
+        'success' => false,
+        'message' => 'You can only change status between Available and Maintenance for approved properties'
+    ], 403);
+}
 
     public function destroy($id)
     {
@@ -85,10 +117,6 @@ class PropertyListingController extends Controller
         return redirect()->route('property.listing')->with('success', 'Property deleted successfully!');
     }
 
-
-    /**
-     * Validate property data
-     */
     private function validatePropertyData(Request $request, $isUpdate = false)
     {
         $rules = [
@@ -103,7 +131,6 @@ class PropertyListingController extends Controller
             'bathrooms' => 'required|numeric|min:0',
             'square_feet' => 'required|integer|min:0',
             'property_type' => 'required|string',
-            'is_available' => 'required|boolean',
             'available_from' => 'nullable|date',
             'amenities' => 'nullable|array',
             'amenities.*' => 'string',
@@ -119,12 +146,8 @@ class PropertyListingController extends Controller
         return $request->validate($rules);
     }
 
-    /**
-     * Handle image uploads for property
-     */
     private function handleImageUploads(Request $request, array $validated, Property $property = null)
     {
-        // Handle main image
         if ($request->hasFile('main_image')) {
             if ($property && $property->main_image) {
                 Storage::disk('public')->delete($property->main_image);
@@ -134,9 +157,7 @@ class PropertyListingController extends Controller
             $validated['main_image'] = $property->main_image;
         }
 
-        // Handle gallery images
         if ($request->hasFile('gallery_images')) {
-            // Delete old gallery images if they exist
             if ($property && $property->gallery_images) {
                 $this->deleteImages(json_decode($property->gallery_images, true));
             }
@@ -153,9 +174,6 @@ class PropertyListingController extends Controller
         return $validated;
     }
 
-    /**
-     * Delete property images
-     */
     private function deletePropertyImages(Property $property)
     {
         if ($property->main_image) {
@@ -167,9 +185,6 @@ class PropertyListingController extends Controller
         }
     }
 
-    /**
-     * Delete multiple images from storage
-     */
     private function deleteImages(array $images)
     {
         foreach ($images as $image) {

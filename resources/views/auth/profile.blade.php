@@ -35,12 +35,12 @@
         }
         .card .card-header {
             font-weight: 500;
-            background-color: rgba(33, 40, 50, 0.03); /* Light gray background */
-            border-bottom: 1px solid rgba(248, 249, 250, 0.13); /* Subtle border */
-            padding: 1rem 1.35rem; /* Padding to match the previous design */
-            font-size: 1rem; /* Font size to match the previous design */
-            color: white; /* Dark text color */
-            border-radius: 0; /* Removed border radius */
+            background-color: rgba(33, 40, 50, 0.03);
+            border-bottom: 1px solid rgba(248, 249, 250, 0.13);
+            padding: 1rem 1.35rem;
+            font-size: 1rem;
+            color: white;
+            border-radius: 0;
         }
         .form-control, .dataTable-input {
             display: block;
@@ -53,7 +53,7 @@
             background-color: #fff;
             background-clip: padding-box;
             border: 1px solid #c5ccd6;
-            border-radius: 0; /* Removed border radius */
+            border-radius: 0;
             transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         }
         .nav-borders .nav-link.active {
@@ -78,7 +78,7 @@
             left: 20px;
             color: white;
             border: none;
-            border-radius: 0; /* Removed border radius */
+            border-radius: 0;
             padding: 10px 20px;
             text-decoration: none;
         }
@@ -87,9 +87,9 @@
             margin-bottom: 20px;
         }
         .profile-image-section img {
-            width: 10rem; /* Adjusted to match the previous design */
-            height: 10rem; /* Adjusted to match the previous design */
-            border-radius: 50%; /* Ensure the image is circular */
+            width: 10rem;
+            height: 10rem;
+            border-radius: 50%;
             object-fit: cover;
         }
         .profile-image-section h3 {
@@ -99,15 +99,53 @@
             color: white;
         }
         .btn {
-            border-radius: 0; /* Removed border radius */
+            border-radius: 0;
         }
         .container-xl {
-            margin-top: 60px; /* Adjusted to move containers lower */
+            margin-top: 60px;
         }
         @media (max-width: 768px) {
             .row {
                 flex-direction: column;
             }
+        }
+
+        .table {
+            color: white;
+            border-color: #444;
+        }
+        .table th {
+            border-bottom-width: 1px;
+            border-color: #444;
+            font-weight: 600;
+        }
+        .table td {
+            border-color: #444;
+            vertical-align: middle;
+        }
+        .table-hover tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .badge {
+            font-weight: 500;
+            padding: 0.35em 0.65em;
+        }
+        .modal-content {
+            background-color: #222;
+            color: white;
+        }
+        .modal-header {
+            border-bottom: 1px solid #444;
+        }
+        .modal-footer {
+            border-top: 1px solid #444;
+        }
+        .btn-close {
+            filter: invert(1);
+        }
+        .tenant-info small {
+            font-size: 0.8rem;
+            color: #aaa;
         }
     </style>
 </head>
@@ -147,17 +185,6 @@
                         </form>
                     </div>
                 </div>
-
-                <!-- Rent History Section -->
-                <div class="card mt-4">
-                    <div class="card-header">Rent History</div>
-                    <div class="card-body">
-                        <!-- Rent History will be dynamically populated from the database -->
-                        <div class="rent-history">
-                            <!-- Example Rent Item -->
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Personal Information Section -->
@@ -191,6 +218,265 @@
                         </form>
                     </div>
                 </div>
+
+                <!-- Tenant Rent History or Landlord Rented Properties Section -->
+                @if(Auth::user()->role === 'tenant')
+                    <!-- Rent History Section for Tenants -->
+                    <div class="card mt-4">
+                        <div class="card-header">Rent History</div>
+                        <div class="card-body">
+                            @if(Auth::user()->payments->count() > 0)
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Property</th>
+                                                <th>Landlord</th>
+                                                <th>Amount</th>
+                                                <th>Period</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach(Auth::user()->payments as $payment)
+                                            <tr>
+                                                <td>
+                                                    <a href="{{ route('house-detail', $payment->property_id) }}" class="text-decoration-none">
+                                                        {{ $payment->property->title }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    @if($payment->landlord)
+                                                        {{ $payment->landlord->first_name }} {{ $payment->landlord->last_name }}
+                                                        <br>
+                                                        <small class="text-muted">{{ $payment->landlord->phone_number }}</small>
+                                                    @else
+                                                        <span class="text-muted">Landlord not available</span>
+                                                    @endif
+                                                </td>
+                                                <td>${{ number_format($payment->amount, 2) }}</td>
+                                                <td>
+                                                    {{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }} - 
+                                                    {{ \Carbon\Carbon::parse($payment->end_date)->format('M d, Y') }}
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-{{ $payment->status == 'completed' ? 'success' : 'warning' }}">
+                                                        {{ ucfirst($payment->status) }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a href="#" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#receiptModal{{ $payment->id }}">
+                                                        <i class="fas fa-receipt"></i> Receipt
+                                                    </a>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Receipt Modal -->
+                                            <div class="modal fade" id="receiptModal{{ $payment->id }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Payment Receipt</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <h6>Property Information</h6>
+                                                                    <p><strong>{{ $payment->property->title }}</strong></p>
+                                                                    <p>{{ $payment->property->address }}</p>
+                                                                    <p>{{ $payment->property->city }}, {{ $payment->property->state }}</p>
+                                                                </div>
+                                                                <div class="col-md-6 text-end">
+                                                                    <h6>Payment Details</h6>
+                                                                    <p><strong>Date:</strong> {{ $payment->created_at->format('M d, Y h:i A') }}</p>
+                                                                    <p><strong>Transaction ID:</strong> {{ $payment->transaction_id }}</p>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row mt-3">
+                                                                <div class="col-md-6">
+                                                                    <h6>Landlord Information</h6>
+                                                                    @if($payment->landlord)
+                                                                        <p><strong>{{ $payment->landlord->first_name }} {{ $payment->landlord->last_name }}</strong></p>
+                                                                        <p>{{ $payment->landlord->email }}</p>
+                                                                        <p>{{ $payment->landlord->phone_number }}</p>
+                                                                    @else
+                                                                        <p class="text-muted">Landlord information not available</p>
+                                                                    @endif
+                                                                </div>
+                                                                <div class="col-md-6 text-end">
+                                                                    <h6>Tenant Information</h6>
+                                                                    <p><strong>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</strong></p>
+                                                                    <p>{{ Auth::user()->email }}</p>
+                                                                    <p>{{ Auth::user()->phone_number }}</p>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row mt-3">
+                                                                <div class="col-md-6">
+                                                                    <h6>Financial Details</h6>
+                                                                    <p><strong>Amount Paid:</strong> ${{ number_format($payment->amount, 2) }}</p>
+                                                                    <p><strong>Payment Method:</strong> {{ ucfirst(str_replace('_', ' ', $payment->payment_method)) }}</p>
+                                                                    <p><strong>Status:</strong> 
+                                                                        <span class="badge bg-{{ $payment->status == 'completed' ? 'success' : 'warning' }}">
+                                                                            {{ ucfirst($payment->status) }}
+                                                                        </span>
+                                                                    </p>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <h6>Rental Period</h6>
+                                                                    <p>{{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }} to {{ \Carbon\Carbon::parse($payment->end_date)->format('M d, Y') }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-primary" onclick="window.print()">
+                                                                <i class="fas fa-print"></i> Print Receipt
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @else
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i> You haven't rented any properties yet.
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @elseif(Auth::user()->role === 'landlord')
+                    <!-- Rented Properties Section for Landlords -->
+                    <div class="card mt-4">
+                        <div class="card-header">Rented Properties</div>
+                        <div class="card-body">
+                            @if(Auth::user()->receivedPayments->count() > 0)
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Property</th>
+                                                <th>Tenant</th>
+                                                <th>Amount</th>
+                                                <th>Rental Period</th>
+                                                <th>Status</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach(Auth::user()->receivedPayments as $payment)
+                                            <tr>
+                                                <td>
+                                                    <a href="{{ route('house-detail', $payment->property_id) }}" class="text-decoration-none">
+                                                        {{ $payment->property->title }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    @if($payment->tenant)
+                                                        {{ $payment->tenant->first_name }} {{ $payment->tenant->last_name }}
+                                                        <br>
+                                                        <small class="text-muted">{{ $payment->tenant->email }}</small>
+                                                    @else
+                                                        <span class="text-muted">Tenant deleted</span>
+                                                    @endif
+                                                </td>
+                                                <td>${{ number_format($payment->amount, 2) }}</td>
+                                                <td>
+                                                    {{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }} - 
+                                                    {{ \Carbon\Carbon::parse($payment->end_date)->format('M d, Y') }}
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-{{ $payment->status == 'completed' ? 'success' : 'warning' }}">
+                                                        {{ ucfirst($payment->status) }}
+                                                    </span>
+                                                </td>
+                                                <td>
+                                                    <a href="#" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#paymentModal{{ $payment->id }}">
+                                                        <i class="fas fa-eye"></i> Details
+                                                    </a>
+                                                </td>
+                                            </tr>
+
+                                            <!-- Payment Details Modal -->
+                                            <div class="modal fade" id="paymentModal{{ $payment->id }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Rental Details</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <h6>Property Information</h6>
+                                                                    <p><strong>{{ $payment->property->title }}</strong></p>
+                                                                    <p>{{ $payment->property->address }}</p>
+                                                                    <p>{{ $payment->property->city }}, {{ $payment->property->state }}</p>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <h6>Tenant Information</h6>
+                                                                    @if($payment->tenant)
+                                                                        <p><strong>{{ $payment->tenant->first_name }} {{ $payment->tenant->last_name }}</strong></p>
+                                                                        <p>{{ $payment->tenant->email }}</p>
+                                                                        <p>{{ $payment->tenant->phone_number }}</p>
+                                                                    @else
+                                                                        <p class="text-muted">Tenant account no longer exists</p>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row mt-3">
+                                                                <div class="col-md-6">
+                                                                    <h6>Payment Details</h6>
+                                                                    <p><strong>Date:</strong> {{ $payment->created_at->format('M d, Y h:i A') }}</p>
+                                                                    <p><strong>Transaction ID:</strong> {{ $payment->transaction_id }}</p>
+                                                                    <p><strong>Method:</strong> {{ ucfirst(str_replace('_', ' ', $payment->payment_method)) }}</p>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <h6>Financial Information</h6>
+                                                                    <p><strong>Amount Paid:</strong> ${{ number_format($payment->amount, 2) }}</p>
+                                                                    <p><strong>Status:</strong> 
+                                                                        <span class="badge bg-{{ $payment->status == 'completed' ? 'success' : 'warning' }}">
+                                                                            {{ ucfirst($payment->status) }}
+                                                                        </span>
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <hr>
+                                                            <div class="row mt-3">
+                                                                <div class="col-md-12">
+                                                                    <h6>Rental Period</h6>
+                                                                    <p>{{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }} to {{ \Carbon\Carbon::parse($payment->end_date)->format('M d, Y') }}</p>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-primary" onclick="window.print()">
+                                                                <i class="fas fa-print"></i> Print Details
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @else
+                                <div class="alert alert-info">
+                                    <i class="fas fa-info-circle"></i> No properties have been rented yet.
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -198,5 +484,6 @@
     <!-- Bootstrap JS and Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    
 </body>
 </html>

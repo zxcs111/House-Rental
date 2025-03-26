@@ -57,4 +57,28 @@ class User extends Authenticatable
     {
         return $query->where('role', $role);
     }
+
+    // app/Models/User.php
+    public function payments()
+    {
+        return $this->hasMany(Payment::class, 'tenant_id');
+    }
+
+    // app/Models/User.php
+    public function rentedProperties()
+    {
+        return $this->hasManyThrough(
+            Property::class,
+            Payment::class,
+            'landlord_id', // Foreign key on payments table
+            'id', // Foreign key on properties table
+            'id', // Local key on users table
+            'property_id' // Local key on payments table
+        )->distinct();
+    }
+
+    public function receivedPayments()
+    {
+        return $this->hasMany(Payment::class, 'landlord_id')->with(['property', 'tenant']);
+    }
 }

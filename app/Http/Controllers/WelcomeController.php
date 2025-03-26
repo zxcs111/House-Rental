@@ -10,7 +10,7 @@ class WelcomeController extends Controller
     public function index()
     {
         // Get 4 available properties
-        $featuredProperties = Property::where('is_available', true)
+        $featuredProperties = Property::where('status', true)
             ->with('user')
             ->latest()
             ->take(4)

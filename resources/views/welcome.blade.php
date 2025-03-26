@@ -129,8 +129,8 @@
                       </div>
                   @else
                       <div class="carousel-car owl-carousel">
-                          @foreach($featuredProperties as $property)
-                          <div class="item">
+                      @foreach($featuredProperties->where('status', 'available') as $property)
+                            <div class="item">
                               <div class="car-wrap rounded ftco-animate">
                                   <div class="img rounded d-flex align-items-end" style="background-image: url('{{ $property->main_image ? asset('storage/' . $property->main_image) : asset('user-template/images/house-placeholder.jpg') }}');">
                                   </div>
@@ -143,10 +143,10 @@
                                       <p class="d-flex mb-0 d-block">
                                           @auth
                                               @if(Auth::user()->role === 'tenant')
-                                                  <a href="#" class="btn btn-primary py-2 mr-1">Rent now</a>
+                                                  <a href="{{ route('payment.form', $property->id) }}" class="btn btn-primary py-2 mr-1">Rent now</a>
                                               @endif
                                           @else
-                                              <a href="#" class="btn btn-primary py-2 mr-1">Rent now</a>
+                                              <a href="{{ route('login') }}" class="btn btn-primary py-2 mr-1">Login to Rent</a>
                                           @endauth
                                           <a href="{{ route('house-detail', $property->id) }}" class="btn btn-secondary py-2 ml-1">Details</a>
                                       </p>

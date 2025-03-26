@@ -100,7 +100,7 @@
                 </div>
                 <h3 class="heading mt-2"><a href="#">Top 10 Luxury Stays That Redefine Comfort</a></h3>
                 <p>Discover the ultimate in luxury travel with our curated list of the top 10 luxury stays around the world. Each destination offers unparalleled comfort, exquisite amenities, and unique experiences that promise to make your vacation unforgettable.</p>
-                <p><a href="{{ route('blog-details') }}" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
+                <p><a href="#" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
               </div>
             </div>
           </div>
@@ -116,7 +116,7 @@
                 </div>
                 <h3 class="heading mt-2"><a href="#">How to Choose the Perfect Stay for Your Vacation</a></h3>
                 <p>Choosing the right accommodation can make or break your travel experience. In this post, we share essential tips and considerations to help you select the perfect stay that matches your needs, preferences, and budget.</p>
-                <p><a href="{{ route('blog-details') }}" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
+                <p><a href="#" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
               </div>
             </div>
           </div>
@@ -132,7 +132,7 @@
                 </div>
                 <h3 class="heading mt-2"><a href="#">5 Essential Tips for a Luxurious Stay Experience</a></h3>
                 <p>Elevate your travel experience with our five essential tips for enjoying a luxurious stay. Learn how to take full advantage of amenities, services, and local attractions to make the most of your getaway.</p>
-                <p><a href="{{ route('blog-details') }}" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
+                <p><a href="#" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
               </div>
             </div>
           </div>
@@ -148,7 +148,7 @@
                 </div>
                 <h3 class="heading mt-2"><a href="#">The Ultimate Guide to Luxurious Accommodation</a></h3>
                 <p>Immerse yourself in the world of luxury with our ultimate guide to top-notch accommodations. From opulent amenities to personalized services, learn how to choose the perfect stay that promises an unforgettable experience at Stay Haven.</p>
-                <p><a href="{{ route('blog-details') }}" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
+                <p><a href="#" class="btn btn-primary">Continue <span class="icon-long-arrow-right"></span></a></p>
               </div>
             </div>
           </div>

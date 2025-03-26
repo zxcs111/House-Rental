@@ -12,7 +12,7 @@ class HouseController extends Controller
      */
     public function index()
     {
-        $properties = Property::where('is_available', true)
+        $properties = Property::where('status', 'available') // Changed from is_available
             ->with('user') // Eager load the landlord/user relationship
             ->latest()
             ->paginate(12); // Paginate with 12 items per page
@@ -26,16 +26,16 @@ class HouseController extends Controller
     public function show($id)
     {
         $property = Property::with('user')
-            ->where('is_available', true)
+            ->where('status', 'available') // Changed from is_available
             ->findOrFail($id);
             
-        $relatedProperties = Property::where('is_available', true)
+        $relatedProperties = Property::where('status', 'available') // Changed from is_available
             ->where('id', '!=', $id)
             ->where('property_type', $property->property_type)
             ->inRandomOrder()
             ->limit(3)
             ->get();
             
-        return view('house-detail', compact('property'));
+        return view('house-detail', compact('property', 'relatedProperties'));
     }
 }
