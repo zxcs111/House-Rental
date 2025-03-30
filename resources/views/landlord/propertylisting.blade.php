@@ -89,11 +89,19 @@
         <div class="collapse navbar-collapse" id="ftco-nav">
           <ul class="navbar-nav ml-auto">
             @auth
-              @if(Auth::user()->role === 'landlord')
-                <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                <li class="nav-item active"><a href="{{ route('property.listing') }}" class="nav-link">Property Listing</a></li>
-              @endif
+            @if(Auth::check() && Auth::user()->role === 'landlord')
+              <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+              <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
+              <li class="nav-item active"><a href="{{ route('property.listing') }}" class="nav-link">Property Listing</a></li>
+              <li class="nav-item">
+                  <a href="{{ route('landlord.cancellation-requests') }}" class="nav-link">
+                      Cancellation Requests
+                      @if(($pendingCancellationCount ?? 0) > 0)
+                          <span class="badge bg-danger">{{ $pendingCancellationCount }}</span>
+                      @endif
+                  </a>
+              </li>
+          @endif
               
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -208,15 +216,15 @@
                               {{ number_format($property->square_feet) }} sqft
                             </td>
                             <td>
-                              @if($property->status === 'pending')
-                                <span class="badge badge-pending">Pending Approval</span>
-                              @elseif($property->status === 'available')
-                                <span class="badge badge-available">Available</span>
-                              @elseif($property->status === 'rented')
-                                <span class="badge badge-rented">Rented</span>
-                              @elseif($property->status === 'maintenance')
-                                <span class="badge badge-maintenance">Under Maintenance</span>
-                              @endif
+                                @if($property->status === 'pending')
+                                    <span class="badge badge-pending">Pending Approval</span>
+                                @elseif($property->status === 'available')
+                                    <span class="badge badge-available">Available</span>
+                                @elseif($property->status === 'rented')
+                                    <span class="badge badge-rented">Rented</span>
+                                @elseif($property->status === 'maintenance')
+                                    <span class="badge badge-maintenance">Under Maintenance</span>
+                                @endif
                             </td>
                             <td>
                               <div class="btn-group" role="group">

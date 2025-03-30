@@ -30,7 +30,7 @@
   </head>
   <body>
     
-  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
       <div class="container">
           <a class="navbar-brand" href="{{ route('home') }}">Stay<span> Haven</span></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,7 +53,14 @@
                           <li class="nav-item active"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                           <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
                           <li class="nav-item"><a href="{{ route('property.listing') }}" class="nav-link">Property Listing</a></li>
-
+                          <li class="nav-item">
+                              <a href="{{ route('landlord.cancellation-requests') }}" class="nav-link">
+                                  Cancellation Requests
+                                  @if(($pendingCancellationCount ?? 0) > 0)
+                                      <span class="badge bg-danger">{{ $pendingCancellationCount }}</span>
+                                  @endif
+                              </a>
+                          </li>
                       @endif
                       
                       <!-- Profile Dropdown (Common for both roles) -->

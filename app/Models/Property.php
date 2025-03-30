@@ -22,7 +22,7 @@ class Property extends Model
         'bathrooms',
         'square_feet',
         'property_type',
-        'status', // Changed from is_available
+        'status', 
         'available_from',
         'amenities',
         'main_image',

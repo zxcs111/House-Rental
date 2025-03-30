@@ -33,8 +33,8 @@ class PropertyListingController extends Controller
         
         $property = Property::create(array_merge($validated, [
             'user_id' => Auth::id(),
-            'status' => 'pending', // Default status for new properties
-            'amenities' => json_encode($request->amenities ?? []) // Removed the misplaced semicolon here
+            'status' => 'pending',
+            'amenities' => json_encode($request->amenities ?? []) 
         ]));
 
         return response()->json([

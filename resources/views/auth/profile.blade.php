@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
+    <title>Stay Haven - Profile</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome for Icons -->
@@ -147,6 +147,9 @@
             font-size: 0.8rem;
             color: #aaa;
         }
+        .rejection-badge {
+            background-color: #dc3545;
+        }
     </style>
 </head>
 <body>
@@ -264,11 +267,30 @@
                                                     <span class="badge bg-{{ $payment->status == 'completed' ? 'success' : 'warning' }}">
                                                         {{ ucfirst($payment->status) }}
                                                     </span>
+                                                    @if($payment->cancellation_status == 'rejected')
+                                                        <span class="badge rejection-badge mt-1">Cancellation Rejected</span>
+                                                    @endif
                                                 </td>
                                                 <td>
                                                     <a href="#" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#receiptModal{{ $payment->id }}">
                                                         <i class="fas fa-receipt"></i> Receipt
                                                     </a>
+                                                    @if($payment->status == 'completed')
+                                                        @if($payment->cancellation_requested && $payment->cancellation_status == 'pending')
+                                                            <span class="badge bg-warning mt-1">Cancellation Pending</span>
+                                                        @elseif($payment->cancellation_status == 'rejected')
+                                                            <button class="btn btn-sm btn-outline-danger mt-1" data-bs-toggle="modal" data-bs-target="#rejectedModal{{ $payment->id }}">
+                                                                <i class="fas fa-info-circle"></i> View Rejection
+                                                            </button>
+                                                            <button class="btn btn-sm btn-outline-warning mt-1" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
+                                                                <i class="fas fa-times-circle"></i> Re-request
+                                                            </button>
+                                                        @elseif(!$payment->cancellation_requested || $payment->cancellation_status == 'approved')
+                                                            <button class="btn btn-sm btn-outline-danger mt-1" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
+                                                                <i class="fas fa-times-circle"></i> Cancel Rent
+                                                            </button>
+                                                        @endif
+                                                    @endif
                                                 </td>
                                             </tr>
 
@@ -337,6 +359,74 @@
                                                                 <i class="fas fa-print"></i> Print Receipt
                                                             </button>
                                                         </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Rejected Cancellation Modal -->
+                                            <div class="modal fade" id="rejectedModal{{ $payment->id }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Cancellation Rejected</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="alert alert-danger">
+                                                                <i class="fas fa-exclamation-circle"></i> Your cancellation request was rejected by the landlord.
+                                                            </div>
+                                                            <div class="card mt-3">
+                                                                <div class="card-header">Rejection Details</div>
+                                                                <div class="card-body">
+                                                                    <p><strong>Reason:</strong></p>
+                                                                    <p>{{ $payment->rejection_reason }}</p>
+                                                                    <p class="text-muted small mt-2">
+                                                                        Rejected on: {{ $payment->updated_at->format('M d, Y h:i A') }}
+                                                                    </p>
+                                                                </div>
+                                                            </div>
+                                                            <p class="mt-3">You may submit a new cancellation request if needed.</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
+                                                                Request Again
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Cancel Rent Modal -->
+                                            <div class="modal fade" id="cancelModal{{ $payment->id }}" tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Request Rent Cancellation</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <form action="{{ route('payment.cancel', $payment->id) }}" method="POST">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <p>Are you sure you want to request cancellation for this rental?</p>
+                                                                <p><strong>Property:</strong> {{ $payment->property->title }}</p>
+                                                                <p><strong>Landlord:</strong> {{ $payment->landlord->first_name }} {{ $payment->landlord->last_name }}</p>
+                                                                
+                                                                <div class="form-group mt-3">
+                                                                    <label for="cancellation_reason">Reason for Cancellation:</label>
+                                                                    <textarea class="form-control" id="cancellation_reason" name="cancellation_reason" rows="3" required></textarea>
+                                                                </div>
+                                                                
+                                                                <div class="alert alert-warning mt-3">
+                                                                    <i class="fas fa-exclamation-triangle"></i> This request needs approval from the landlord. 
+                                                                    You may be subject to cancellation fees based on the rental agreement.
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-danger">Submit Cancellation Request</button>
+                                                            </div>
+                                                        </form>
                                                     </div>
                                                 </div>
                                             </div>

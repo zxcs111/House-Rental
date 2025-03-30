@@ -24,65 +24,72 @@
   <body>
     
   <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-      <div class="container">
-          <a class="navbar-brand" href="{{ route('home') }}">Stay<span> Haven</span></a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-              <span class="oi oi-menu"></span> Menu
-          </button>
+    <div class="container">
+        <a class="navbar-brand" href="{{ route('home') }}">Stay<span> Haven</span></a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="oi oi-menu"></span> Menu
+        </button>
 
-          <div class="collapse navbar-collapse" id="ftco-nav">
-              <ul class="navbar-nav ml-auto">
-                  @auth
-                      @if(Auth::user()->role === 'tenant')
-                          <!-- Tenant Menu Items -->
-                          <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
-                          <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
-                          <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
-                          <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                          <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
-                          <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
-                      @elseif(Auth::user()->role === 'landlord')
-                          <!-- Landlord Menu Items -->
-                          <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
-                          <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                          <li class="nav-item"><a href="{{ route('property.listing') }}" class="nav-link">Property Listing</a></li>
-
-                      @endif
-                      
-                      <!-- Profile Dropdown (Common for both roles) -->
-                      <li class="nav-item dropdown">
-                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              @if(Auth::user()->profile_picture)
-                                  <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
-                              @else
-                                  <i class="fas fa-user-circle" style="font-size: 24px;"></i>
-                              @endif
-                          </a>
-                          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                              <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
-                              <a class="dropdown-item" href="{{ route('logout') }}"
-                                  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                  Logout
-                              </a>
-                              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                  @csrf
-                              </form>
-                          </div>
-                      </li>
-                  @else
-                      <!-- Default Menu Items (for non-logged in users) -->
-                      <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
-                      <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
-                      <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
-                      <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                      <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
-                      <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
-                      <li class="nav-item"><a href="{{ route('login') }}" class="nav-link">Login</a></li>
-                  @endauth
-              </ul>
-          </div>
-      </div>
-  </nav>
+        <div class="collapse navbar-collapse" id="ftco-nav">
+            <ul class="navbar-nav ml-auto">
+                @auth
+                    @if(Auth::user()->role === 'tenant')
+                        <!-- Tenant Menu Items -->
+                        <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                        <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
+                        <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
+                        <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
+                        <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
+                        <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
+                    @elseif(Auth::user()->role === 'landlord')
+                        <!-- Landlord Menu Items -->
+                        <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                        <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
+                        <li class="nav-item"><a href="{{ route('property.listing') }}" class="nav-link">Property Listing</a></li>
+                        <li class="nav-item">
+                            <a href="{{ route('landlord.cancellation-requests') }}" class="nav-link">
+                                Cancellation Requests
+                                @if(($pendingCancellationCount ?? 0) > 0)
+                                    <span class="badge bg-danger">{{ $pendingCancellationCount }}</span>
+                                @endif
+                            </a>
+                        </li>
+                    @endif
+                    
+                    <!-- Profile Dropdown (Common for both roles) -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @if(Auth::user()->profile_picture)
+                                <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                            @else
+                                <i class="fas fa-user-circle" style="font-size: 24px;"></i>
+                            @endif
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
+                            <a class="dropdown-item" href="{{ route('logout') }}"
+                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                Logout
+                            </a>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                @csrf
+                            </form>
+                        </div>
+                    </li>
+                @else
+                    <!-- Default Menu Items (for non-logged in users) -->
+                    <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
+                    <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
+                    <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
+                    <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
+                    <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
+                    <li class="nav-item"><a href="{{ route('login') }}" class="nav-link">Login</a></li>
+                @endauth
+            </ul>
+        </div>
+    </div>
+</nav>
     <!-- END nav -->
     
     <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('{{ $property->main_image ? asset('storage/' . $property->main_image) : asset('user-template/images/house-detail.jpg') }}');" data-stellar-background-ratio="0.5">
@@ -107,6 +114,19 @@
       				<div class="text text-center">
       					<span class="subheading">{{ $property->property_type }}</span>
       					<h2>{{ $property->title }}</h2>
+      					<!-- Added Rent Button Section Here -->
+      					<div class="rent-button mt-4">
+      					    <p class="d-flex mb-0 d-block justify-content-center">
+                                @auth
+                                    @if(Auth::user()->role === 'tenant')
+                                        <a href="{{ route('payment.form', $property->id) }}" class="btn btn-primary py-2 mr-1">Rent now</a>
+                                    @endif
+                                @else
+                                    <a href="{{ route('login') }}" class="btn btn-primary py-2 mr-1">Login to Rent</a>
+                                @endauth
+                                <a href="{{ route('houses') }}" class="btn btn-secondary py-2 ml-1">Back to Houses</a>
+                            </p>
+      					</div>
       				</div>
       			</div>
       		</div>

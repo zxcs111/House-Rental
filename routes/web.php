@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HouseController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Landlord\PropertyListingController;
+use App\Http\Controllers\Landlord\LandlordController; // Updated namespace
 use App\Http\Controllers\Admin\AdminController;
 
 // Home route
@@ -74,3 +75,22 @@ Route::middleware('auth')->group(function () {
     Route::put('/property/update/{id}', [PropertyListingController::class, 'update'])->name('property.update');
     Route::delete('/property/delete/{id}', [PropertyListingController::class, 'destroy'])->name('property.delete');
 });
+
+// Cancel payment/rent request
+Route::post('/payments/{payment}/cancel', [PaymentController::class, 'requestCancellation'])
+    ->name('payment.cancel')
+    ->middleware('auth');
+
+// Landlord routes
+Route::middleware('auth')->group(function () {
+    Route::get('/cancellation-requests', [LandlordController::class, 'cancellationRequests'])
+        ->name('landlord.cancellation-requests');
+    
+    Route::post('/cancellation-requests/{payment}/approve', [LandlordController::class, 'approveCancellation'])
+        ->name('landlord.cancellation.approve');
+    
+    Route::post('/cancellation-requests/{payment}/reject', [LandlordController::class, 'rejectCancellation'])
+        ->name('landlord.cancellation.reject');
+});
+
+

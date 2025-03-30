@@ -12,24 +12,24 @@ class HouseController extends Controller
      */
     public function index()
     {
-        $properties = Property::where('status', 'available') // Changed from is_available
-            ->with('user') // Eager load the landlord/user relationship
-            ->latest()
-            ->paginate(12); // Paginate with 12 items per page
+        $properties = Property::where('status', 'available')
+                    ->with('user')
+                    ->latest()
+                    ->paginate(12);
         
         return view('houses', compact('properties'));
     }
 
-    /**
-     * Display a single property detail
-     */
     public function show($id)
     {
-        $property = Property::with('user')
-            ->where('status', 'available') // Changed from is_available
-            ->findOrFail($id);
+        $property = Property::with('user')->findOrFail($id);
+        
+        // Optional: Prevent access to rented property details
+        if ($property->status !== 'available') {
+            abort(404, 'This property is not currently available');
+        }
             
-        $relatedProperties = Property::where('status', 'available') // Changed from is_available
+        $relatedProperties = Property::where('status', 'available')
             ->where('id', '!=', $id)
             ->where('property_type', $property->property_type)
             ->inRandomOrder()

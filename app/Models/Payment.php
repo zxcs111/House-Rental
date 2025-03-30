@@ -19,7 +19,11 @@ class Payment extends Model
         'status',
         'start_date',
         'end_date',
-        'notes'
+        'notes',
+        'cancellation_requested',
+        'cancellation_reason',
+        'cancellation_status',
+        'rejection_reason'
     ];
 
     // app/Models/Payment.php
@@ -27,8 +31,21 @@ class Payment extends Model
         'start_date' => 'date',
         'end_date' => 'date',
         'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+        'updated_at' => 'datetime',
+        'cancellation_requested' => 'boolean'
     ];
+
+    public function scopePendingCancellations($query)
+    {
+        return $query->where('cancellation_requested', true)
+                    ->where('cancellation_status', 'pending');
+    }
+
+    public function isCancelled()
+    {
+        return $this->cancellation_status === 'approved';
+    }
+    
 
     public function property()
     {
