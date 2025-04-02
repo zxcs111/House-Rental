@@ -20,6 +20,10 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/flaticon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
+
+	<style>
+
+	</style>
   </head>
   <body>
     
@@ -67,6 +71,7 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
+							<a class="dropdown-item" href="{{ route('messages.index') }}" >Messages</a>
                             <a class="dropdown-item" href="{{ route('logout') }}"
                                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                 Logout
@@ -90,6 +95,7 @@
         </div>
     </div>
 </nav>
+
     <!-- END nav -->
     
     <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('{{ $property->main_image ? asset('storage/' . $property->main_image) : asset('user-template/images/house-detail.jpg') }}');" data-stellar-background-ratio="0.5">
@@ -103,9 +109,9 @@
         </div>
       </div>
     </section>
-		
 
-		<section class="ftco-section ftco-car-details">
+
+	<section class="ftco-section ftco-car-details">
       <div class="container">
       	<div class="row justify-content-center">
       		<div class="col-md-12">
@@ -114,7 +120,6 @@
       				<div class="text text-center">
       					<span class="subheading">{{ $property->property_type }}</span>
       					<h2>{{ $property->title }}</h2>
-      					<!-- Added Rent Button Section Here -->
       					<div class="rent-button mt-4">
       					    <p class="d-flex mb-0 d-block justify-content-center">
                                 @auth
@@ -136,7 +141,7 @@
             <div class="media block-6 services">
               <div class="media-body py-md-4">
               	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-bed"></span></div>
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="fas fa-bed"></span></div>
 	              	<div class="text">
 		                <h3 class="heading mb-0 pl-3">
 		                	Bedrooms
@@ -151,7 +156,7 @@
             <div class="media block-6 services">
               <div class="media-body py-md-4">
               	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-bathtub"></span></div>
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="fas fa-bath"></span></div>
 	              	<div class="text">
 		                <h3 class="heading mb-0 pl-3">
 		                	Bathrooms
@@ -166,7 +171,7 @@
             <div class="media block-6 services">
               <div class="media-body py-md-4">
               	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-blueprint"></span></div>
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="fas fa-ruler-combined"></span></div>
 	              	<div class="text">
 		                <h3 class="heading mb-0 pl-3">
 		                	Area
@@ -181,7 +186,7 @@
             <div class="media block-6 services">
               <div class="media-body py-md-4">
               	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-home"></span></div>
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="fas fa-home"></span></div>
 	              	<div class="text">
 		                <h3 class="heading mb-0 pl-3">
 		                	Type
@@ -196,7 +201,7 @@
             <div class="media block-6 services">
               <div class="media-body py-md-4">
               	<div class="d-flex mb-3 align-items-center">
-	              	<div class="icon d-flex align-items-center justify-content-center"><span class="flaticon-money"></span></div>
+	              	<div class="icon d-flex align-items-center justify-content-center"><span class="fas fa-dollar-sign"></span></div>
 	              	<div class="text">
 		                <h3 class="heading mb-0 pl-3">
 		                	Price
@@ -208,6 +213,51 @@
             </div>      
           </div>
       	</div>
+
+		  <div class="container">
+			<div class="row justify-content-center">
+					<div class="property-owner">
+						<div class="d-flex justify-content-between align-items-center mb-4">
+							<h3 class="mb-0">Property Owner</h3>
+						</div>
+						<div class="d-flex align-items-center">
+							@if($property->user->profile_picture)
+								<img src="{{ asset('storage/' . $property->user->profile_picture) }}" 
+									alt="Owner Profile" 
+									class="rounded-circle mr-4" 
+									style="width: 80px; height: 80px; object-fit: cover;">
+							@else
+								<div class="rounded-circle mr-4 bg-secondary d-flex align-items-center justify-content-center" 
+									style="width: 80px; height: 80px;">
+									<i class="fas fa-user fa-2x text-white"></i>
+								</div>
+							@endif
+							<div>
+								<h4 class="mb-1">{{ $property->user->name }}</h4>
+								<p class="mb-2 text-muted">
+									<i class="fas fa-home mr-2"></i> Landlord
+								</p>
+								@auth
+									@if(Auth::user()->role === 'tenant')
+										<a href="{{ route('messages.conversation', $property->user->id) }}?property_id={{ $property->id }}" 
+										class="btn btn-primary">
+											 Message Owner
+										</a>
+									@elseif(Auth::user()->id === $property->user_id)
+										<a href="{{ route('messages.index') }}" class="btn btn-primary">
+											 View Messages
+										</a>
+									@endif
+								@else
+									<a href="{{ route('login') }}" class="btn btn-primary">
+											Login to Message
+									</a>
+								@endauth
+							</div>
+						</div>
+					</div>
+			</div>
+		</div>
       	<div class="row">
       		<div class="col-md-12 pills">
 						<div class="bd-example bd-example-tabs">
@@ -398,6 +448,8 @@
       </div>
     </section>
 
+    <!-- Property Owner Section -->
+	
 
     <footer class="ftco-footer ftco-bg-dark ftco-section">
       <div class="container">
@@ -467,22 +519,22 @@
 
 
   <script src="{{ asset('user-template/js/jquery.min.js') }}"></script>
-    <script src="{{ asset('user-template/js/jquery-migrate-3.0.1.min.js') }}"></script>
-    <script src="{{ asset('user-template/js/popper.min.js') }}"></script>
-    <script src="{{ asset('user-template/js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('user-template/js/jquery.easing.1.3.js') }}"></script>
-    <script src="{{ asset('user-template/js/jquery.waypoints.min.js') }}"></script>
-    <script src="{{ asset('user-template/js/jquery.stellar.min.js') }}"></script>
-    <script src="{{ asset('user-template/js/owl.carousel.min.js') }}"></script>
-    <script src="{{ asset('user-template/js/jquery.magnific-popup.min.js') }}"></script>
-    <script src="{{ asset('user-template/js/aos.js') }}"></script>
-    <script src="{{ asset('user-template/js/jquery.animateNumber.min.js') }}"></script>
-    <script src="{{ asset('user-template/js/bootstrap-datepicker.js') }}"></script>
-    <script src="{{ asset('user-template/js/jquery.timepicker.min.js') }}"></script>
-    <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-    <script src="{{ asset('user-template/js/google-map.js') }}"></script>
-    <script src="{{ asset('user-template/js/main.js') }}"></script>
+  <script src="{{ asset('user-template/js/jquery-migrate-3.0.1.min.js') }}"></script>
+  <script src="{{ asset('user-template/js/popper.min.js') }}"></script>
+  <script src="{{ asset('user-template/js/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('user-template/js/jquery.easing.1.3.js') }}"></script>
+  <script src="{{ asset('user-template/js/jquery.waypoints.min.js') }}"></script>
+  <script src="{{ asset('user-template/js/jquery.stellar.min.js') }}"></script>
+  <script src="{{ asset('user-template/js/owl.carousel.min.js') }}"></script>
+  <script src="{{ asset('user-template/js/jquery.magnific-popup.min.js') }}"></script>
+  <script src="{{ asset('user-template/js/aos.js') }}"></script>
+  <script src="{{ asset('user-template/js/jquery.animateNumber.min.js') }}"></script>
+  <script src="{{ asset('user-template/js/bootstrap-datepicker.js') }}"></script>
+  <script src="{{ asset('user-template/js/jquery.timepicker.min.js') }}"></script>
+  <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
+  <script src="{{ asset('user-template/js/google-map.js') }}"></script>
+  <script src="{{ asset('user-template/js/main.js') }}"></script>
     
   </body>
 </html>

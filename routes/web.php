@@ -7,6 +7,11 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Landlord\PropertyListingController;
 use App\Http\Controllers\Landlord\LandlordController; // Updated namespace
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\MessageController;
+use Illuminate\Support\Facades\Broadcast;
+
+Broadcast::routes(['middleware' => ['auth']]);
+
 
 // Home route
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index'])->name('home');
@@ -35,6 +40,7 @@ Route::get('/contact', function () {
 // House routes
 Route::get('/houses', [HouseController::class, 'index'])->name('houses');
 Route::get('/houses/{id}', [HouseController::class, 'show'])->name('house-detail');
+Route::get('/messages/unread-count', [MessageController::class, 'unreadCount'])->name('messages.unread-count');
 
 // Payment routes (authenticated only)
 Route::middleware(['auth'])->group(function () {
@@ -91,6 +97,25 @@ Route::middleware('auth')->group(function () {
     
     Route::post('/cancellation-requests/{payment}/reject', [LandlordController::class, 'rejectCancellation'])
         ->name('landlord.cancellation.reject');
+});
+
+
+Route::group(['middleware' => 'auth'], function() {
+    Route::get('/messages', [MessageController::class, 'index'])->name('messages.index');
+    Route::get('/messages/conversation/{user}', [MessageController::class, 'conversation'])->name('messages.conversation');
+    Route::post('/messages', [MessageController::class, 'store'])->name('messages.store');
+
+    Route::post('/messages/delete-conversation', [MessageController::class, 'deleteConversation'])
+    ->name('messages.delete-conversation');
+
+    Route::get('/messages/new/{user}', [MessageController::class, 'getNewMessages'])->name('messages.new');
+
+    
+    // Mark as read routes
+    Route::post('/messages/mark-as-read', [MessageController::class, 'markAsRead'])->name('messages.mark-as-read');
+    Route::post('/messages/mark-conversation-read/{user}', [MessageController::class, 'markConversationAsRead'])
+        ->name('messages.mark-conversation-read');
+        
 });
 
 
