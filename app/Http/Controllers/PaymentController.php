@@ -90,4 +90,27 @@ class PaymentController extends Controller
 
         return redirect()->route('profile')->with('success', 'Cancellation request submitted. Waiting for landlord approval.');
     }
+
+    public function receipt(Payment $payment)
+    {
+        // Verify the payment belongs to the authenticated user (either landlord or tenant)
+        if (Auth::user()->role === 'landlord' && $payment->landlord_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        } elseif (Auth::user()->role === 'tenant' && $payment->tenant_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        return response()->json([
+            'property' => $payment->property,
+            'landlord' => $payment->landlord,
+            'tenant' => $payment->tenant,
+            'amount' => $payment->amount,
+            'payment_method' => $payment->payment_method,
+            'status' => $payment->status,
+            'transaction_id' => $payment->transaction_id,
+            'start_date' => $payment->start_date,
+            'end_date' => $payment->end_date,
+            'created_at' => $payment->created_at
+        ]);
+    }
 }

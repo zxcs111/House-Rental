@@ -398,17 +398,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Payment Receipt</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="receiptContent">
-                    Loading receipt...
+                    <!-- Receipt content will be loaded here via AJAX -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary" id="printReceipt">
-                        <i class="fas fa-print mr-1"></i> Print
+                        <i class="fas fa-print"></i> Print Receipt
                     </button>
                 </div>
             </div>
@@ -527,40 +525,112 @@
             }
         });
 
-        // View receipt
         $('.view-receipt').on('click', function() {
-            const transactionId = $(this).data('transaction-id');
-            
-            // Only show receipt for rented/completed transactions
-            const status = $(this).closest('tr').data('status');
-            if (status !== 'rented' && status !== 'completed') {
-                alert('Receipt is only available for rented properties');
-                return;
+        const transactionId = $(this).data('transaction-id');
+        const $row = $(this).closest('tr');
+        const status = $row.data('status');
+        
+        // Only show receipt for rented/completed transactions
+        if (status !== 'rented' && status !== 'completed') {
+            alert('Receipt is only available for rented properties');
+            return;
+        }
+        
+        $.ajax({
+            url: `/payments/${transactionId}/receipt`,
+            method: 'GET',
+            success: function(response) {
+                // Create receipt HTML that matches the profile page style
+                const receiptHtml = `
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Property Information</h6>
+                            <p><strong>${response.property.title}</strong></p>
+                            <p>${response.property.address}</p>
+                            <p>${response.property.city}, ${response.property.state}</p>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <h6>Payment Details</h6>
+                            <p><strong>Date:</strong> ${new Date(response.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                            <p><strong>Transaction ID:</strong> ${response.transaction_id}</p>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <h6>Landlord Information</h6>
+                            ${response.landlord ? `
+                                <p><strong>${response.landlord.first_name} ${response.landlord.last_name}</strong></p>
+                                <p>${response.landlord.email}</p>
+                                <p>${response.landlord.phone_number}</p>
+                            ` : '<p class="text-muted">Landlord information not available</p>'}
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <h6>Tenant Information</h6>
+                            ${response.tenant ? `
+                                <p><strong>${response.tenant.first_name} ${response.tenant.last_name}</strong></p>
+                                <p>${response.tenant.email}</p>
+                                <p>${response.tenant.phone_number}</p>
+                            ` : '<p class="text-muted">Tenant information not available</p>'}
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <h6>Financial Details</h6>
+                            <p><strong>Amount Paid:</strong> $${response.amount.toFixed(2)}</p>
+                            <p><strong>Payment Method:</strong> ${response.payment_method.replace('_', ' ')}</p>
+                            <p><strong>Status:</strong> 
+                                <span class="badge bg-${response.status === 'completed' || response.status === 'rented' ? 'success' : 'warning'}">
+                                    ${response.status === 'completed' ? 'Rented' : response.status.charAt(0).toUpperCase() + response.status.slice(1)}
+                                </span>
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Rental Period</h6>
+                            <p>${new Date(response.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} to ${new Date(response.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
+                        </div>
+                    </div>
+                `;
+                
+                $('#receiptContent').html(receiptHtml);
+                $('#receiptModal').modal('show');
+            },
+            error: function() {
+                $('#receiptContent').html(`
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-circle"></i> Error loading receipt details.
+                    </div>
+                `);
+                $('#receiptModal').modal('show');
             }
-            
-            $.ajax({
-                url: `/payments/${transactionId}/receipt`,
-                method: 'GET',
-                success: function(html) {
-                    $('#receiptContent').html(html);
-                    $('#receiptModal').modal('show');
-                },
-                error: function() {
-                    $('#receiptContent').html('<div class="alert alert-danger">Error loading receipt</div>');
-                    $('#receiptModal').modal('show');
-                }
-            });
         });
+    });
 
-        // Print receipt
-        $('#printReceipt').on('click', function() {
-            const printContents = $('#receiptContent').html();
-            const originalContents = $('body').html();
-            
-            $('body').html(printContents);
-            window.print();
-            $('body').html(originalContents);
-        });
+    // Print receipt
+    $('#printReceipt').on('click', function() {
+        const printContents = $('#receiptContent').html();
+        const originalContents = $('body').html();
+        
+        $('body').html(`
+            <div class="container mt-4">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h4>Payment Receipt - Stay Haven</h4>
+                    </div>
+                    <div class="card-body">
+                        ${printContents}
+                    </div>
+                    <div class="card-footer bg-white text-muted">
+                        Printed on ${new Date().toLocaleDateString()}
+                    </div>
+                </div>
+            </div>
+        `);
+        
+        window.print();
+        $('body').html(originalContents);
+    });
 
         // Delete transaction
         $('.delete-transaction').on('click', function() {
