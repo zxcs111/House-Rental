@@ -47,4 +47,24 @@ class FinancialReportingController extends Controller
             'landlord' => $landlord
         ]);
     }
+
+    public function destroy($id)
+    {
+        $landlord = Auth::user();
+        
+        // Verify the user is a landlord
+        if ($landlord->role !== 'landlord') {
+            abort(403, 'Unauthorized access. Landlord privileges required.');
+        }
+
+        $payment = Payment::where('landlord_id', $landlord->id)
+                        ->findOrFail($id);
+
+        $payment->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Transaction deleted successfully'
+        ]);
+    }
 }

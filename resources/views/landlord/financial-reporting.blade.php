@@ -293,7 +293,7 @@
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <h6 class="dropdown-header">Filter by Status</h6>
                                     <a class="dropdown-item filter-status" href="#" data-status="all">All Transactions</a>
-                                    <a class="dropdown-item filter-status" href="#" data-status="completed">Completed</a>
+                                    <a class="dropdown-item filter-status" href="#" data-status="rented">Rented</a>
                                     <a class="dropdown-item filter-status" href="#" data-status="pending">Pending</a>
                                     <a class="dropdown-item filter-status" href="#" data-status="failed">Failed</a>
                                     <div class="dropdown-divider"></div>
@@ -315,40 +315,42 @@
                                     <th>Property</th>
                                     <th>Amount</th>
                                     <th>Tenant</th>
+                                    <th>Rental Period</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($transactions as $transaction)
-                                <tr data-status="{{ $transaction->status }}">
+                                <tr data-status="{{ $transaction->status === 'completed' ? 'rented' : $transaction->status }}">
                                     <td>{{ $transaction->created_at->format('M d, Y') }}</td>
                                     <td>
-                                        <a href="{{ route('house-detail', ['id' => $transaction->property_id]) }}" class="text-decoration-none">
-                                            {{ $transaction->property->title ?? 'N/A' }}
-                                        </a>
+                                        {{ $transaction->property->title ?? 'N/A' }}
                                     </td>
                                     <td>${{ number_format($transaction->amount, 2) }}</td>
                                     <td>
-                                        @if($transaction->tenant)
-                                            <a href="#" class="text-decoration-none view-tenant" data-tenant-id="{{ $transaction->tenant_id }}">
-                                                {{ $transaction->tenant->name }}
-                                            </a>
-                                        @else
-                                            N/A
-                                        @endif
+                                        {{ $transaction->tenant->name ?? 'N/A' }}
+                                    </td>
+                                    <td>
+                                        {{ $transaction->start_date->format('M d, Y') }} - 
+                                        {{ $transaction->end_date->format('M d, Y') }}
                                     </td>
                                     <td>
                                         <span class="badge rounded-pill 
-                                            @if($transaction->status === 'completed') badge-success
+                                            @if($transaction->status === 'completed' || $transaction->status === 'rented') badge-success
                                             @elseif($transaction->status === 'pending') badge-warning
                                             @else badge-danger @endif">
-                                            {{ ucfirst($transaction->status) }}
+                                            {{ $transaction->status === 'completed' ? 'Rented' : ucfirst($transaction->status) }}
                                         </span>
                                     </td>
                                     <td>
+                                        @if($transaction->status === 'completed' || $transaction->status === 'rented')
                                         <button class="btn btn-sm btn-outline-primary view-receipt" data-transaction-id="{{ $transaction->id }}">
                                             <i class="fas fa-receipt"></i> Receipt
+                                        </button>
+                                        @endif
+                                        <button class="btn btn-sm btn-outline-danger delete-transaction" data-transaction-id="{{ $transaction->id }}">
+                                            <i class="fas fa-trash"></i> Delete
                                         </button>
                                     </td>
                                 </tr>
@@ -492,92 +494,154 @@
     <script src="{{ asset('user-template/js/main.js') }}"></script>
     
     <script>
-        $(document).ready(function() {
-            // Initialize date range picker
-            flatpickr("#dateRangePicker", {
-                mode: "range",
-                dateFormat: "Y-m-d",
-                onChange: function(selectedDates, dateStr, instance) {
-                    if (selectedDates.length === 2) {
-                        filterTransactions();
-                    }
+    $(document).ready(function() {
+        // Initialize date range picker
+        flatpickr("#dateRangePicker", {
+            mode: "range",
+            dateFormat: "Y-m-d",
+            onChange: function(selectedDates, dateStr, instance) {
+                if (selectedDates.length === 2) {
+                    filterTransactions();
                 }
-            });
-
-            // Filter transactions by status
-            $('.filter-status').on('click', function(e) {
-                e.preventDefault();
-                const status = $(this).data('status');
-                
-                if (status === 'all') {
-                    $('#transactionsTable tbody tr').show();
-                } else {
-                    $('#transactionsTable tbody tr').each(function() {
-                        if ($(this).data('status') === status) {
-                            $(this).show();
-                        } else {
-                            $(this).hide();
-                        }
-                    });
-                }
-            });
-
-            // View tenant details
-            $('.view-tenant').on('click', function(e) {
-                e.preventDefault();
-                const tenantId = $(this).data('tenant-id');
-                
-                $.get(`/api/tenants/${tenantId}`, function(data) {
-                    $('#tenantDetails').html(`
-                        <div class="row">
-                            <div class="col-md-4 text-center">
-                                <img src="${data.profile_picture ? '/storage/' + data.profile_picture : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(data.name)}" 
-                                     class="img-fluid rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
-                            </div>
-                            <div class="col-md-8">
-                                <h4>${data.name}</h4>
-                                <p><i class="fas fa-envelope mr-2"></i> ${data.email}</p>
-                                <p><i class="fas fa-phone mr-2"></i> ${data.phone_number || 'Not provided'}</p>
-                                <p><i class="fas fa-map-marker-alt mr-2"></i> ${data.address || 'Not provided'}</p>
-                            </div>
-                        </div>
-                    `);
-                    
-                    $('#tenantModal').modal('show');
-                }).fail(function() {
-                    $('#tenantDetails').html('Error loading tenant information');
-                });
-            });
-
-            // View receipt
-            $('.view-receipt').on('click', function() {
-                const transactionId = $(this).data('transaction-id');
-                
-                $.get(`/payments/${transactionId}/receipt`, function(html) {
-                    $('#receiptContent').html(html);
-                    $('#receiptModal').modal('show');
-                }).fail(function() {
-                    $('#receiptContent').html('Error loading receipt');
-                });
-            });
-
-            // Print receipt
-            $('#printReceipt').on('click', function() {
-                const printContents = $('#receiptContent').html();
-                const originalContents = $('body').html();
-                
-                $('body').html(printContents);
-                window.print();
-                $('body').html(originalContents);
-            });
-
-            // Filter transactions function
-            function filterTransactions() {
-                const dateRange = $('#dateRangePicker').val();
-                console.log('Filter by date range:', dateRange);
-                // Implement AJAX filtering if needed
             }
         });
-    </script>
+
+        // Filter transactions by status
+        $('.filter-status').on('click', function(e) {
+            e.preventDefault();
+            const status = $(this).data('status');
+            
+            if (status === 'all') {
+                $('#transactionsTable tbody tr').show();
+            } else {
+                $('#transactionsTable tbody tr').each(function() {
+                    const rowStatus = $(this).data('status');
+                    if (status === 'rented' && (rowStatus === 'rented' || rowStatus === 'completed')) {
+                        $(this).show();
+                    } else if (rowStatus === status) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            }
+        });
+
+        // View receipt
+        $('.view-receipt').on('click', function() {
+            const transactionId = $(this).data('transaction-id');
+            
+            // Only show receipt for rented/completed transactions
+            const status = $(this).closest('tr').data('status');
+            if (status !== 'rented' && status !== 'completed') {
+                alert('Receipt is only available for rented properties');
+                return;
+            }
+            
+            $.ajax({
+                url: `/payments/${transactionId}/receipt`,
+                method: 'GET',
+                success: function(html) {
+                    $('#receiptContent').html(html);
+                    $('#receiptModal').modal('show');
+                },
+                error: function() {
+                    $('#receiptContent').html('<div class="alert alert-danger">Error loading receipt</div>');
+                    $('#receiptModal').modal('show');
+                }
+            });
+        });
+
+        // Print receipt
+        $('#printReceipt').on('click', function() {
+            const printContents = $('#receiptContent').html();
+            const originalContents = $('body').html();
+            
+            $('body').html(printContents);
+            window.print();
+            $('body').html(originalContents);
+        });
+
+        // Delete transaction
+        $('.delete-transaction').on('click', function() {
+            const transactionId = $(this).data('transaction-id');
+            const $row = $(this).closest('tr');
+            
+            if (confirm('Are you sure you want to delete this transaction? This action cannot be undone.')) {
+                $.ajax({
+                    url: `/landlord/financial-reporting/${transactionId}`,
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Remove the row from the table
+                            $row.fadeOut(300, function() {
+                                $(this).remove();
+                                // Update the pagination info if needed
+                                updatePaginationInfo();
+                            });
+                        } else {
+                            alert('Error: ' + (response.message || 'Failed to delete transaction'));
+                        }
+                    },
+                    error: function(xhr) {
+                        let errorMsg = 'Error deleting transaction';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+                        alert(errorMsg);
+                    }
+                });
+            }
+        });
+
+        // Function to update pagination info after deletion
+        function updatePaginationInfo() {
+            const remainingRows = $('#transactionsTable tbody tr').length;
+            const $paginationInfo = $('.text-muted');
+            const currentText = $paginationInfo.text();
+            const matches = currentText.match(/Showing (\d+) to (\d+) of (\d+) entries/);
+            
+            if (matches && matches.length === 4) {
+                const total = parseInt(matches[3]) - 1;
+                const newText = `Showing ${matches[1]} to ${matches[2] > total ? total : matches[2]} of ${total} entries`;
+                $paginationInfo.text(newText);
+            }
+        }
+
+        // Filter transactions function
+        function filterTransactions() {
+            const dateRange = $('#dateRangePicker').val();
+            if (!dateRange) return;
+            
+            const dates = dateRange.split(' to ');
+            if (dates.length !== 2) return;
+            
+            const startDate = dates[0];
+            const endDate = dates[1];
+            
+            // You can implement AJAX filtering here if needed
+            // Example:
+            /*
+            $.ajax({
+                url: '/landlord/financial-reporting/filter',
+                method: 'GET',
+                data: {
+                    start_date: startDate,
+                    end_date: endDate
+                },
+                success: function(response) {
+                    // Update the table with filtered data
+                }
+            });
+            */
+            
+            // For now, just show a message
+            console.log('Filtering by date range:', startDate, 'to', endDate);
+        }
+    });
+</script>
 </body>
 </html>

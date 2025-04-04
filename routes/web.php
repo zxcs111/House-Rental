@@ -120,7 +120,12 @@ Route::group(['middleware' => 'auth'], function() {
 });
 
 
-Route::get('/landlord/financial-reporting', [FinancialReportingController::class, 'index'])
-    ->name('landlord.financial-reporting')
-    ->middleware('auth');
-
+// Show financial reporting page
+// Financial Reporting Routes
+Route::group(['prefix' => 'landlord', 'middleware' => ['auth']], function() {
+    Route::get('/financial-reporting', [FinancialReportingController::class, 'index'])
+        ->name('landlord.financial-reporting');
+        
+    Route::delete('/financial-reporting/{payment}', [FinancialReportingController::class, 'destroy'])
+        ->name('landlord.financial-reporting.destroy');
+});
