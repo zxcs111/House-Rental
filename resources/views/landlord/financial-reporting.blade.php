@@ -285,35 +285,39 @@
                     </div>
                 </div>
             </div>
-            <!-- Transactions Table -->
+           <!-- Transactions Table -->
             <div class="card">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <h4 class="mb-0">Transaction History</h4>
-                        <div class="d-flex">
-                            <div class="input-group mr-3" style="width: 250px;">
-                                <input type="text" id="dateRangePicker" class="form-control" placeholder="Select date range">
-                                <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="mb-0">Transaction History</h4>
+                    <div class="d-flex align-items-center">
+                        <div class="input-group mr-3" style="width: 250px;">
+                            <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search property or tenant...">
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-white border-left-0 py-0">
+                                    <i class="fas fa-search fa-sm"></i>
+                                </span>
                             </div>
-                            <div class="dropdown">
-                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-toggle="dropdown">
-                                    <i class="fas fa-filter mr-1"></i> Filter
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-right">
-                                    <h6 class="dropdown-header">Filter by Status</h6>
-                                    <a class="dropdown-item filter-status" href="#" data-status="all">All Transactions</a>
-                                    <a class="dropdown-item filter-status" href="#" data-status="rented">Rented</a>
-                                    <a class="dropdown-item filter-status" href="#" data-status="cancelled">Cancelled</a>
-                                    <div class="dropdown-divider"></div>
-                                    <h6 class="dropdown-header">Time Period</h6>
-                                    <a class="dropdown-item filter-period" href="#" data-period="this_month">This Month</a>
-                                    <a class="dropdown-item filter-period" href="#" data-period="last_month">Last Month</a>
-                                    <a class="dropdown-item filter-period" href="#" data-period="this_year">This Year</a>
-                                    <a class="dropdown-item filter-period" href="#" data-period="all_time">All Time</a>
-                                </div>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="filterDropdown" data-toggle="dropdown">
+                                <i class="fas fa-filter mr-1"></i> Filter
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <h6 class="dropdown-header">Filter by Status</h6>
+                                <a class="dropdown-item filter-status" href="#" data-status="all">All Transactions</a>
+                                <a class="dropdown-item filter-status" href="#" data-status="rented">Rented</a>
+                                <a class="dropdown-item filter-status" href="#" data-status="cancelled">Cancelled</a>
+                                <div class="dropdown-divider"></div>
+                                <h6 class="dropdown-header">Time Period</h6>
+                                <a class="dropdown-item filter-period" href="#" data-period="this_month">This Month</a>
+                                <a class="dropdown-item filter-period" href="#" data-period="last_month">Last Month</a>
+                                <a class="dropdown-item filter-period" href="#" data-period="this_year">This Year</a>
+                                <a class="dropdown-item filter-period" href="#" data-period="all_time">All Time</a>
                             </div>
                         </div>
                     </div>
+                </div>
                     <div class="table-responsive">
                         <table class="table" id="transactionsTable">
                             <thead>
@@ -506,6 +510,8 @@
                 }
             }
         });
+
+        
         // Filter transactions by status
         $('.filter-status').on('click', function(e) {
             e.preventDefault();
