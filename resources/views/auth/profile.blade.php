@@ -272,9 +272,9 @@
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a href="#" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#receiptModal{{ $payment->id }}">
+                                                    <button class="btn btn-sm btn-outline-primary view-receipt" data-payment-id="{{ $payment->id }}">
                                                         <i class="fas fa-receipt"></i> Receipt
-                                                    </a>
+                                                    </button>
                                                     @if($payment->status == 'completed')
                                                         @if($payment->cancellation_requested && $payment->cancellation_status == 'pending')
                                                             <span class="badge bg-warning mt-1">Cancellation Pending</span>
@@ -293,75 +293,6 @@
                                                     @endif
                                                 </td>
                                             </tr>
-
-                                            <!-- Receipt Modal -->
-                                            <div class="modal fade" id="receiptModal{{ $payment->id }}" tabindex="-1" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Payment Receipt</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <h6>Property Information</h6>
-                                                                    <p><strong>{{ $payment->property->title }}</strong></p>
-                                                                    <p>{{ $payment->property->address }}</p>
-                                                                    <p>{{ $payment->property->city }}, {{ $payment->property->state }}</p>
-                                                                </div>
-                                                                <div class="col-md-6 text-end">
-                                                                    <h6>Payment Details</h6>
-                                                                    <p><strong>Date:</strong> {{ $payment->created_at->format('M d, Y h:i A') }}</p>
-                                                                    <p><strong>Transaction ID:</strong> {{ $payment->transaction_id }}</p>
-                                                                </div>
-                                                            </div>
-                                                            <hr>
-                                                            <div class="row mt-3">
-                                                                <div class="col-md-6">
-                                                                    <h6>Landlord Information</h6>
-                                                                    @if($payment->landlord)
-                                                                        <p><strong>{{ $payment->landlord->first_name }} {{ $payment->landlord->last_name }}</strong></p>
-                                                                        <p>{{ $payment->landlord->email }}</p>
-                                                                        <p>{{ $payment->landlord->phone_number }}</p>
-                                                                    @else
-                                                                        <p class="text-muted">Landlord information not available</p>
-                                                                    @endif
-                                                                </div>
-                                                                <div class="col-md-6 text-end">
-                                                                    <h6>Tenant Information</h6>
-                                                                    <p><strong>{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</strong></p>
-                                                                    <p>{{ Auth::user()->email }}</p>
-                                                                    <p>{{ Auth::user()->phone_number }}</p>
-                                                                </div>
-                                                            </div>
-                                                            <hr>
-                                                            <div class="row mt-3">
-                                                                <div class="col-md-6">
-                                                                    <h6>Financial Details</h6>
-                                                                    <p><strong>Amount Paid:</strong> ${{ number_format($payment->amount, 2) }}</p>
-                                                                    <p><strong>Payment Method:</strong> {{ ucfirst(str_replace('_', ' ', $payment->payment_method)) }}</p>
-                                                                    <p><strong>Status:</strong> 
-                                                                        <span class="badge bg-{{ $payment->status == 'completed' ? 'success' : 'warning' }}">
-                                                                            {{ ucfirst($payment->status) }}
-                                                                        </span>
-                                                                    </p>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <h6>Rental Period</h6>
-                                                                    <p>{{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }} to {{ \Carbon\Carbon::parse($payment->end_date)->format('M d, Y') }}</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                            <button type="button" class="btn btn-primary" onclick="window.print()">
-                                                                <i class="fas fa-print"></i> Print Receipt
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
 
                                             <!-- Rejected Cancellation Modal -->
                                             <div class="modal fade" id="rejectedModal{{ $payment->id }}" tabindex="-1" aria-hidden="true">
@@ -487,74 +418,11 @@
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <a href="#" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#paymentModal{{ $payment->id }}">
+                                                    <button class="btn btn-sm btn-outline-primary view-receipt" data-payment-id="{{ $payment->id }}">
                                                         <i class="fas fa-eye"></i> Details
-                                                    </a>
+                                                    </button>
                                                 </td>
                                             </tr>
-
-                                            <!-- Payment Details Modal -->
-                                            <div class="modal fade" id="paymentModal{{ $payment->id }}" tabindex="-1" aria-hidden="true">
-                                                <div class="modal-dialog modal-lg">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Rental Details</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <h6>Property Information</h6>
-                                                                    <p><strong>{{ $payment->property->title }}</strong></p>
-                                                                    <p>{{ $payment->property->address }}</p>
-                                                                    <p>{{ $payment->property->city }}, {{ $payment->property->state }}</p>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <h6>Tenant Information</h6>
-                                                                    @if($payment->tenant)
-                                                                        <p><strong>{{ $payment->tenant->first_name }} {{ $payment->tenant->last_name }}</strong></p>
-                                                                        <p>{{ $payment->tenant->email }}</p>
-                                                                        <p>{{ $payment->tenant->phone_number }}</p>
-                                                                    @else
-                                                                        <p class="text-muted">Tenant account no longer exists</p>
-                                                                    @endif
-                                                                </div>
-                                                            </div>
-                                                            <hr>
-                                                            <div class="row mt-3">
-                                                                <div class="col-md-6">
-                                                                    <h6>Payment Details</h6>
-                                                                    <p><strong>Date:</strong> {{ $payment->created_at->format('M d, Y h:i A') }}</p>
-                                                                    <p><strong>Transaction ID:</strong> {{ $payment->transaction_id }}</p>
-                                                                    <p><strong>Method:</strong> {{ ucfirst(str_replace('_', ' ', $payment->payment_method)) }}</p>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <h6>Financial Information</h6>
-                                                                    <p><strong>Amount Paid:</strong> ${{ number_format($payment->amount, 2) }}</p>
-                                                                    <p><strong>Status:</strong> 
-                                                                        <span class="badge bg-{{ $payment->status == 'completed' ? 'success' : 'warning' }}">
-                                                                            {{ ucfirst($payment->status) }}
-                                                                        </span>
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                            <hr>
-                                                            <div class="row mt-3">
-                                                                <div class="col-md-12">
-                                                                    <h6>Rental Period</h6>
-                                                                    <p>{{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }} to {{ \Carbon\Carbon::parse($payment->end_date)->format('M d, Y') }}</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                            <button type="button" class="btn btn-primary" onclick="window.print()">
-                                                                <i class="fas fa-print"></i> Print Details
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -571,9 +439,179 @@
         </div>
     </div>
 
+    <!-- Receipt Modal -->
+    <div class="modal fade" id="receiptModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Payment Receipt</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="receiptContent">
+                    <!-- Content will be loaded here -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="printReceipt">
+                        <i class="fas fa-print"></i> Print Receipt
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS and Dependencies -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
+    <script>
+    $(document).ready(function() {
+        // View receipt handler
+        $(document).on('click', '.view-receipt', function() {
+            const paymentId = $(this).data('payment-id');
+            
+            // Show loading state
+            $('#receiptContent').html(`
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
+                    </div>
+                    <p class="mt-2">Loading receipt...</p>
+                </div>
+            `);
+            
+            $('#receiptModal').modal('show');
+            
+            $.ajax({
+                url: `/payments/${paymentId}/receipt`,
+                method: 'GET',
+                success: function(response) {
+                    // Create receipt HTML
+                    const receiptHtml = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Property Information</h6>
+                                <p><strong>${response.property.title || 'N/A'}</strong></p>
+                                <p>${response.property.address || 'N/A'}</p>
+                                <p>${response.property.city || 'N/A'}, ${response.property.state || 'N/A'}</p>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <h6>Payment Details</h6>
+                                <p><strong>Date:</strong> ${new Date(response.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                                <p><strong>Transaction ID:</strong> ${response.transaction_id || 'N/A'}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <h6>Landlord Information</h6>
+                                ${response.landlord ? `
+                                    <p><strong>${response.landlord.name || 'N/A'}</strong></p>
+                                    <p>${response.landlord.email || 'N/A'}</p>
+                                    <p>${response.landlord.phone_number || 'N/A'}</p>
+                                ` : '<p class="text-muted">Landlord information not available</p>'}
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <h6>Tenant Information</h6>
+                                ${response.tenant ? `
+                                    <p><strong>${response.tenant.name || 'N/A'}</strong></p>
+                                    <p>${response.tenant.email || 'N/A'}</p>
+                                    <p>${response.tenant.phone_number || 'N/A'}</p>
+                                ` : '<p class="text-muted">Tenant information not available</p>'}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <h6>Financial Details</h6>
+                                <p><strong>Amount Paid:</strong> $${(response.amount || 0).toFixed(2)}</p>
+                                <p><strong>Payment Method:</strong> ${(response.payment_method || 'N/A').replace('_', ' ')}</p>
+                                <p><strong>Status:</strong> 
+                                    <span class="badge bg-${response.status === 'completed' || response.status === 'rented' ? 'success' : 'warning'}">
+                                        ${response.status === 'completed' ? 'Rented' : (response.status ? response.status.charAt(0).toUpperCase() + response.status.slice(1) : 'N/A')}
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Rental Period</h6>
+                                <p>${response.start_date ? new Date(response.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'} to 
+                                ${response.end_date ? new Date(response.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    $('#receiptContent').html(receiptHtml);
+                },
+                error: function(xhr) {
+                    let errorMessage = 'Error loading receipt details';
+                    if (xhr.status === 403) {
+                        errorMessage = 'You are not authorized to view this receipt';
+                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    
+                    $('#receiptContent').html(`
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i> ${errorMessage}
+                        </div>
+                    `);
+                }
+            });
+        });
+
+        // Print receipt handler
+        $(document).on('click', '#printReceipt', function() {
+            const printContent = $('#receiptContent').html();
+            const printWindow = window.open('', '_blank');
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Payment Receipt</title>
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+                    <style>
+                        @media print {
+                            body { padding: 20px; }
+                            .no-print { display: none !important; }
+                            .receipt-header { border-bottom: 2px solid #000; margin-bottom: 20px; }
+                            .receipt-footer { border-top: 2px solid #000; margin-top: 20px; padding-top: 10px; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="receipt-header text-center">
+                            <h2>Stay Haven</h2>
+                            <p>Payment Receipt</p>
+                        </div>
+                        ${printContent}
+                        <div class="receipt-footer text-center text-muted">
+                            <p>Printed on ${new Date().toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                    <script>
+                        window.onload = function() {
+                            setTimeout(function() {
+                                window.print();
+                                window.onafterprint = function() {
+                                    window.close();
+                                };
+                                setTimeout(function() {
+                                    if (!window.closed) {
+                                        window.close();
+                                    }
+                                }, 1000);
+                            }, 200);
+                        };
+                    <\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        });
+    });
+    </script>
 </body>
 </html>

@@ -93,6 +93,7 @@
                                 @endif
                             </a>
                         </li>
+                        <li class="nav-item"><a href="{{ route('landlord.financial-reporting') }}" class="nav-link">Financial Reporting</a></li>
                     @endif
                     
                     <!-- Profile Dropdown (Common for both roles) -->

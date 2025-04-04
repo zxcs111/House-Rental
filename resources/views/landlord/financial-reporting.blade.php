@@ -168,7 +168,7 @@
                           <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
                       @elseif(Auth::user()->role === 'landlord')
                           <!-- Landlord Menu Items -->
-                          <li class="nav-item active"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                          <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                           <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
                           <li class="nav-item"><a href="{{ route('property.listing') }}" class="nav-link">Property Listing</a></li>
                           <li class="nav-item">
@@ -179,7 +179,7 @@
                                   @endif
                               </a>
                           </li>
-                          <li class="nav-item">
+                          <li class="nav-item active">
                               <a href="{{ route('landlord.financial-reporting') }}" class="nav-link">
                                   Financial Reporting
                               </a>
@@ -290,12 +290,12 @@
                                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-toggle="dropdown">
                                     <i class="fas fa-filter mr-1"></i> Filter
                                 </button>
+                                <!-- Replace the existing dropdown menu with this one -->
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <h6 class="dropdown-header">Filter by Status</h6>
                                     <a class="dropdown-item filter-status" href="#" data-status="all">All Transactions</a>
                                     <a class="dropdown-item filter-status" href="#" data-status="rented">Rented</a>
-                                    <a class="dropdown-item filter-status" href="#" data-status="pending">Pending</a>
-                                    <a class="dropdown-item filter-status" href="#" data-status="failed">Failed</a>
+                                    <a class="dropdown-item filter-status" href="#" data-status="cancelled">Cancelled</a>
                                     <div class="dropdown-divider"></div>
                                     <h6 class="dropdown-header">Time Period</h6>
                                     <a class="dropdown-item filter-period" href="#" data-period="this_month">This Month</a>
@@ -377,7 +377,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tenant Information</h5>
+                    <h5 class="modal-title">Payment Receipt</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -398,10 +398,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Payment Receipt</h5>
-                    <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body" id="receiptContent">
-                    <!-- Receipt content will be loaded here via AJAX -->
+                    <!-- Content will be loaded here -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -525,115 +527,160 @@
             }
         });
 
-        $('.view-receipt').on('click', function() {
-        const transactionId = $(this).data('transaction-id');
-        const $row = $(this).closest('tr');
-        const status = $row.data('status');
-        
-        // Only show receipt for rented/completed transactions
-        if (status !== 'rented' && status !== 'completed') {
-            alert('Receipt is only available for rented properties');
-            return;
-        }
-        
-        $.ajax({
-            url: `/payments/${transactionId}/receipt`,
-            method: 'GET',
-            success: function(response) {
-                // Create receipt HTML that matches the profile page style
-                const receiptHtml = `
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h6>Property Information</h6>
-                            <p><strong>${response.property.title}</strong></p>
-                            <p>${response.property.address}</p>
-                            <p>${response.property.city}, ${response.property.state}</p>
-                        </div>
-                        <div class="col-md-6 text-end">
-                            <h6>Payment Details</h6>
-                            <p><strong>Date:</strong> ${new Date(response.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
-                            <p><strong>Transaction ID:</strong> ${response.transaction_id}</p>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <h6>Landlord Information</h6>
-                            ${response.landlord ? `
-                                <p><strong>${response.landlord.first_name} ${response.landlord.last_name}</strong></p>
-                                <p>${response.landlord.email}</p>
-                                <p>${response.landlord.phone_number}</p>
-                            ` : '<p class="text-muted">Landlord information not available</p>'}
-                        </div>
-                        <div class="col-md-6 text-end">
-                            <h6>Tenant Information</h6>
-                            ${response.tenant ? `
-                                <p><strong>${response.tenant.first_name} ${response.tenant.last_name}</strong></p>
-                                <p>${response.tenant.email}</p>
-                                <p>${response.tenant.phone_number}</p>
-                            ` : '<p class="text-muted">Tenant information not available</p>'}
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="row mt-3">
-                        <div class="col-md-6">
-                            <h6>Financial Details</h6>
-                            <p><strong>Amount Paid:</strong> $${response.amount.toFixed(2)}</p>
-                            <p><strong>Payment Method:</strong> ${response.payment_method.replace('_', ' ')}</p>
-                            <p><strong>Status:</strong> 
-                                <span class="badge bg-${response.status === 'completed' || response.status === 'rented' ? 'success' : 'warning'}">
-                                    ${response.status === 'completed' ? 'Rented' : response.status.charAt(0).toUpperCase() + response.status.slice(1)}
-                                </span>
-                            </p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Rental Period</h6>
-                            <p>${new Date(response.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} to ${new Date(response.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</p>
-                        </div>
-                    </div>
-                `;
-                
-                $('#receiptContent').html(receiptHtml);
-                $('#receiptModal').modal('show');
-            },
-            error: function() {
-                $('#receiptContent').html(`
-                    <div class="alert alert-danger">
-                        <i class="fas fa-exclamation-circle"></i> Error loading receipt details.
-                    </div>
-                `);
-                $('#receiptModal').modal('show');
+        // View receipt handler
+        $(document).on('click', '.view-receipt', function() {
+            const transactionId = $(this).data('transaction-id');
+            const $row = $(this).closest('tr');
+            const status = $row.data('status');
+            
+            // Only show receipt for rented/completed transactions
+            if (status !== 'rented' && status !== 'completed') {
+                alert('Receipt is only available for rented properties');
+                return;
             }
-        });
-    });
-
-    // Print receipt
-    $('#printReceipt').on('click', function() {
-        const printContents = $('#receiptContent').html();
-        const originalContents = $('body').html();
-        
-        $('body').html(`
-            <div class="container mt-4">
-                <div class="card">
-                    <div class="card-header bg-white">
-                        <h4>Payment Receipt - Stay Haven</h4>
+            
+            // Show loading state
+            $('#receiptContent').html(`
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="sr-only">Loading...</span>
                     </div>
-                    <div class="card-body">
-                        ${printContents}
-                    </div>
-                    <div class="card-footer bg-white text-muted">
-                        Printed on ${new Date().toLocaleDateString()}
-                    </div>
+                    <p class="mt-2">Loading receipt...</p>
                 </div>
-            </div>
-        `);
-        
-        window.print();
-        $('body').html(originalContents);
-    });
+            `);
+            $('#receiptModal').modal('show');
+            
+            $.ajax({
+                url: `/payments/${transactionId}/receipt`,
+                method: 'GET',
+                success: function(response) {
+                    // Create receipt HTML
+                    const receiptHtml = `
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6>Property Information</h6>
+                                <p><strong>${response.property.title || 'N/A'}</strong></p>
+                                <p>${response.property.address || 'N/A'}</p>
+                                <p>${response.property.city || 'N/A'}, ${response.property.state || 'N/A'}</p>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <h6>Payment Details</h6>
+                                <p><strong>Date:</strong> ${new Date(response.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
+                                <p><strong>Transaction ID:</strong> ${response.transaction_id || 'N/A'}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <h6>Landlord Information</h6>
+                                ${response.landlord ? `
+                                    <p><strong>${response.landlord.name || 'N/A'}</strong></p>
+                                    <p>${response.landlord.email || 'N/A'}</p>
+                                    <p>${response.landlord.phone_number || 'N/A'}</p>
+                                ` : '<p class="text-muted">Landlord information not available</p>'}
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <h6>Tenant Information</h6>
+                                ${response.tenant ? `
+                                    <p><strong>${response.tenant.name || 'N/A'}</strong></p>
+                                    <p>${response.tenant.email || 'N/A'}</p>
+                                    <p>${response.tenant.phone_number || 'N/A'}</p>
+                                ` : '<p class="text-muted">Tenant information not available</p>'}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <h6>Financial Details</h6>
+                                <p><strong>Amount Paid:</strong> $${(response.amount || 0).toFixed(2)}</p>
+                                <p><strong>Payment Method:</strong> ${(response.payment_method || 'N/A').replace('_', ' ')}</p>
+                                <p><strong>Status:</strong> 
+                                    <span class="badge bg-${response.status === 'completed' || response.status === 'rented' ? 'success' : 'warning'}">
+                                        ${response.status === 'completed' ? 'Rented' : (response.status ? response.status.charAt(0).toUpperCase() + response.status.slice(1) : 'N/A')}
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Rental Period</h6>
+                                <p>${response.start_date ? new Date(response.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'} to 
+                                ${response.end_date ? new Date(response.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    $('#receiptContent').html(receiptHtml);
+                },
+                error: function(xhr) {
+                    let errorMessage = 'Error loading receipt details';
+                    if (xhr.status === 403) {
+                        errorMessage = 'You are not authorized to view this receipt';
+                    } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+                    
+                    $('#receiptContent').html(`
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i> ${errorMessage}
+                        </div>
+                    `);
+                }
+            });
+        });
 
-        // Delete transaction
-        $('.delete-transaction').on('click', function() {
+        // Print receipt handler
+        $(document).on('click', '#printReceipt', function() {
+            const printContent = $('#receiptContent').html();
+            const printWindow = window.open('', '_blank');
+            
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Payment Receipt</title>
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+                    <style>
+                        @media print {
+                            body { padding: 20px; }
+                            .no-print { display: none !important; }
+                            .receipt-header { border-bottom: 2px solid #000; margin-bottom: 20px; }
+                            .receipt-footer { border-top: 2px solid #000; margin-top: 20px; padding-top: 10px; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="receipt-header text-center">
+                            <h2>Stay Haven</h2>
+                            <p>Payment Receipt</p>
+                        </div>
+                        ${printContent}
+                        <div class="receipt-footer text-center text-muted">
+                            <p>Printed on ${new Date().toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                    <script>
+                        window.onload = function() {
+                            setTimeout(function() {
+                                window.print();
+                                window.onafterprint = function() {
+                                    window.close();
+                                };
+                                setTimeout(function() {
+                                    if (!window.closed) {
+                                        window.close();
+                                    }
+                                }, 1000);
+                            }, 200);
+                        };
+                    <\/script>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        });
+
+        // Delete transaction handler
+        $(document).on('click', '.delete-transaction', function() {
             const transactionId = $(this).data('transaction-id');
             const $row = $(this).closest('tr');
             
@@ -646,10 +693,8 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            // Remove the row from the table
                             $row.fadeOut(300, function() {
                                 $(this).remove();
-                                // Update the pagination info if needed
                                 updatePaginationInfo();
                             });
                         } else {
@@ -692,23 +737,6 @@
             const startDate = dates[0];
             const endDate = dates[1];
             
-            // You can implement AJAX filtering here if needed
-            // Example:
-            /*
-            $.ajax({
-                url: '/landlord/financial-reporting/filter',
-                method: 'GET',
-                data: {
-                    start_date: startDate,
-                    end_date: endDate
-                },
-                success: function(response) {
-                    // Update the table with filtered data
-                }
-            });
-            */
-            
-            // For now, just show a message
             console.log('Filtering by date range:', startDate, 'to', endDate);
         }
     });

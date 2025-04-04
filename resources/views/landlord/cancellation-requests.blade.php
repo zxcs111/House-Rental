@@ -131,6 +131,7 @@
                             <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
                             <li class="nav-item"><a href="{{ route('property.listing') }}" class="nav-link">Property Listing</a></li>
                             <li class="nav-item active"><a href="{{ route('landlord.cancellation-requests') }}" class="nav-link">Cancellation Requests</a></li>
+                            <li class="nav-item"><a href="{{ route('landlord.financial-reporting') }}" class="nav-link">Financial Reporting</a></li>
                         @endif
                         
                         <!-- Profile Dropdown -->
