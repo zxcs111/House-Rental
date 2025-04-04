@@ -218,12 +218,12 @@
                                                 <td>
                                                     <form action="{{ route('landlord.cancellation.approve', $request->id) }}" method="POST" class="d-inline">
                                                         @csrf
-                                                        <button type="submit" class="btn btn-sm btn-success">
-                                                            <i class="fas fa-check"></i> Approve
+                                                        <button type="submit" class="btn btn-sm btn-primary mr-2">
+                                                            <i class="fas fa-check"></i>
                                                         </button>
                                                     </form>
                                                     <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $request->id }}">
-                                                        <i class="fas fa-times"></i> Reject
+                                                        <i class="fas fa-trash"></i>
                                                     </button>
                                                 </td>
                                             </tr>

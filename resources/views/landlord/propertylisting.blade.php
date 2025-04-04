@@ -23,59 +23,59 @@
     
     <!-- Additional CSS for the property listing -->
     <style>
-      .edit-property {
-          cursor: pointer;
-      }
-      .property-image {
-        width: 80px;
-        height: 60px;
-        object-fit: cover;
-      }
-      .property-placeholder {
-        width: 80px;
-        height: 60px;
-        background: #eee;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .badge {
-        font-size: 0.9rem;
-        font-weight: 500;
-      }
-      .badge-pending {
-        background-color: #ffc107;
-        color: #212529;
-      }
-      .badge-available {
-        background-color: #28a745;
-      }
-      .badge-rented {
-        background-color: #6c757d;
-      }
-      .badge-maintenance {
-        background-color: #dc3545;
-      }
-      .table-responsive {
-        overflow-x: auto;
-      }
-      .image-preview {
-        max-height: 150px;
-        margin-bottom: 10px;
-      }
-      .feature-checkbox {
-        margin-right: 10px;
-      }
-      #createPropertyModal .modal-dialog {
-        max-width: 800px;
-      }
-      .update-status {
-          transition: all 0.3s ease;
-      }
-      .update-status:hover {
-          transform: scale(1.05);
-      }
-    </style>
+    .edit-property {
+        cursor: pointer;
+    }
+    .property-image {
+      width: 80px;
+      height: 60px;
+      object-fit: cover;
+    }
+    .property-placeholder {
+      width: 80px;
+      height: 60px;
+      background: #eee;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .badge {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: white !important; /* Force white text for all badges */
+    }
+    .badge-pending {
+      background-color: #f6c23e; /* Warning color from financial reporting */
+    }
+    .badge-available {
+      background-color: #4e73df; /* Success color from financial reporting */
+    }
+    .badge-rented {
+      background-color: #1cc88a; /* Primary color from financial reporting */
+    }
+    .badge-maintenance {
+      background-color: #e74a3b; /* Danger color from financial reporting */
+    }
+    .table-responsive {
+      overflow-x: auto;
+    }
+    .image-preview {
+      max-height: 150px;
+      margin-bottom: 10px;
+    }
+    .feature-checkbox {
+      margin-right: 10px;
+    }
+    #createPropertyModal .modal-dialog {
+      max-width: 800px;
+    }
+    .update-status {
+        transition: all 0.3s ease;
+    }
+    .update-status:hover {
+        transform: scale(1.05);
+    }
+  </style>
   </head>
   <body>
     

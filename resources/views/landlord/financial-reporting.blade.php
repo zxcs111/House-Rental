@@ -5,11 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" />
-
     <link rel="stylesheet" href="{{ asset('user-template/css/open-iconic-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/owl.carousel.min.css') }}">
@@ -23,7 +21,6 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    
     <style>
         :root {
             --primary-color: #4e73df;
@@ -32,114 +29,119 @@
             --warning-color: #f6c23e;
             --danger-color: #e74a3b;
         }
+        /* Hero Section */
         
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8f9fa;
-            padding-top: 70px;
+        .hero-wrap .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            content: '';
+            opacity: .3;
+            background: #000;
         }
-        
+        .slider-text {
+            position: relative;
+            z-index: 2;
+        }
+        .breadcrumbs {
+            font-size: 14px;
+            color: #fff;
+        }
+        .breadcrumbs a {
+            color: #fff;
+        }
+        .breadcrumbs a:hover {
+            text-decoration: underline;
+        }
+        .hero-wrap h1 {
+            color: #fff;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
         /* Main Content */
         .main-content {
-            padding: 30px 0;
+            padding: 50px 0; /* Increased padding */
         }
-        
         .page-header {
             margin-bottom: 30px;
         }
-        
         .page-header h2 {
             font-weight: 600;
             color: #2c3e50;
         }
-        
-        /* Card Styles (removed hover effects) */
+        /* Card Styles */
         .card {
             border: none;
             border-radius: 10px;
             box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
             margin-bottom: 20px;
+            transition: transform 0.3s ease;
         }
-        
         .card-body {
             padding: 20px;
         }
-        
         .card-title {
             font-size: 1.1rem;
             font-weight: 500;
             color: #2c3e50;
         }
-        
         .card-value {
             font-size: 1.8rem;
             font-weight: 600;
             margin: 10px 0;
         }
-        
         .card-text {
             font-size: 0.9rem;
             color: #6c757d;
         }
-        
         .card-primary {
             border-left: 4px solid var(--primary-color);
         }
-        
         .card-success {
             border-left: 4px solid var(--success-color);
         }
-        
         .card-info {
             border-left: 4px solid var(--info-color);
         }
-        
         /* Table Styles */
         .table {
             width: 100%;
         }
-        
         .table th {
             font-weight: 600;
             background-color: #f8f9fa;
             color: #2c3e50;
             border-top: none;
         }
-        
         .table td {
             vertical-align: middle;
         }
-        
         /* Badge Styles */
         .badge {
             font-weight: 500;
             padding: 5px 10px;
+            font-size: 0.9rem;
         }
-        
         .badge-success {
             background-color: var(--success-color);
         }
-        
         .badge-warning {
             background-color: var(--warning-color);
             color: #212529;
         }
-        
         .badge-danger {
             background-color: var(--danger-color);
         }
-        
-        
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .card-value {
                 font-size: 1.5rem;
             }
-            
             .main-content {
-                padding: 20px 0;
+                padding: 30px 0;
             }
-            
             .navbar-nav .nav-link {
                 margin: 5px 0;
             }
@@ -154,7 +156,6 @@
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
               <span class="oi oi-menu"></span> Menu
           </button>
-
           <div class="collapse navbar-collapse" id="ftco-nav">
               <ul class="navbar-nav ml-auto">
                   @auth
@@ -185,7 +186,6 @@
                               </a>
                           </li>
                       @endif
-                      
                       <!-- Profile Dropdown (Common for both roles) -->
                       <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -221,16 +221,26 @@
           </div>
       </div>
   </nav>
-
+    <!-- Hero Section -->
+    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('{{ asset('user-template/images/about-landing.jpg') }}'); height: 300px;" data-stellar-background-ratio="0.5">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
+                <div class="col-md-9 ftco-animate pb-5">
+                    <p class="breadcrumbs">
+                        <span class="mr-2">
+                            <a href="{{ route('home') }}">Home <i class="ion-ios-arrow-forward"></i></a>
+                        </span>
+                        <span>Financial Reporting <i class="ion-ios-arrow-forward"></i></span>
+                    </p>
+                    <h1 class="mb-3 bread">Manage Financial History</h1>
+                </div>
+            </div>
+        </div>
+    </section>
     <!-- Main Content -->
     <section class="main-content">
         <div class="container">
-            <div class="page-header">
-                <h2>Financial Reporting</h2>
-                <p class="text-muted">View your rental income and transaction history</p>
-            </div>
-            
-            <!-- Summary Cards -->
             <div class="row mb-4">
                 <div class="col-md-4">
                     <div class="card card-primary">
@@ -275,7 +285,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Transactions Table -->
             <div class="card">
                 <div class="card-body">
@@ -290,7 +299,6 @@
                                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="filterDropdown" data-toggle="dropdown">
                                     <i class="fas fa-filter mr-1"></i> Filter
                                 </button>
-                                <!-- Replace the existing dropdown menu with this one -->
                                 <div class="dropdown-menu dropdown-menu-right">
                                     <h6 class="dropdown-header">Filter by Status</h6>
                                     <a class="dropdown-item filter-status" href="#" data-status="all">All Transactions</a>
@@ -306,7 +314,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="table-responsive">
                         <table class="table" id="transactionsTable">
                             <thead>
@@ -344,21 +351,22 @@
                                         </span>
                                     </td>
                                     <td>
-                                        @if($transaction->status === 'completed' || $transaction->status === 'rented')
-                                        <button class="btn btn-sm btn-outline-primary view-receipt" data-transaction-id="{{ $transaction->id }}">
-                                            <i class="fas fa-receipt"></i> Receipt
-                                        </button>
-                                        @endif
-                                        <button class="btn btn-sm btn-outline-danger delete-transaction" data-transaction-id="{{ $transaction->id }}">
-                                            <i class="fas fa-trash"></i> Delete
-                                        </button>
+                                        <div class="btn-group" role="group">
+                                            @if($transaction->status === 'completed' || $transaction->status === 'rented')
+                                            <button class="btn btn-sm btn-primary edit-property mr-2 view-receipt" data-transaction-id="{{ $transaction->id }}">
+                                                <i class="fas fa-receipt"></i>
+                                            </button>
+                                            @endif
+                                            <button class="btn btn-sm btn-danger" data-transaction-id="{{ $transaction->id }}">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
-
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <div class="text-muted">
                             Showing {{ $transactions->firstItem() }} to {{ $transactions->lastItem() }} of {{ $transactions->total() }} entries
@@ -371,7 +379,6 @@
             </div>
         </div>
     </section>
-
     <!-- Tenant Modal -->
     <div class="modal fade" id="tenantModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -391,7 +398,6 @@
             </div>
         </div>
     </div>
-
     <!-- Receipt Modal -->
     <div class="modal fade" id="receiptModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -414,7 +420,6 @@
             </div>
         </div>
     </div>
-
     <!-- Footer -->
     <footer class="ftco-footer ftco-bg-dark ftco-section">
       <div class="container">
@@ -456,25 +461,22 @@
           </div>
           <div class="col-md">
             <div class="ftco-footer-widget mb-4">
-            	<h2 class="ftco-heading-2">Have a Questions?</h2>
-            	<div class="block-23 mb-3">
-	              <ul>
-	                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
-	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
-	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
-	              </ul>
-	            </div>
+                <h2 class="ftco-heading-2">Have a Questions?</h2>
+                <div class="block-23 mb-3">
+                  <ul>
+                    <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
+                    <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+                    <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+                  </ul>
+                </div>
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-12 text-center">
-
-
         </div>
       </div>
     </footer>
-
     <!-- Scripts -->
     <script src="{{ asset('user-template/js/jquery.min.js') }}"></script>
     <script src="{{ asset('user-template/js/jquery-migrate-3.0.1.min.js') }}"></script>
@@ -492,7 +494,6 @@
     <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="{{ asset('user-template/js/main.js') }}"></script>
-    
     <script>
     $(document).ready(function() {
         // Initialize date range picker
@@ -505,12 +506,10 @@
                 }
             }
         });
-
         // Filter transactions by status
         $('.filter-status').on('click', function(e) {
             e.preventDefault();
             const status = $(this).data('status');
-            
             if (status === 'all') {
                 $('#transactionsTable tbody tr').show();
             } else {
@@ -526,19 +525,16 @@
                 });
             }
         });
-
         // View receipt handler
         $(document).on('click', '.view-receipt', function() {
             const transactionId = $(this).data('transaction-id');
             const $row = $(this).closest('tr');
             const status = $row.data('status');
-            
             // Only show receipt for rented/completed transactions
             if (status !== 'rented' && status !== 'completed') {
                 alert('Receipt is only available for rented properties');
                 return;
             }
-            
             // Show loading state
             $('#receiptContent').html(`
                 <div class="text-center py-4">
@@ -549,7 +545,6 @@
                 </div>
             `);
             $('#receiptModal').modal('show');
-            
             $.ajax({
                 url: `/payments/${transactionId}/receipt`,
                 method: 'GET',
@@ -607,7 +602,6 @@
                             </div>
                         </div>
                     `;
-                    
                     $('#receiptContent').html(receiptHtml);
                 },
                 error: function(xhr) {
@@ -617,7 +611,6 @@
                     } else if (xhr.responseJSON && xhr.responseJSON.message) {
                         errorMessage = xhr.responseJSON.message;
                     }
-                    
                     $('#receiptContent').html(`
                         <div class="alert alert-danger">
                             <i class="fas fa-exclamation-circle"></i> ${errorMessage}
@@ -626,12 +619,10 @@
                 }
             });
         });
-
         // Print receipt handler
         $(document).on('click', '#printReceipt', function() {
             const printContent = $('#receiptContent').html();
             const printWindow = window.open('', '_blank');
-            
             printWindow.document.write(`
                 <!DOCTYPE html>
                 <html>
@@ -678,12 +669,10 @@
             `);
             printWindow.document.close();
         });
-
         // Delete transaction handler
         $(document).on('click', '.delete-transaction', function() {
             const transactionId = $(this).data('transaction-id');
             const $row = $(this).closest('tr');
-            
             if (confirm('Are you sure you want to delete this transaction? This action cannot be undone.')) {
                 $.ajax({
                     url: `/landlord/financial-reporting/${transactionId}`,
@@ -711,32 +700,26 @@
                 });
             }
         });
-
         // Function to update pagination info after deletion
         function updatePaginationInfo() {
             const remainingRows = $('#transactionsTable tbody tr').length;
             const $paginationInfo = $('.text-muted');
             const currentText = $paginationInfo.text();
             const matches = currentText.match(/Showing (\d+) to (\d+) of (\d+) entries/);
-            
             if (matches && matches.length === 4) {
                 const total = parseInt(matches[3]) - 1;
                 const newText = `Showing ${matches[1]} to ${matches[2] > total ? total : matches[2]} of ${total} entries`;
                 $paginationInfo.text(newText);
             }
         }
-
         // Filter transactions function
         function filterTransactions() {
             const dateRange = $('#dateRangePicker').val();
             if (!dateRange) return;
-            
             const dates = dateRange.split(' to ');
             if (dates.length !== 2) return;
-            
             const startDate = dates[0];
             const endDate = dates[1];
-            
             console.log('Filtering by date range:', startDate, 'to', endDate);
         }
     });
