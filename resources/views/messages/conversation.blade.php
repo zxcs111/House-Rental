@@ -78,9 +78,19 @@
         .chat-messages {
             display: flex;
             flex-direction: column;
-            height: calc(100% - 150px);
+            height: calc(100% - 150px); /* Adjust this value as needed */
             overflow-y: auto;
             padding: 1rem;
+            margin-bottom: 80px; /* Add margin to prevent overlap */
+        }
+
+        .input-group {
+            width: 100%;
+        }
+
+        #send-button {
+            margin-left: 10px;
+            white-space: nowrap;
         }
         
         .chat-message-left,
@@ -200,7 +210,7 @@
             padding: 15px;
             border-top: 1px solid #eee;
             background: white;
-            position: fixed;
+            position: sticky; /* Changed from fixed to sticky */
             bottom: 0;
             width: 100%;
         }

@@ -2,21 +2,29 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Builder;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string $role
+ * @property string|null $profile_picture
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property string|null $phone_number
+ * @property string|null $address
+ */
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
         'name',
         'email',
@@ -29,21 +37,11 @@ class User extends Authenticatable
         'role', 
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -52,33 +50,47 @@ class User extends Authenticatable
         ];
     }
 
-    // In App\Models\User.php
-    public function scopeFilterByRole($query, $role)
+    public function scopeFilterByRole(Builder $query, string $role): Builder
     {
         return $query->where('role', $role);
     }
 
-    // app/Models/User.php
-    public function payments()
+    /**
+     * Payments made by this user as a tenant
+     */
+    public function payments(): HasMany
     {
         return $this->hasMany(Payment::class, 'tenant_id');
     }
 
-    // app/Models/User.php
-    public function rentedProperties()
+    /**
+     * Properties rented by this user (as tenant)
+     */
+    public function rentedProperties(): HasManyThrough
     {
         return $this->hasManyThrough(
             Property::class,
             Payment::class,
-            'landlord_id', // Foreign key on payments table
-            'id', // Foreign key on properties table
-            'id', // Local key on users table
-            'property_id' // Local key on payments table
+            'tenant_id',    // Foreign key on payments table
+            'id',           // Foreign key on properties table
+            'id',           // Local key on users table
+            'property_id'   // Local key on payments table
         )->distinct();
     }
 
-    public function receivedPayments()
+    /**
+     * Payments received by this user (as landlord)
+     */
+    public function receivedPayments(): HasMany
     {
-        return $this->hasMany(Payment::class, 'landlord_id')->with(['property', 'tenant']);
+        return $this->hasMany(Payment::class, 'landlord_id');
+    }
+
+    /**
+     * Properties owned by this user (as landlord)
+     */
+    public function ownedProperties(): HasMany
+    {
+        return $this->hasMany(Property::class, 'landlord_id');
     }
 }

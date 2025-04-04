@@ -6,6 +6,7 @@ use App\Http\Controllers\HouseController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Landlord\PropertyListingController;
 use App\Http\Controllers\Landlord\LandlordController; // Updated namespace
+use App\Http\Controllers\Landlord\FinancialReportingController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Broadcast;
@@ -118,4 +119,8 @@ Route::group(['middleware' => 'auth'], function() {
         
 });
 
+
+Route::get('/landlord/financial-reporting', [FinancialReportingController::class, 'index'])
+    ->name('landlord.financial-reporting')
+    ->middleware('auth');
 
