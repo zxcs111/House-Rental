@@ -110,6 +110,7 @@
             }
         }
 
+        /* Enhanced Table Styles */
         .table {
             color: white;
             border-color: #444;
@@ -118,10 +119,13 @@
             border-bottom-width: 1px;
             border-color: #444;
             font-weight: 600;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 12px 15px;
         }
         .table td {
             border-color: #444;
             vertical-align: middle;
+            padding: 12px 15px;
         }
         .table-hover tbody tr:hover {
             background-color: rgba(255, 255, 255, 0.1);
@@ -129,19 +133,41 @@
         .badge {
             font-weight: 500;
             padding: 0.35em 0.65em;
+            font-size: 0.85em;
         }
+        
+        /* Button Group Styles */
+        .btn-action-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .btn-action-group .btn {
+            padding: 0.375rem 0.75rem;
+            font-size: 0.85rem;
+        }
+        
+        /* Modal Styles */
         .modal-content {
             background-color: #222;
             color: white;
+            border-radius: 0;
+            border: 1px solid #444;
         }
         .modal-header {
             border-bottom: 1px solid #444;
+            padding: 1rem 1.5rem;
         }
         .modal-footer {
             border-top: 1px solid #444;
+            padding: 1rem 1.5rem;
+        }
+        .modal-body {
+            padding: 1.5rem;
         }
         .btn-close {
             filter: invert(1);
+            opacity: 0.8;
         }
         .tenant-info small {
             font-size: 0.8rem;
@@ -149,6 +175,57 @@
         }
         .rejection-badge {
             background-color: #dc3545;
+        }
+        .alert-modal {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-left: 4px solid;
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1rem;
+        }
+        .alert-modal.alert-danger {
+            border-left-color: #dc3545;
+        }
+        .alert-modal.alert-warning {
+            border-left-color: #ffc107;
+        }
+        
+        /* Property title style (non-clickable) */
+        .property-title {
+            color:rgb(42, 87, 224);
+            font-weight: 500;
+            text-decoration: none;
+            cursor: default;
+            margin-left: 10px;
+        
+        }
+
+        .table thead th {
+            color: white; /* Change header text color to white */
+            background-color: #343a40; /* Dark background for contrast */ 
+        }
+
+        .table {
+            background-color: #222; /* Dark background for entire table */
+            color: white; /* Default text color for the table */
+        }
+
+        .table tbody tr:hover {
+            background-color: #555; /* Darker hover effect for table rows */
+        }
+        
+        /* Spacing improvements */
+        .card-body .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .table tr td:not(:last-child) {
+            padding-right: 15px;
+        }
+        .modal-body .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .bg-dark {
+            background-color: white !important;
         }
     </style>
 </head>
@@ -194,37 +271,44 @@
             <div class="col-xl-8">
                 <div class="card mb-4">
                     <div class="card-header">Personal Information</div>
-                    <div class="card-body">
-                        <form action="{{ route('profile.update') }}" method="POST">
-                            @csrf
-                            <div class="form-group">
-                                <label for="first_name">First Name</label>
-                                <input type="text" name="first_name" id="first_name" class="form-control" value="{{ Auth::user()->first_name }}">
-                            </div>
-                            <div class="form-group">
-                                <label for="last_name">Last Name</label>
-                                <input type="text" name="last_name" id="last_name" class="form-control" value="{{ Auth::user()->last_name }}">
-                            </div>
-                            <div class="form-group">
-                                <label for="phone_number">Phone</label>
-                                <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ Auth::user()->phone_number }}">
-                            </div>
-                            <div class="form-group">
-                                <label for="address">Address</label>
-                                <input type="text" name="address" id="address" class="form-control" value="{{ Auth::user()->address ?? '' }}">
-                            </div>
-                            <div class="form-group text-center mt-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-save"></i> Save Changes
-                                </button>
-                            </div>
-                        </form>
+                        <div class="card-body">
+                            <form action="{{ route('profile.update') }}" method="POST">
+                                @csrf
+                                <div class="form-group">
+                                    <label for="name">Account Name</label>
+                                    <input type="text" name="name" id="name" class="form-control" value="{{ Auth::user()->name }}" maxlength="20" oninput="validateName(this)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="first_name">First Name</label>
+                                    <input type="text" name="first_name" id="first_name" class="form-control" value="{{ Auth::user()->first_name }}" maxlength="20" oninput="validateName(this)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="last_name">Last Name</label>
+                                    <input type="text" name="last_name" id="last_name" class="form-control" value="{{ Auth::user()->last_name }}" maxlength="15" oninput="validateName(this)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" name="email" id="email" class="form-control" value="{{ Auth::user()->email }}" maxlength="255">
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone_number">Phone</label>
+                                    <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ Auth::user()->phone_number }}" oninput="validatePhone(this)">
+                                </div>
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <input type="text" name="address" id="address" class="form-control" value="{{ Auth::user()->address ?? '' }}">
+                                </div>
+                                <div class="form-group text-center mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Save Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Tenant Rent History or Landlord Rented Properties Section -->
+            <!-- Tenant Rent History or Landlord Rented Properties Section -->
                 @if(Auth::user()->role === 'tenant')
-                    <!-- Rent History Section for Tenants -->
                     <div class="card mt-4">
                         <div class="card-header">Rent History</div>
                         <div class="card-body">
@@ -238,20 +322,20 @@
                                                 <th>Amount</th>
                                                 <th>Period</th>
                                                 <th>Status</th>
-                                                <th>Action</th>
+                                                <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach(Auth::user()->payments as $payment)
                                             <tr>
                                                 <td>
-                                                    <a href="{{ route('house-detail', $payment->property_id) }}" class="text-decoration-none">
+                                                    <span class="property-title">
                                                         {{ $payment->property->title }}
-                                                    </a>
+                                                    </span>
                                                 </td>
                                                 <td>
                                                     @if($payment->landlord)
-                                                        {{ $payment->landlord->first_name }} {{ $payment->landlord->last_name }}
+                                                        {{ $payment->landlord->name }} 
                                                         <br>
                                                         <small class="text-muted">{{ $payment->landlord->phone_number }}</small>
                                                     @else
@@ -265,32 +349,34 @@
                                                 </td>
                                                 <td>
                                                     <span class="badge bg-{{ $payment->status == 'completed' ? 'success' : 'warning' }}">
-                                                        {{ ucfirst($payment->status) }}
+                                                        {{ $payment->status == 'completed' ? 'Rented' : ucfirst($payment->status) }}
                                                     </span>
                                                     @if($payment->cancellation_status == 'rejected')
-                                                        <span class="badge rejection-badge mt-1">Cancellation Rejected</span>
+                                                        <span class="badge rejection-badge mt-1 d-block">Cancellation Rejected</span>
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <button class="btn btn-sm btn-outline-primary view-receipt" data-payment-id="{{ $payment->id }}">
-                                                        <i class="fas fa-receipt"></i> Receipt
-                                                    </button>
-                                                    @if($payment->status == 'completed')
-                                                        @if($payment->cancellation_requested && $payment->cancellation_status == 'pending')
-                                                            <span class="badge bg-warning mt-1">Cancellation Pending</span>
-                                                        @elseif($payment->cancellation_status == 'rejected')
-                                                            <button class="btn btn-sm btn-outline-danger mt-1" data-bs-toggle="modal" data-bs-target="#rejectedModal{{ $payment->id }}">
-                                                                <i class="fas fa-info-circle"></i> View Rejection
-                                                            </button>
-                                                            <button class="btn btn-sm btn-outline-warning mt-1" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
-                                                                <i class="fas fa-times-circle"></i> Re-request
-                                                            </button>
-                                                        @elseif(!$payment->cancellation_requested || $payment->cancellation_status == 'approved')
-                                                            <button class="btn btn-sm btn-outline-danger mt-1" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
-                                                                <i class="fas fa-times-circle"></i> Cancel Rent
-                                                            </button>
+                                                    <div class="btn-action-group">
+                                                        <button class="btn btn-sm btn-outline-primary view-receipt" data-payment-id="{{ $payment->id }}">
+                                                            <i class="fas fa-receipt"></i> Receipt
+                                                        </button>
+                                                        @if($payment->status == 'completed')
+                                                            @if($payment->cancellation_requested && $payment->cancellation_status == 'pending')
+                                                                <span class="badge bg-warning text-dark">Pending</span>
+                                                            @elseif($payment->cancellation_status == 'rejected')
+                                                                <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#rejectedModal{{ $payment->id }}">
+                                                                    <i class="fas fa-info-circle"></i> Details
+                                                                </button>
+                                                                <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
+                                                                    <i class="fas fa-redo"></i> Re-request
+                                                                </button>
+                                                            @elseif(!$payment->cancellation_requested || $payment->cancellation_status == 'approved')
+                                                                <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
+                                                                    <i class="fas fa-times-circle"></i> Cancel
+                                                                </button>
+                                                            @endif
                                                         @endif
-                                                    @endif
+                                                    </div>
                                                 </td>
                                             </tr>
 
@@ -303,16 +389,17 @@
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
-                                                            <div class="alert alert-danger">
-                                                                <i class="fas fa-exclamation-circle"></i> Your cancellation request was rejected by the landlord.
+                                                            <div class="alert-modal alert-danger">
+                                                                <i class="fas fa-exclamation-circle me-2"></i> Your cancellation request was rejected by the landlord.
                                                             </div>
-                                                            <div class="card mt-3">
-                                                                <div class="card-header">Rejection Details</div>
+                                                            <div class="card mt-3 bg-dark">
+                                                                <div class="card-header bg-secondary">Rejection Details</div>
                                                                 <div class="card-body">
-                                                                    <p><strong>Reason:</strong></p>
-                                                                    <p>{{ $payment->rejection_reason }}</p>
+                                                                    <p class="text-dark"><strong>Reason:</strong></p>
+                                                                    <p class="text-dark">{{ $payment->rejection_reason }}</p> <!-- Changed to text-dark -->
                                                                     <p class="text-muted small mt-2">
-                                                                        Rejected on: {{ $payment->updated_at->format('M d, Y h:i A') }}
+                                                                        Rejected on: {{ $payment->updated_at->format('M d, Y h:i A') }}<br>
+                                                                        <strong class="text-muted">Landlord:</strong> {{ $payment->landlord->name ?? 'N/A' }} <!-- Adapted for consistency -->
                                                                     </p>
                                                                 </div>
                                                             </div>
@@ -339,23 +426,31 @@
                                                         <form action="{{ route('payment.cancel', $payment->id) }}" method="POST">
                                                             @csrf
                                                             <div class="modal-body">
-                                                                <p>Are you sure you want to request cancellation for this rental?</p>
-                                                                <p><strong>Property:</strong> {{ $payment->property->title }}</p>
-                                                                <p><strong>Landlord:</strong> {{ $payment->landlord->first_name }} {{ $payment->landlord->last_name }}</p>
-                                                                
-                                                                <div class="form-group mt-3">
-                                                                    <label for="cancellation_reason">Reason for Cancellation:</label>
-                                                                    <textarea class="form-control" id="cancellation_reason" name="cancellation_reason" rows="3" required></textarea>
+                                                                <div class="mb-4">
+                                                                    <p>You are requesting cancellation for:</p>
+                                                                    <div class="card bg-dark p-3">
+                                                                        <p class="mb-1"><strong>Property:</strong> {{ $payment->property->title }}</p>
+                                                                        <p class="mb-1"><strong>Landlord:</strong> {{ $payment->landlord->name }}</p>
+                                                                        <p class="mb-0"><strong>Rental Period:</strong> 
+                                                                            {{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }} - 
+                                                                            {{ \Carbon\Carbon::parse($payment->end_date)->format('M d, Y') }}
+                                                                        </p>
+                                                                    </div>
                                                                 </div>
                                                                 
-                                                                <div class="alert alert-warning mt-3">
-                                                                    <i class="fas fa-exclamation-triangle"></i> This request needs approval from the landlord. 
-                                                                    You may be subject to cancellation fees based on the rental agreement.
+                                                                <div class="form-group">
+                                                                    <label for="cancellation_reason" class="form-label">Reason for Cancellation:</label>
+                                                                    <textarea class="form-control bg-dark text-white" id="cancellation_reason" name="cancellation_reason" rows="3" required placeholder="Please explain your reason for cancellation..."></textarea>
+                                                                </div>
+                                                                
+                                                                <div class="alert-modal alert-warning mt-4">
+                                                                    <i class="fas fa-exclamation-triangle me-2"></i> 
+                                                                    This request needs approval from the landlord. You may be subject to cancellation fees based on the rental agreement.
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                <button type="submit" class="btn btn-danger">Submit Cancellation Request</button>
+                                                                <button type="submit" class="btn btn-danger">Submit Request</button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -368,68 +463,6 @@
                             @else
                                 <div class="alert alert-info">
                                     <i class="fas fa-info-circle"></i> You haven't rented any properties yet.
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                @elseif(Auth::user()->role === 'landlord')
-                    <!-- Rented Properties Section for Landlords -->
-                    <div class="card mt-4">
-                        <div class="card-header">Rented Properties</div>
-                        <div class="card-body">
-                            @if(Auth::user()->receivedPayments->count() > 0)
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>Property</th>
-                                                <th>Tenant</th>
-                                                <th>Amount</th>
-                                                <th>Rental Period</th>
-                                                <th>Status</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach(Auth::user()->receivedPayments as $payment)
-                                            <tr>
-                                                <td>
-                                                    <a href="{{ route('house-detail', $payment->property_id) }}" class="text-decoration-none">
-                                                        {{ $payment->property->title }}
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    @if($payment->tenant)
-                                                        {{ $payment->tenant->first_name }} {{ $payment->tenant->last_name }}
-                                                        <br>
-                                                        <small class="text-muted">{{ $payment->tenant->email }}</small>
-                                                    @else
-                                                        <span class="text-muted">Tenant deleted</span>
-                                                    @endif
-                                                </td>
-                                                <td>${{ number_format($payment->amount, 2) }}</td>
-                                                <td>
-                                                    {{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }} - 
-                                                    {{ \Carbon\Carbon::parse($payment->end_date)->format('M d, Y') }}
-                                                </td>
-                                                <td>
-                                                    <span class="badge bg-{{ $payment->status == 'completed' ? 'success' : 'warning' }}">
-                                                        {{ ucfirst($payment->status) }}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-sm btn-outline-primary view-receipt" data-payment-id="{{ $payment->id }}">
-                                                        <i class="fas fa-eye"></i> Details
-                                                    </button>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
-                                </div>
-                            @else
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i> No properties have been rented yet.
                                 </div>
                             @endif
                         </div>
@@ -464,6 +497,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     
     <script>
     $(document).ready(function() {
@@ -612,6 +646,15 @@
             printWindow.document.close();
         });
     });
+
+    function validateName(input) {
+        input.value = input.value.replace(/[^a-zA-Z\s]/g, '');
+    }
+
+    function validatePhone(input) {
+        input.value = input.value.replace(/[^0-9]/g, '');
+    }
+
     </script>
 </body>
 </html>
