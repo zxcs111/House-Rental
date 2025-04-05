@@ -276,7 +276,7 @@
                                 @csrf
                                 <div class="form-group">
                                     <label for="name">Account Name</label>
-                                    <input type="text" name="name" id="name" class="form-control" value="{{ Auth::user()->name }}" maxlength="20" oninput="validateName(this)">
+                                    <input type="text" name="name" id="name" class="form-control" value="{{ Auth::user()->name }}" maxlength="15" oninput="validateName(this)">
                                 </div>
                                 <div class="form-group">
                                     <label for="first_name">First Name</label>
@@ -292,7 +292,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="phone_number">Phone</label>
-                                    <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ Auth::user()->phone_number }}" oninput="validatePhone(this)">
+                                    <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ Auth::user()->phone_number }}" oninput="validatePhone(this)" maxlength="11" pattern="\d{0,11}">
                                 </div>
                                 <div class="form-group">
                                     <label for="address">Address</label>
@@ -653,6 +653,16 @@
 
     function validatePhone(input) {
         input.value = input.value.replace(/[^0-9]/g, '');
+    }
+
+    function validatePhone(input) {
+        // Remove non-digit characters
+        input.value = input.value.replace(/\D/g, '');
+
+        // Limit the input to 11 characters
+        if (input.value.length > 11) {
+            input.value = input.value.slice(0, 11);
+        }
     }
 
     </script>

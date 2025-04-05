@@ -123,9 +123,12 @@
       			<div class="car-details">
       				<div class="img rounded" style="background-image: url('{{ $property->main_image ? asset('storage/' . $property->main_image) : asset('user-template/images/bg_1.jpg') }}');"></div>
       				<div class="text text-center">
-      					<span class="subheading">{{ $property->property_type }}</span>
+      					<span class="subheading" style="font-size: 1em">{{ $property->property_type }}</span>
       					<h2>{{ $property->title }}</h2>
-      					<div class="rent-button mt-4">
+							<p class="location" style="font-size: 1.2em; line-height: 1.5;">
+								<span style="margin-left: 5px;">{{ $property->address }}</span>
+							</p>      					
+						<div class="rent-button mt-4">	
       					    <p class="d-flex mb-0 d-block justify-content-center">
                                 @auth
                                     @if(Auth::user()->role === 'tenant')
