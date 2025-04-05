@@ -74,58 +74,187 @@
         /* Card Styles */
         .card {
             border: none;
-            border-radius: 10px;
-            box-shadow: 0 1px 2px 0 rgba(0,0,0,0.1);
+            border-radius: 15px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
             margin-bottom: 20px;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px); /* Slight lift effect */
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
         }
         .card-body {
-            padding: 20px;
+            padding: 25px;
         }
         .card-title {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 500;
-            color: #2c3e50;
+            color: #fff; /* White text for contrast */
         }
         .card-value {
             font-size: 1.8rem;
             font-weight: 600;
+            color: #fff; /* White text for contrast */
             margin: 10px 0;
         }
         .card-text {
             font-size: 0.9rem;
-            color: #6c757d;
+            color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
         }
         .card-primary {
-            border-left: 4px solid var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), #3e5fbc);
         }
         .card-success {
-            border-left: 4px solid var(--success-color);
+            background: linear-gradient(135deg, var(--success-color), #14a07c);
         }
         .card-info {
-            border-left: 4px solid var(--info-color);
+            background: linear-gradient(135deg, var(--info-color), #2d9baf);
         }
         /* Table Styles */
+        .card1 {
+            border: none;
+            border-radius: 15px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            margin-bottom: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
         .table {
             width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
         }
         .table th {
             font-weight: 600;
             background-color: #f8f9fa;
             color: #2c3e50;
             border-top: none;
+            border-bottom: 2px solid #dee2e6;
         }
         .table td {
             vertical-align: middle;
+            padding: 12px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .table tbody tr:nth-child(even) {
+            background-color: #f9f9f9; /* Alternating row colors */
+        }
+        .table tbody tr:hover {
+            background-color: #f1f1f1; /* Hover effect */
+        }
+
+        /* Custom Search Bar Styles */
+        .form {
+        --timing: 0.3s;
+        --width-of-input: 200px;
+        --height-of-input: 30px; /* Matches btn-sm height */
+        --border-height: 2px;
+        --input-bg: #fff;
+        --border-color: #4e73df; /* Primary color */
+        --border-radius: 30px;
+        --after-border-radius: 4px;
+        position: relative;
+        width: var(--width-of-input);
+        height: var(--height-of-input);
+        display: flex;
+        align-items: center;
+        padding-inline: 0.8em;
+        border-radius: var(--border-radius);
+        transition: border-radius 0.5s ease;
+        background: var(--input-bg,#fff);
+        border: 1px solid #ced4da; /* Match Bootstrap's form-control border */
+        margin-right: 0.75rem;
+        }
+
+        .form button {
+        border: none;
+        background: none;
+        color: #8b8ba7;
+        padding: 0;
+        margin-right: 0.5rem;
+        }
+
+        .input {
+        font-size: 0.875rem; /* Match btn-sm */
+        background-color: transparent;
+        width: 100%;
+        height: 100%;
+        padding-inline: 0.5em;
+        padding-block: 0.5em;
+        border: none;
+        color: #495057; /* Match Bootstrap's text color */
+        }
+
+        .form:before {
+        content: "";
+        position: absolute;
+        background: var(--border-color);
+        transform: scaleX(0);
+        transform-origin: center;
+        width: 100%;
+        height: var(--border-height);
+        left: 0;
+        bottom: 0;
+        border-radius: 1px;
+        transition: transform var(--timing) ease;
+        }
+
+        .form:focus-within {
+        border-radius: var(--after-border-radius);
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25); /* Bootstrap focus shadow */
+        }
+
+        .input:focus {
+        outline: none;
+        }
+
+        .form:focus-within:before {
+        transform: scale(1);
+        }
+
+        .reset {
+        border: none;
+        background: none;
+        opacity: 0;
+        visibility: hidden;
+        padding: 0;
+        margin-left: 0.5rem;
+        }
+
+        .input:not(:placeholder-shown) ~ .reset {
+        opacity: 1;
+        visibility: visible;
+        }
+
+        .form svg {
+        width: 14px;
+        height: 14px;
+        }
+
+        /* Make sure the dropdown matches in height */
+        .btn-sm {
+        height: 30px;
+        line-height: 1;
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+        }
+
+        /* Align both elements vertically */
+        .d-flex.align-items-center {
+        align-items: center;
         }
         /* Badge Styles */
         .badge {
             font-weight: 500;
             padding: 5px 10px;
             font-size: 0.9rem;
+            border-radius: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
         }
         .badge-success {
             background-color: var(--success-color);
+            color: #fff;
         }
         .badge-warning {
             background-color: var(--warning-color);
@@ -133,6 +262,15 @@
         }
         .badge-danger {
             background-color: var(--danger-color);
+            color: #fff;
+        }
+        /* Action Buttons */
+        .btn-group .btn {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-group .btn:hover {
+            transform: scale(1.05); /* Slight zoom effect */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
         }
         /* Responsive Adjustments */
         @media (max-width: 768px) {
@@ -247,11 +385,11 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h5 class="card-title text-primary">Total Sales</h5>
+                                    <h5 class="card-title">Total Sales</h5>
                                     <h2 class="card-value">${{ number_format($totalSales, 2) }}</h2>
                                     <p class="card-text">All-time rental income</p>
                                 </div>
-                                <i class="fas fa-dollar-sign fa-3x text-primary opacity-25"></i>
+                                <i class="fas fa-dollar-sign fa-3x text-white"></i>
                             </div>
                         </div>
                     </div>
@@ -261,11 +399,11 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h5 class="card-title text-success">Monthly Sales</h5>
+                                    <h5 class="card-title">Monthly Sales</h5>
                                     <h2 class="card-value">${{ number_format($monthlySales, 2) }}</h2>
                                     <p class="card-text">This month's rental income</p>
                                 </div>
-                                <i class="fas fa-calendar-alt fa-3x text-success opacity-25"></i>
+                                <i class="fas fa-dollar-sign fa-3x text-white"></i>
                             </div>
                         </div>
                     </div>
@@ -275,49 +413,59 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h5 class="card-title text-info">Annual Sales</h5>
+                                    <h5 class="card-title">Annual Sales</h5>
                                     <h2 class="card-value">${{ number_format($annualSales, 2) }}</h2>
                                     <p class="card-text">This year's rental income</p>
                                 </div>
-                                <i class="fas fa-chart-line fa-3x text-info opacity-25"></i>
+                                <i class="fas fa-dollar-sign fa-3x text-white"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
            <!-- Transactions Table -->
-            <div class="card">
+           <div class="card1">
                 <div class="card-body">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h4 class="mb-0">Transaction History</h4>
-                    <div class="d-flex align-items-center">
-                        <div class="input-group mr-3" style="width: 250px;">
-                            <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="Search property or tenant...">
-                            <div class="input-group-append">
-                                <span class="input-group-text bg-white border-left-0 py-0">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="dropdown">
-                            <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" id="filterDropdown" data-toggle="dropdown">
-                                <i class="fas fa-filter mr-1"></i> Filter
-                            </button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <h6 class="dropdown-header">Filter by Status</h6>
-                                <a class="dropdown-item filter-status" href="#" data-status="all">All Transactions</a>
-                                <a class="dropdown-item filter-status" href="#" data-status="rented">Rented</a>
-                                <a class="dropdown-item filter-status" href="#" data-status="cancelled">Cancelled</a>
-                                <div class="dropdown-divider"></div>
-                                <h6 class="dropdown-header">Time Period</h6>
-                                <a class="dropdown-item filter-period" href="#" data-period="this_month">This Month</a>
-                                <a class="dropdown-item filter-period" href="#" data-period="last_month">Last Month</a>
-                                <a class="dropdown-item filter-period" href="#" data-period="this_year">This Year</a>
-                                <a class="dropdown-item filter-period" href="#" data-period="all_time">All Time</a>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">Rental History</h4>
+                        <div class="d-flex align-items-center">
+                            <!-- Search Bar -->
+                            <form class="form mr-3" style="--width-of-input: 200px; --height-of-input: 30px; --border-color: #4e73df;">
+                                <button type="button">
+                                    <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
+                                        <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9" stroke="#8b8ba7" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </button>
+                                <input class="input" id="searchInput" placeholder="Search property or tenant..." type="text">
+                                <button class="reset" type="reset">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="none" viewBox="0 0 24 24" stroke="#8b8ba7">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                                    </svg>
+                                </button>
+                            </form>
+                            
+                            <!-- Filter Button -->
+                            <div class="dropdown">
+                                <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="filterDropdown" data-toggle="dropdown" 
+                                        style="border-radius: 30px; border-color: #ced4da; height: 30px; line-height: 1;">
+                                    <i class="fas fa-filter mr-1"></i> Filter
+                                </button>
+                                <div class="dropdown-menu dropdown-menu-right">
+
+                                    <h6 class="dropdown-header">Filter by Status</h6>
+                                    <a class="dropdown-item filter-status" href="#" data-status="all">All Transactions</a>
+                                    <a class="dropdown-item filter-status" href="#" data-status="rented">Rented</a>
+                                    <a class="dropdown-item filter-status" href="#" data-status="cancelled">Cancelled</a>
+                                    <div class="dropdown-divider"></div>
+                                    <h6 class="dropdown-header">Time Period</h6>
+                                    <a class="dropdown-item filter-period" href="#" data-period="this_month">This Month</a>
+                                    <a class="dropdown-item filter-period" href="#" data-period="last_month">Last Month</a>
+                                    <a class="dropdown-item filter-period" href="#" data-period="this_year">This Year</a>
+                                    <a class="dropdown-item filter-period" href="#" data-period="all_time">All Time</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
                     <div class="table-responsive">
                         <table class="table" id="transactionsTable">
                             <thead>
@@ -335,13 +483,9 @@
                                 @foreach($transactions as $transaction)
                                 <tr data-status="{{ $transaction->status === 'completed' ? 'rented' : $transaction->status }}">
                                     <td>{{ $transaction->created_at->format('M d, Y') }}</td>
-                                    <td>
-                                        {{ $transaction->property->title ?? 'N/A' }}
-                                    </td>
+                                    <td>{{ $transaction->property->title ?? 'N/A' }}</td>
                                     <td>${{ number_format($transaction->amount, 2) }}</td>
-                                    <td>
-                                        {{ $transaction->tenant->name ?? 'N/A' }}
-                                    </td>
+                                    <td>{{ $transaction->tenant->name ?? 'N/A' }}</td>
                                     <td>
                                         {{ $transaction->start_date->format('M d, Y') }} - 
                                         {{ $transaction->end_date->format('M d, Y') }}
@@ -357,11 +501,19 @@
                                     <td>
                                         <div class="btn-group" role="group">
                                             @if($transaction->status === 'completed' || $transaction->status === 'rented')
-                                            <button class="btn btn-sm btn-primary edit-property mr-2 view-receipt" data-transaction-id="{{ $transaction->id }}">
+                                            <button class="btn btn-sm btn-primary edit-property mr-2 view-receipt" 
+                                                data-transaction-id="{{ $transaction->id }}" 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="View Receipt">
                                                 <i class="fas fa-receipt"></i>
                                             </button>
                                             @endif
-                                            <button class="btn btn-sm btn-danger" data-transaction-id="{{ $transaction->id }}">
+                                            <button class="btn btn-sm btn-danger delete-transaction" 
+                                                data-transaction-id="{{ $transaction->id }}" 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Delete Transaction">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>
@@ -708,14 +860,14 @@
         });
         // Function to update pagination info after deletion
         function updatePaginationInfo() {
-            const remainingRows = $('#transactionsTable tbody tr').length;
+            const visibleRows = $('#transactionsTable tbody tr:visible').length;
+            const totalRows = $('#transactionsTable tbody tr').length;
             const $paginationInfo = $('.text-muted');
-            const currentText = $paginationInfo.text();
-            const matches = currentText.match(/Showing (\d+) to (\d+) of (\d+) entries/);
-            if (matches && matches.length === 4) {
-                const total = parseInt(matches[3]) - 1;
-                const newText = `Showing ${matches[1]} to ${matches[2] > total ? total : matches[2]} of ${total} entries`;
-                $paginationInfo.text(newText);
+            
+            if ($('#searchInput').val().length > 0) {
+                $paginationInfo.text(`Showing ${visibleRows} of ${totalRows} entries (filtered)`);
+            } else {
+                $paginationInfo.text(`Showing ${$('#transactionsTable tbody tr:visible').length} of ${totalRows} entries`);
             }
         }
         // Filter transactions function
@@ -728,6 +880,29 @@
             const endDate = dates[1];
             console.log('Filtering by date range:', startDate, 'to', endDate);
         }
+    });
+
+    // Search functionality
+    $('#searchInput').on('input', function() {
+        const searchTerm = $(this).val().toLowerCase();
+        
+        $('#transactionsTable tbody tr').each(function() {
+            const propertyName = $(this).find('td:nth-child(2)').text().toLowerCase();
+            const tenantName = $(this).find('td:nth-child(4)').text().toLowerCase();
+            
+            if (propertyName.includes(searchTerm) || tenantName.includes(searchTerm)) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+        
+        updatePaginationInfo();
+    });
+
+    // Clear search when reset button is clicked
+    $(document).on('click', '.reset', function() {
+        $('#searchInput').val('').trigger('input');
     });
 </script>
 </body>

@@ -81,30 +81,30 @@ class PropertyListingController extends Controller
     }
 
     public function updateStatus(Request $request, $id)
-{
-    $this->authorizeLandlord();
-    $property = Property::where('user_id', Auth::id())->findOrFail($id);
-    
-    $request->validate([
-        'status' => 'required|in:available,maintenance'
-    ]);
-    
-    // Only allow changing between available and maintenance for approved properties
-    if ($property->status === 'available' || $property->status === 'maintenance') {
-        $property->update(['status' => $request->status]);
+    {
+        $this->authorizeLandlord();
+        $property = Property::where('user_id', Auth::id())->findOrFail($id);
+        
+        $request->validate([
+            'status' => 'required|in:available,maintenance'
+        ]);
+        
+        // Only allow changing between available and maintenance for approved properties
+        if ($property->status === 'available' || $property->status === 'maintenance') {
+            $property->update(['status' => $request->status]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Property status updated successfully!',
+                'property' => $property
+            ]);
+        }
         
         return response()->json([
-            'success' => true,
-            'message' => 'Property status updated successfully!',
-            'property' => $property
-        ]);
+            'success' => false,
+            'message' => 'You can only change status between Available and Maintenance for approved properties'
+        ], 403);
     }
-    
-    return response()->json([
-        'success' => false,
-        'message' => 'You can only change status between Available and Maintenance for approved properties'
-    ], 403);
-}
 
     public function destroy($id)
     {
