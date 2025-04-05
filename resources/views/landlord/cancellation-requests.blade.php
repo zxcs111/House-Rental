@@ -103,6 +103,15 @@
         .breadcrumbs .ion-ios-arrow-forward {
             color: rgba(255, 255, 255, 0.8);
         }
+
+        .reason-column {
+            max-width: 300px; /* Set a maximum width for the reason column */
+            white-space: normal; /* Allow text to wrap */
+            word-wrap: break-word; /* Break long words if needed */
+            overflow-wrap: break-word; /* Modern alternative to word-wrap */
+            text-align: left; /* Align text to left (looks better for paragraphs) */
+            padding: 8px 12px; /* Add some padding */
+        }
     </style>
   </head>
   <body>
@@ -193,7 +202,7 @@
                                                 <th>Property</th>
                                                 <th>Tenant</th>
                                                 <th>Rental Period</th>
-                                                <th>Reason</th>
+                                                <th class="text-center">Reason</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -201,9 +210,9 @@
                                             @foreach($pendingRequests as $request)
                                             <tr>
                                                 <td>
-                                                    <a href="{{ route('house-detail', $request->property_id) }}" class="text-primary">
+                                                    <span class="text-primary">
                                                         {{ $request->property->title }}
-                                                    </a>
+                                                    </span>
                                                 </td>
                                                 <td>
                                                     {{ $request->tenant->first_name }} {{ $request->tenant->last_name }}
@@ -214,7 +223,7 @@
                                                     {{ \Carbon\Carbon::parse($request->start_date)->format('M d, Y') }} - 
                                                     {{ \Carbon\Carbon::parse($request->end_date)->format('M d, Y') }}
                                                 </td>
-                                                <td>{{ $request->cancellation_reason }}</td>
+                                                <td class="reason-column">{{ $request->cancellation_reason }}</td> <!-- Updated column cell -->
                                                 <td>
                                                     <form action="{{ route('landlord.cancellation.approve', $request->id) }}" method="POST" class="d-inline">
                                                         @csrf
@@ -222,7 +231,7 @@
                                                             <i class="fas fa-check"></i>
                                                         </button>
                                                     </form>
-                                                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $request->id }}">
+                                                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $request->id }}" style="margin-left: 8px;"> <!-- Added margin here -->
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </td>
@@ -312,11 +321,6 @@
                             </ul>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 text-center">
-                    <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved</p>
                 </div>
             </div>
         </div>
