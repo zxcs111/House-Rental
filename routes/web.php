@@ -5,9 +5,10 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HouseController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Landlord\PropertyListingController;
-use App\Http\Controllers\Landlord\LandlordController; // Updated namespace
+use App\Http\Controllers\Landlord\LandlordController; 
 use App\Http\Controllers\Landlord\FinancialReportingController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Broadcast;
 
@@ -58,8 +59,8 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Profile routes (authenticated only)
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [LoginController::class, 'profile'])->name('profile');
-    Route::post('/profile/update', [LoginController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
+    Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
 });
 
 // Admin routes
