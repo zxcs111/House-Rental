@@ -6,8 +6,9 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Redirect;
 
-class LandlordController extends Controller
+class CancellationController extends Controller
 {
     public function __construct()
     {
@@ -15,7 +16,7 @@ class LandlordController extends Controller
         
         $this->middleware(function ($request, $next) {
             if (Auth::user()->role !== 'landlord') {
-                abort(403, 'Unauthorized access. Landlord privileges required.');
+                return Redirect::to(url()->previous());
             }
             return $next($request);
         });
@@ -74,7 +75,7 @@ class LandlordController extends Controller
         $payment->update([
             'cancellation_status' => 'rejected',
             'rejection_reason' => $validated['rejection_reason'],
-            'cancellation_requested' => false // Changed from true to false
+            'cancellation_requested' => false 
         ]);
 
         return back()->with('success', 'Cancellation request rejected.');

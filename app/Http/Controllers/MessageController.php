@@ -70,8 +70,8 @@ class MessageController extends Controller
                 
                 $lastMessage = $messages->first();
                 $unreadCount = $messages->where('recipient_id', Auth::id())
-                                      ->where('is_read', false)
-                                      ->count();
+                                    ->where('is_read', false)
+                                    ->count();
 
                 return [
                     'user' => $otherUser,
@@ -82,6 +82,12 @@ class MessageController extends Controller
             })
             ->sortByDesc(function($conversation) {
                 return $conversation['last_message']->created_at;
+            })
+            ->filter(function($conversation) {
+                // Only include conversations that have at least one message not deleted by the current user
+                return $conversation['last_message']->sender_id == Auth::id() 
+                    ? !$conversation['last_message']->deleted_by_sender
+                    : !$conversation['last_message']->deleted_by_recipient;
             });
 
         // If there are conversations, redirect to the first one
@@ -100,8 +106,14 @@ class MessageController extends Controller
         // Get all conversations for the sidebar
         $conversations = Message::with(['sender', 'recipient', 'property'])
             ->where(function($query) {
-                $query->where('recipient_id', Auth::id())
-                    ->orWhere('sender_id', Auth::id());
+                $query->where(function($q) {
+                    $q->where('recipient_id', Auth::id())
+                    ->where('deleted_by_recipient', false);
+                })
+                ->orWhere(function($q) {
+                    $q->where('sender_id', Auth::id())
+                    ->where('deleted_by_sender', false);
+                });
             })
             ->latest()
             ->get()
@@ -117,8 +129,8 @@ class MessageController extends Controller
                 
                 $lastMessage = $messages->first();
                 $unreadCount = $messages->where('recipient_id', Auth::id())
-                                      ->where('is_read', false)
-                                      ->count();
+                                    ->where('is_read', false)
+                                    ->count();
 
                 return [
                     'user' => $otherUser,
@@ -129,6 +141,12 @@ class MessageController extends Controller
             })
             ->sortByDesc(function($conversation) {
                 return $conversation['last_message']->created_at;
+            })
+            ->filter(function($conversation) {
+                // Only include conversations that have at least one message not deleted by the current user
+                return $conversation['last_message']->sender_id == Auth::id() 
+                    ? !$conversation['last_message']->deleted_by_sender
+                    : !$conversation['last_message']->deleted_by_recipient;
             });
 
         // Get messages for the current conversation with property relationship
@@ -165,22 +183,7 @@ class MessageController extends Controller
         ]);
     }
 
-    public function markAsRead(Request $request)
-    {
-        $request->validate([
-            'message_id' => 'required|exists:messages,id'
-        ]);
-
-        $message = Message::find($request->message_id);
-        
-        if ($message->recipient_id == Auth::id() && !$message->is_read) {
-            $message->update(['is_read' => true]);
-            broadcast(new MessageRead($message->sender_id, Auth::id(), [$message->id]));
-        }
-
-        return response()->json(['status' => 'success']);
-    }
-
+    
     public function markConversationAsRead($userId)
     {
         $unreadMessages = Message::where('sender_id', $userId)
@@ -230,33 +233,34 @@ class MessageController extends Controller
         ]);
 
         $userId = Auth::id();
+        $recipientId = $request->recipient_id;
 
         // Update messages where current user is the sender
         Message::where('sender_id', $userId)
-            ->where('recipient_id', $request->recipient_id)
+            ->where('recipient_id', $recipientId)
             ->update(['deleted_by_sender' => true]);
 
         // Update messages where current user is the recipient
-        Message::where('sender_id', $request->recipient_id)
+        Message::where('sender_id', $recipientId)
             ->where('recipient_id', $userId)
             ->update(['deleted_by_recipient' => true]);
 
         // Soft delete messages that both parties have deleted
-        Message::where(function($query) use ($userId, $request) {
+        Message::where(function($query) use ($userId, $recipientId) {
                 $query->where('sender_id', $userId)
-                    ->where('recipient_id', $request->recipient_id)
+                    ->where('recipient_id', $recipientId)
                     ->where('deleted_by_sender', true)
                     ->where('deleted_by_recipient', true);
             })
-            ->orWhere(function($query) use ($userId, $request) {
-                $query->where('sender_id', $request->recipient_id)
+            ->orWhere(function($query) use ($userId, $recipientId) {
+                $query->where('sender_id', $recipientId)
                     ->where('recipient_id', $userId)
                     ->where('deleted_by_sender', true)
                     ->where('deleted_by_recipient', true);
             })
             ->delete();
 
-        return response()->json(['success' => true]);
+        return response()->json(['success' => true, 'redirect' => route('messages.index')]);
     }
 
     // Add this new method to your MessageController

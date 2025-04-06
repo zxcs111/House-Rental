@@ -4,13 +4,22 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HouseController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\Landlord\PropertyListingController;
-use App\Http\Controllers\Landlord\LandlordController; 
-use App\Http\Controllers\Landlord\FinancialReportingController;
-use App\Http\Controllers\Admin\AdminController;
+
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Broadcast;
+
+use App\Http\Controllers\tenant\AboutController;
+use App\Http\Controllers\tenant\ServicesController;
+use App\Http\Controllers\tenant\BlogController;
+use App\Http\Controllers\tenant\ContactController;
+
+use App\Http\Controllers\Landlord\PropertyListingController;
+use App\Http\Controllers\Landlord\CancellationController; 
+use App\Http\Controllers\Landlord\FinancialReportingController;
+
+use App\Http\Controllers\Admin\AdminController;
+
 
 Broadcast::routes(['middleware' => ['auth']]);
 
@@ -18,26 +27,12 @@ Broadcast::routes(['middleware' => ['auth']]);
 // Home route
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index'])->name('home');
 
-// Static page routes
-Route::get('/about', function () {
-    return view('about');
-})->name('about');
-
-Route::get('/services', function () {
-    return view('services');
-})->name('services');
-
-Route::get('/pricing', function () {
-    return view('pricing');
-})->name('pricing');
-
-Route::get('/blog', function () {
-    return view('blog');
-})->name('blog');
-
-Route::get('/contact', function () {
-    return view('contact');
-})->name('contact');
+Route::middleware('auth')->group(function () {
+    Route::get('/about', [AboutController::class, 'index'])->name('about');
+    Route::get('/services', [ServicesController::class, 'index'])->name('services');
+    Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+    Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+});
 
 // House routes
 Route::get('/houses', [HouseController::class, 'index'])->name('houses');
@@ -91,13 +86,13 @@ Route::post('/payments/{payment}/cancel', [PaymentController::class, 'requestCan
 
 // Landlord routes
 Route::middleware('auth')->group(function () {
-    Route::get('/cancellation-requests', [LandlordController::class, 'cancellationRequests'])
+    Route::get('/cancellation-requests', [CancellationController::class, 'cancellationRequests'])
         ->name('landlord.cancellation-requests');
     
-    Route::post('/cancellation-requests/{payment}/approve', [LandlordController::class, 'approveCancellation'])
+    Route::post('/cancellation-requests/{payment}/approve', [CancellationController::class, 'approveCancellation'])
         ->name('landlord.cancellation.approve');
     
-    Route::post('/cancellation-requests/{payment}/reject', [LandlordController::class, 'rejectCancellation'])
+    Route::post('/cancellation-requests/{payment}/reject', [CancellationController::class, 'rejectCancellation'])
         ->name('landlord.cancellation.reject');
 });
 
@@ -112,7 +107,6 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('/messages/new/{user}', [MessageController::class, 'getNewMessages'])->name('messages.new');
 
-    
     // Mark as read routes
     Route::post('/messages/mark-as-read', [MessageController::class, 'markAsRead'])->name('messages.mark-as-read');
     Route::post('/messages/mark-conversation-read/{user}', [MessageController::class, 'markConversationAsRead'])

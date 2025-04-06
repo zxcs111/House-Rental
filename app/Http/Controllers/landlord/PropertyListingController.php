@@ -7,27 +7,23 @@ use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redirect;
 
 class PropertyListingController extends Controller
 {
-    private function authorizeLandlord()
-    {
-        if (Auth::user()->role !== 'landlord') {
-            abort(403, 'Unauthorized access. Landlord privileges required.');
-        }
-    }
-
     public function index()
     {
-        $this->authorizeLandlord();
+
+        if (Auth::user()->role !== 'landlord') {
+            return Redirect::to(url()->previous());
+        }
+
         $properties = Property::where('user_id', Auth::id())->latest()->get();
         return view('landlord.propertylisting', compact('properties'));
     }
 
     public function store(Request $request)
-    {
-        $this->authorizeLandlord();
-        
+    {        
         $validated = $this->validatePropertyData($request);
         $validated = $this->handleImageUploads($request, $validated);
         
@@ -47,7 +43,6 @@ class PropertyListingController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->authorizeLandlord();
         $property = Property::where('user_id', Auth::id())->findOrFail($id);
         
         $validated = $this->validatePropertyData($request, true);
@@ -74,11 +69,16 @@ class PropertyListingController extends Controller
     }
 
     public function edit($id)
-    {
-        $this->authorizeLandlord();
-        $property = Property::where('user_id', Auth::id())->findOrFail($id);
-        return response()->json($property);
+{
+    $property = Property::where('user_id', Auth::id())->findOrFail($id);
+    
+    // Include status in the response for all properties except pending
+    if ($property->status !== 'pending') {
+        $property->can_change_status = true;
     }
+    
+    return response()->json($property);
+}
 
     public function updateStatus(Request $request, $id)
     {
@@ -89,8 +89,8 @@ class PropertyListingController extends Controller
             'status' => 'required|in:available,maintenance'
         ]);
         
-        // Only allow changing between available and maintenance for approved properties
-        if ($property->status === 'available' || $property->status === 'maintenance') {
+        // Allow changing to maintenance from any status except pending
+        if ($property->status !== 'pending') {
             $property->update(['status' => $request->status]);
             
             return response()->json([
@@ -102,13 +102,12 @@ class PropertyListingController extends Controller
         
         return response()->json([
             'success' => false,
-            'message' => 'You can only change status between Available and Maintenance for approved properties'
+            'message' => 'You can only change status for approved properties'
         ], 403);
     }
 
     public function destroy($id)
     {
-        $this->authorizeLandlord();
         $property = Property::where('user_id', Auth::id())->findOrFail($id);
         
         $this->deletePropertyImages($property);

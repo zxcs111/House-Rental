@@ -351,32 +351,42 @@
                                                     <span class="badge bg-{{ $payment->status == 'completed' ? 'success' : 'warning' }}">
                                                         {{ $payment->status == 'completed' ? 'Rented' : ucfirst($payment->status) }}
                                                     </span>
+                                                    @if($payment->property->status === 'maintenance')
+                                                        <span class="badge bg-info mt-1 d-block">Under Maintenance</span>
+                                                    @endif
                                                     @if($payment->cancellation_status == 'rejected')
                                                         <span class="badge rejection-badge mt-1 d-block">Cancellation Rejected</span>
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <div class="btn-action-group">
-                                                        <button class="btn btn-sm btn-outline-primary view-receipt" data-payment-id="{{ $payment->id }}">
-                                                            <i class="fas fa-receipt"></i> Receipt
-                                                        </button>
-                                                        @if($payment->status == 'completed')
-                                                            @if($payment->cancellation_requested && $payment->cancellation_status == 'pending')
-                                                                <span class="badge bg-warning text-dark">Pending</span>
-                                                            @elseif($payment->cancellation_status == 'rejected')
-                                                                <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#rejectedModal{{ $payment->id }}">
-                                                                    <i class="fas fa-info-circle"></i> Details
-                                                                </button>
-                                                                <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
-                                                                    <i class="fas fa-redo"></i> Re-request
-                                                                </button>
-                                                            @elseif(!$payment->cancellation_requested || $payment->cancellation_status == 'approved')
-                                                                <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
-                                                                    <i class="fas fa-times-circle"></i> Cancel
-                                                                </button>
+                                                    <td>
+                                                        <div class="btn-action-group">
+                                                            <button class="btn btn-sm btn-outline-primary view-receipt" data-payment-id="{{ $payment->id }}">
+                                                                <i class="fas fa-receipt"></i> Receipt
+                                                            </button>
+                                                            @if($payment->landlord_id && $payment->status == 'completed') 
+                                                                <a href="{{ route('messages.conversation', ['user' => $payment->landlord_id]) }}" class="btn btn-sm btn-outline-secondary">
+                                                                    <i class="fas fa-comment-dots"></i> Message the Owner
+                                                                </a>
                                                             @endif
-                                                        @endif
-                                                    </div>
+                                                            @if($payment->status == 'completed')
+                                                                @if($payment->cancellation_requested && $payment->cancellation_status == 'pending')
+                                                                    <span class="badge bg-warning text-dark">Pending</span>
+                                                                @elseif($payment->cancellation_status == 'rejected')
+                                                                    <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#rejectedModal{{ $payment->id }}">
+                                                                        <i class="fas fa-info-circle"></i> Details
+                                                                    </button>
+                                                                    <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
+                                                                        <i class="fas fa-redo"></i> Re-request
+                                                                    </button>
+                                                                @elseif(!$payment->cancellation_requested || $payment->cancellation_status == 'approved')
+                                                                    <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
+                                                                        <i class="fas fa-times-circle"></i> Cancel
+                                                                    </button>
+                                                                @endif
+                                                            @endif
+                                                        </div>
+                                                    </td>
                                                 </td>
                                             </tr>
 

@@ -35,6 +35,11 @@ class User extends Authenticatable
         'phone_number',   
         'address', 
         'role', 
+        'amount',
+        'tenant_id',
+        'landlord_id',
+        'property_id',  // Include this if payments are related to a specific property
+        'created_at',   // Or any other date fields you have
     ];
 
     protected $hidden = [
