@@ -48,9 +48,9 @@ class PropertyListingController extends Controller
         $validated = $this->validatePropertyData($request, true);
         $validated = $this->handleImageUploads($request, $validated, $property);
         
-        // Only update status if it's provided and property is already approved
+        // Only update status if it's provided and property is already approved or rented
         if ($request->has('status') && 
-            ($property->status === 'available' || $property->status === 'maintenance')) {
+            ($property->status === 'rented' || $property->status === 'maintenance')) {
             $validated['status'] = $request->status;
         } else {
             unset($validated['status']);
@@ -69,40 +69,37 @@ class PropertyListingController extends Controller
     }
 
     public function edit($id)
-{
-    $property = Property::where('user_id', Auth::id())->findOrFail($id);
-    
-    // Include status in the response for all properties except pending
-    if ($property->status !== 'pending') {
-        $property->can_change_status = true;
+    {
+        $property = Property::where('user_id', Auth::id())->findOrFail($id);
+        
+        if ($property->status === 'rented' || $property->status === 'maintenance') {
+            $property->can_change_status = true;
+        }
+        
+        return response()->json($property);
     }
-    
-    return response()->json($property);
-}
 
     public function updateStatus(Request $request, $id)
     {
-        $this->authorizeLandlord();
         $property = Property::where('user_id', Auth::id())->findOrFail($id);
         
         $request->validate([
-            'status' => 'required|in:available,maintenance'
+            'status' => 'required|in:rented,maintenance'
         ]);
         
-        // Allow changing to maintenance from any status except pending
-        if ($property->status !== 'pending') {
+        if ($property->status === 'rented' || $property->status === 'maintenance') {
             $property->update(['status' => $request->status]);
             
             return response()->json([
                 'success' => true,
-                'message' => 'Property status updated successfully!',
-                'property' => $property
+                'message' => 'Property status changed to ' . ucfirst($request->status) . ' successfully!',
+                'status' => $request->status
             ]);
         }
         
         return response()->json([
             'success' => false,
-            'message' => 'You can only change status for approved properties'
+            'message' => 'You can only change status for rented properties'
         ], 403);
     }
 

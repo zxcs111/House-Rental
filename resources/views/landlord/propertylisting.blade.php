@@ -7,6 +7,7 @@
     
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <link rel="stylesheet" href="{{ asset('user-template/css/open-iconic-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/animate.css') }}">
@@ -524,9 +525,10 @@
   <script src="{{ asset('user-template/js/bootstrap-datepicker.js') }}"></script>
   <script src="{{ asset('user-template/js/jquery.timepicker.min.js') }}"></script>
   <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
   <script src="{{ asset('user-template/js/google-map.js') }}"></script>
   <script src="{{ asset('user-template/js/main.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   
   <script>
 $(document).ready(function() {
@@ -599,20 +601,20 @@ $(document).ready(function() {
                 modal.find('#available_from').val(data.available_from);
                 
                 // Show status dropdown only for available/maintenance properties
-                if (data.status === 'available' || data.status === 'maintenance') {
+                if (data.status === 'rented' || data.status === 'maintenance') {
                   const statusHtml = `
-                    <div class="form-group">
-                        <label for="status">Status*</label>
-                        <select class="form-control" id="status" name="status" required>
-                            <option value="available" ${data.status === 'available' ? 'selected' : ''}>Available</option>
-                            <option value="maintenance" ${data.status === 'maintenance' ? 'selected' : ''}>Under Maintenance</option>
-                        </select>
-                    </div>
-                `;
-                // Insert before the amenities section
-                $('.form-group:has(label:contains("Amenities"))').before(statusHtml);
-            } else {
-                    // For pending or rented properties, keep status hidden
+                        <div class="form-group">
+                            <label for="status">Status*</label>
+                            <select class="form-control" id="status" name="status" required>
+                                <option value="rented" ${data.status === 'rented' ? 'selected' : ''}>Rented</option>
+                                <option value="maintenance" ${data.status === 'maintenance' ? 'selected' : ''}>Under Maintenance</option>
+                            </select>
+                        </div>
+                    `;
+                    // Insert before the amenities section
+                    $('.form-group:has(label:contains("Amenities"))').before(statusHtml);
+                } else {
+                    // For other statuses, keep status hidden
                     $('<input>').attr({
                         type: 'hidden',
                         name: 'status',
@@ -675,20 +677,23 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             success: function(response) {
-                if(response.success) {
-                    // Close modal
-                    $('#createPropertyModal').modal('hide');
-                    
-                    // Update the table without refresh
-                    updatePropertyTable(response.property, response.isNew);
-                    
-                    // Show success message
-                    showAlert('success', response.message || 'Operation completed successfully!');
-                }
-            },
+              if(response.success) {
+                $('#createPropertyModal').modal('hide');
+                  
+                  updatePropertyTable(response.property, response.isNew);
+                  
+                  Swal.fire({
+                      icon: 'success',
+                      title: 'Success!',
+                      text: response.message || 'Operation completed successfully!',
+                      showConfirmButton: false,
+                      timer: 3000
+                  });
+              }
+          },
             error: function(xhr) {
-                // Handle validation errors
-                if (xhr.status === 422) {
+
+              if (xhr.status === 422) {
                     var errors = xhr.responseJSON.errors;
                     $.each(errors, function(key, value) {
                         var element = $('[name="' + key + '"]');
@@ -703,17 +708,13 @@ $(document).ready(function() {
         });
     });
     
-    // Function to update the property table
     function updatePropertyTable(property, isNew) {
-        // Check if this is the first property
         const isEmptyState = $('.table-responsive').length === 0;
         
-        // If this is the first property, create the table structure
         if (isEmptyState) {
             createTableStructure();
         }
         
-        // Create the status badge
         let statusBadge;
         if (property.status === 'pending') {
             statusBadge = '<span class="badge badge-pending">Pending Approval</span>';
@@ -725,12 +726,10 @@ $(document).ready(function() {
             statusBadge = '<span class="badge badge-maintenance">Under Maintenance</span>';
         }
         
-        // Create the image cell
         const imageCell = property.main_image
             ? `<img src="/storage/${property.main_image}" alt="${property.title}" class="property-image rounded">`
             : `<div class="property-placeholder rounded"><i class="fas fa-home text-muted"></i></div>`;
         
-        // Create the actions buttons
         const actions = `
             <div class="btn-group" role="group">
                 <button class="btn btn-sm btn-primary edit-property" 
@@ -751,7 +750,6 @@ $(document).ready(function() {
             </div>
         `;
         
-        // Create the table row
         const newRow = `
             <tr data-id="${property.id}">
                 <td>${imageCell}</td>
@@ -771,15 +769,12 @@ $(document).ready(function() {
         `;
         
         if (isNew) {
-            // If new property, prepend to the table
             $('table tbody').prepend(newRow);
         } else {
-            // If updating, replace the existing row
             $(`tr[data-id="${property.id}"]`).replaceWith(newRow);
         }
     }
     
-    // Function to create the table structure when adding first property
     function createTableStructure() {
         const tableHtml = `
             <div class="table-responsive">
@@ -800,11 +795,9 @@ $(document).ready(function() {
             </div>
         `;
         
-        // Replace the empty state with the table
         $('.card-body').html(tableHtml);
     }
     
-    // Function to show alert messages
     function showAlert(type, message) {
         const alertHtml = `
             <div class="alert alert-${type} alert-dismissible fade show" role="alert">
@@ -815,19 +808,15 @@ $(document).ready(function() {
             </div>
         `;
         
-        // Remove any existing alerts
         $('.alert').remove();
         
-        // Add the new alert
         $('.card-body').prepend(alertHtml);
         
-        // Auto-dismiss after 5 seconds
         setTimeout(() => {
             $('.alert').alert('close');
         }, 5000);
     }
     
-    // Reset form when modal is closed
     $('#createPropertyModal').on('hidden.bs.modal', function() {
         $('#createPropertyForm')[0].reset();
         $('#imagePreview').empty();
@@ -836,10 +825,8 @@ $(document).ready(function() {
         $('.invalid-feedback').remove();
         $('input[name="amenities[]"]').prop('checked', false);
         
-        // Remove any dynamically added status field
         $('#status').closest('.form-group').remove();
         
-        // Reset form action and method
         $('#createPropertyForm').attr('action', '/property/store');
         $('input[name="_method"]').val('POST');
         $('#main_image').attr('required', 'required');

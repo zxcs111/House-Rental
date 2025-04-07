@@ -6,11 +6,17 @@ use App\Models\Payment;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class PaymentController extends Controller
 {
+    
     public function showPaymentForm($propertyId)
     {
+        if (Auth::user()->role !== 'tenant') {
+            return Redirect::to(url()->previous());
+        }
+
         $property = Property::findOrFail($propertyId);
         return view('payment', compact('property'));
     }
