@@ -59,8 +59,72 @@
     .badge-maintenance {
       background-color: #e74a3b; /* Danger color from financial reporting */
     }
+    /* Table container */
     .table-responsive {
-      overflow-x: auto;
+        overflow-x: auto;
+        margin-bottom: 20px;
+    }
+
+    /* Table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        min-width: 1000px; /* Ensure the table doesn't shrink too much */
+    }
+
+    /* Table header */
+    thead th {
+        background-color: #f8f9fa;
+        color: #333;
+        font-weight: bold;
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 2px solid #dee2e6;
+    }
+
+    /* Table body */
+    tbody td {
+        padding: 12px 15px;
+        border-bottom: 1px solid #dee2e6;
+        vertical-align: middle;
+    }
+
+    /* Image column */
+    td img {
+        max-width: 100px;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    /* Status badges */
+    .status-badge {
+        display: inline-block;
+        padding: 5px 10px;
+        font-size: 12px;
+        font-weight: bold;
+        border-radius: 4px;
+        text-transform: capitalize;
+    }
+
+    .status-pending {
+        background-color: #ffcc80;
+        color: #333;
+    }
+
+    .status-rented {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .status-available {
+        background-color: #007bff;
+        color: white;
+    }
+
+    /* Hover effect for table rows */
+    tr:hover {
+        background-color: #f1f8ff;
     }
     .image-preview {
       max-height: 150px;
