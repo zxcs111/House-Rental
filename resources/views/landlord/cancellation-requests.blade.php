@@ -9,6 +9,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <link rel="stylesheet" href="{{ asset('user-template/css/open-iconic-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/owl.carousel.min.css') }}">
@@ -112,6 +115,88 @@
             text-align: left; /* Align text to left (looks better for paragraphs) */
             padding: 8px 12px; /* Add some padding */
         }
+
+        /* Custom Table Design */
+        .custom-table {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .custom-table thead {
+            background-color: #f8f9fa;
+        }
+
+        .custom-table th {
+            font-weight: 600;
+            color: #333;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .custom-table td {
+            vertical-align: middle;
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .custom-table tbody tr:hover {
+            background-color: #f1f8ff;
+        }
+
+        .reason-column {
+            max-width: 300px;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            text-align: left;
+            padding: 8px 12px;
+        }
+
+        /* Action Buttons */
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+        }
+
+        /* Card Header */
+        .card-header {
+            border-bottom: 1px solid #dee2e6;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #ffc107; /* Warning color */
+        }
+
+        .card-header .badge {
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        /* Alert Styling */
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
+        }
+
+        .alert-info i {
+            margin-right: 8px;
+        }
     </style>
   </head>
   <body>
@@ -179,7 +264,7 @@
             <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
                 <div class="col-md-9 ftco-animate pb-5">
                     <p class="breadcrumbs"><span class="mr-2"><a href="{{ route('home') }}">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Cancellation Requests <i class="ion-ios-arrow-forward"></i></span></p>
-                    <h1 class="mb-3 bread">Manage Cancellation Requests</h1>
+                    <h1 class="mb-3 bread">Property Cancellation Requests</h1>
                 </div>
             </div>
         </div>
@@ -187,85 +272,103 @@
 
     <section class="ftco-section bg-light">
         <div class="container">
+            <!-- Heading Section -->
+            <div class="row justify-content-center mb-5 pb-2">
+                <div class="col-md-12 heading-section text-center ftco-animate">
+                    <span class="subheading">Cancellation Requests</span>
+                    <h2 class="mb-4">Manage Pending Cancellations</h2>
+                </div>
+            </div>
+
             <div class="row justify-content-center">
                 <div class="col-md-12">
-                    <div class="card mb-4">
-                        <div class="card-header bg-warning text-white">
-                            <h3 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Pending Cancellation Requests</h3>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-warning text-white d-flex justify-content-between align-items-center">
+                            <h4 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Pending Cancellation Requests</h4>
+                            @if($pendingRequests->count() > 0)
+                                <span class="badge bg-danger">{{ $pendingRequests->count() }} Pending</span>
+                            @endif
                         </div>
                         <div class="card-body">
                             @if($pendingRequests->count() > 0)
                                 <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead>
+                                    <table class="table table-hover custom-table">
+                                        <thead class="thead-light">
                                             <tr>
                                                 <th>Property</th>
                                                 <th>Tenant</th>
                                                 <th>Rental Period</th>
-                                                <th class="text-center">Reason</th>
-                                                <th>Action</th>
+                                                <th class="reason-column">Reason</th>
+                                                <th class="text-center">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($pendingRequests as $request)
-                                            <tr>
-                                                <td>
-                                                    <span class="text-primary">
-                                                        {{ $request->property->title }}
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    {{ $request->tenant->first_name }} {{ $request->tenant->last_name }}
-                                                    <br>
-                                                    <small class="text-muted">{{ $request->tenant->email }}</small>
-                                                </td>
-                                                <td>
-                                                    {{ \Carbon\Carbon::parse($request->start_date)->format('M d, Y') }} - 
-                                                    {{ \Carbon\Carbon::parse($request->end_date)->format('M d, Y') }}
-                                                </td>
-                                                <td class="reason-column">{{ $request->cancellation_reason }}</td> <!-- Updated column cell -->
-                                                <td>
-                                                    <form action="{{ route('landlord.cancellation.approve', $request->id) }}" method="POST" class="d-inline">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-sm btn-primary mr-2">
+                                                <tr>
+                                                    <td>
+                                                        <span class="text-primary fw-bold">
+                                                            {{ $request->property->title }}
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        {{ $request->tenant->first_name }} {{ $request->tenant->last_name }}
+                                                        <br>
+                                                        <small class="text-muted">{{ $request->tenant->email }}</small>
+                                                    </td>
+                                                    <td>
+                                                        {{ \Carbon\Carbon::parse($request->start_date)->format('M d, Y') }} - 
+                                                        {{ \Carbon\Carbon::parse($request->end_date)->format('M d, Y') }}
+                                                    </td>
+                                                    <td class="reason-column">{{ $request->cancellation_reason }}</td>
+                                                    <td class="text-center">
+                                                        <!-- Approve Button -->
+                                                        <button 
+                                                            class="btn btn-sm btn-success me-2 approve-btn" 
+                                                            data-id="{{ $request->id }}" 
+                                                            title="Approve">
                                                             <i class="fas fa-check"></i>
                                                         </button>
-                                                    </form>
-                                                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal{{ $request->id }}" style="margin-left: 8px;"> <!-- Added margin here -->
-                                                        <i class="fas fa-trash"></i>
-                                                    </button>
-                                                </td>
-                                            </tr>
 
-                                            <!-- Reject Modal -->
-                                            <div class="modal fade" id="rejectModal{{ $request->id }}" tabindex="-1" aria-hidden="true">
-                                                <div class="modal-dialog">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Reject Cancellation Request</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        <!-- Reject Button -->
+                                                        <button 
+                                                            class="btn btn-sm btn-danger reject-btn" 
+                                                            data-bs-toggle="modal" 
+                                                            data-bs-target="#rejectModal{{ $request->id }}" 
+                                                            title="Reject">
+                                                            <i class="fas fa-times"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <!-- Reject Modal -->
+                                                <div class="modal fade" id="rejectModal{{ $request->id }}" tabindex="-1" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Reject Cancellation Request</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <form id="rejectForm{{ $request->id }}">
+                                                                @csrf
+                                                                <input type="hidden" name="payment_id" value="{{ $request->id }}">
+                                                                <div class="modal-body">
+                                                                    <p>Please provide a reason for rejecting this cancellation request:</p>
+                                                                    <textarea class="form-control" name="rejection_reason" rows="3" required></textarea>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                                    <button type="submit" class="btn btn-danger submit-reject" data-id="{{ $request->id }}">Confirm Rejection</button>
+                                                                </div>
+                                                            </form>
                                                         </div>
-                                                        <form action="{{ route('landlord.cancellation.reject', $request->id) }}" method="POST">
-                                                            @csrf
-                                                            <div class="modal-body">
-                                                                <p>Please provide a reason for rejecting this cancellation request:</p>
-                                                                <textarea class="form-control" name="rejection_reason" rows="3" required></textarea>
-                                                            </div>
-                                                            <div class="modal-footer">
-                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                                <button type="submit" class="btn btn-danger">Confirm Rejection</button>
-                                                            </div>
-                                                        </form>
                                                     </div>
                                                 </div>
-                                            </div>
                                             @endforeach
                                         </tbody>
                                     </table>
                                 </div>
                             @else
-                                <div class="alert alert-info">
-                                    <i class="fas fa-info-circle"></i> No pending cancellation requests.
+                                <div class="alert alert-info text-center">
+                                    <i class="fas fa-info-circle me-2"></i> No pending cancellation requests.
                                 </div>
                             @endif
                         </div>
@@ -349,5 +452,93 @@
     <script src="{{ asset('user-template/js/main.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
-  </body>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+
+    <script>
+    // SweetAlert Confirmation for Approve
+    document.querySelectorAll('.approve-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const paymentId = this.dataset.id;
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You want to approve this cancellation request?",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, approve it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Send AJAX request to approve the cancellation
+                    axios.post(`/cancellation-requests/${paymentId}/approve`, {
+                        _token: '{{ csrf_token() }}'
+                    }).then(response => {
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Cancellation approved successfully.',
+                            icon: 'success',
+                            confirmButtonColor: '#28a745'
+                        }).then(() => {
+                            location.reload(); // Optionally refresh the page or update the UI dynamically
+                        });
+                    }).catch(error => {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'An error occurred while approving the cancellation.',
+                            icon: 'error',
+                            confirmButtonColor: '#d33'
+                        });
+                    });
+                }
+            });
+        });
+    });
+
+        // Handle Rejection via AJAX
+        document.querySelectorAll('.submit-reject').forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const paymentId = this.dataset.id;
+                const form = document.getElementById(`rejectForm${paymentId}`);
+                const formData = new FormData(form);
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "You want to reject this cancellation request?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, reject it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Send AJAX request to reject the cancellation
+                        axios.post(`/cancellation-requests/${paymentId}/reject`, formData)
+                            .then(response => {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: 'Successfully rejected the cancellation.',
+                                    icon: 'success',
+                                    confirmButtonColor: '#28a745'
+                                }).then(() => {
+                                    // Optionally refresh the table or update the UI
+                                    location.reload(); // Remove this line if you want to dynamically update the UI
+                                });
+                            }).catch(error => {
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'An error occurred while rejecting the cancellation.',
+                                    icon: 'error',
+                                    confirmButtonColor: '#d33'
+                                });
+                            });
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
 </html>

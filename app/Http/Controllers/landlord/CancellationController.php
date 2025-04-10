@@ -46,20 +46,17 @@ class CancellationController extends Controller
 
     public function approveCancellation(Request $request, Payment $payment)
     {
-        if ($payment->landlord_id !== Auth::id()) {
-            abort(403, 'Unauthorized action.');
-        }
 
-        // Update payment status and property availability
+       // Update payment status and property availability
         $payment->update([
             'cancellation_status' => 'approved',
             'status' => 'cancelled',
-            'cancellation_requested' => false // Mark as no longer pending
+            'cancellation_requested' => false
         ]);
 
         $payment->property->update(['status' => 'available']);
 
-        return back()->with('success', 'Cancellation approved successfully.');
+        return response()->json(['message' => 'Cancellation approved successfully.']);
     }
 
     public function rejectCancellation(Request $request, Payment $payment)
