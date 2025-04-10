@@ -34,7 +34,7 @@ class FinancialReportingController extends Controller
         $transactions = $landlord->receivedPayments()
             ->with(['property', 'tenant'])
             ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->paginate(5);
 
         return view('landlord.financial-reporting', [
             'totalSales' => $totalSales,

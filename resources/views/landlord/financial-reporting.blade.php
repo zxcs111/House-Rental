@@ -320,7 +320,7 @@
                           </li>
                           <li class="nav-item active">
                               <a href="{{ route('landlord.financial-reporting') }}" class="nav-link">
-                                  Financial Reporting
+                                  Financial Report
                               </a>
                           </li>
                       @endif
@@ -369,9 +369,9 @@
                         <span class="mr-2">
                             <a href="{{ route('home') }}">Home <i class="ion-ios-arrow-forward"></i></a>
                         </span>
-                        <span>Financial Reporting <i class="ion-ios-arrow-forward"></i></span>
+                        <span>Financial Report <i class="ion-ios-arrow-forward"></i></span>
                     </p>
-                    <h1 class="mb-3 bread">Manage Financial History</h1>
+                    <h1 class="mb-3 bread">Your Financial Report</h1>
                 </div>
             </div>
         </div>
@@ -379,6 +379,12 @@
     <!-- Main Content -->
     <section class="main-content">
         <div class="container">
+        <div class="row justify-content-center mb-5 pb-2">
+                <div class="col-md-12 heading-section text-center ftco-animate">
+                    <span class="subheading">Financial Report</span>
+                    <h2 class="mb-4">Manage Rented History Transaction</h2>
+                </div>
+            </div>
             <div class="row mb-4">
                 <div class="col-md-4">
                     <div class="card card-primary">
@@ -528,7 +534,23 @@
                             Showing {{ $transactions->firstItem() }} to {{ $transactions->lastItem() }} of {{ $transactions->total() }} entries
                         </div>
                         <div>
-                            {{ $transactions->links() }}
+                            <!-- Adjusted Pagination Controls -->
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination pagination-sm"> <!-- Added pagination-sm for smaller size -->
+                                    <!-- Previous Button -->
+                                    <li class="page-item {{ $transactions->onFirstPage() ? 'disabled' : '' }}">
+                                        <a class="page-link" href="{{ $transactions->previousPageUrl() }}" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span> <!-- Smaller arrow -->
+                                        </a>
+                                    </li>
+                                    <!-- Next Button -->
+                                    <li class="page-item {{ $transactions->hasMorePages() ? '' : 'disabled' }}">
+                                        <a class="page-link" href="{{ $transactions->nextPageUrl() }}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span> <!-- Smaller arrow -->
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
                 </div>
