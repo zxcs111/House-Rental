@@ -44,18 +44,18 @@ class PropertyListingController extends Controller
     public function update(Request $request, $id)
     {
         $property = Property::where('user_id', Auth::id())->findOrFail($id);
-        
+
         $validated = $this->validatePropertyData($request, true);
+
         $validated = $this->handleImageUploads($request, $validated, $property);
-        
-        // Only update status if it's provided and property is already approved or rented
+
         if ($request->has('status') && 
             ($property->status === 'rented' || $property->status === 'maintenance')) {
             $validated['status'] = $request->status;
         } else {
             unset($validated['status']);
         }
-        
+
         $property->update(array_merge($validated, [
             'amenities' => json_encode($request->amenities ?? [])
         ]));
@@ -110,7 +110,10 @@ class PropertyListingController extends Controller
         $this->deletePropertyImages($property);
         $property->delete();
 
-        return redirect()->route('property.listing')->with('success', 'Property deleted successfully!');
+        return response()->json([
+            'success' => true,
+            'message' => 'Property deleted successfully!'
+        ]);
     }
 
     private function validatePropertyData(Request $request, $isUpdate = false)
@@ -137,6 +140,23 @@ class PropertyListingController extends Controller
             $rules['main_image'] = 'required|image|mimes:jpeg,png,jpg,gif|max:10240';
         } else {
             $rules['main_image'] = 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240';
+
+            if ($request->has('status') && in_array($request->status, ['rented', 'maintenance'])) {
+                unset($rules['title']);
+                unset($rules['description']);
+                unset($rules['address']);
+                unset($rules['city']);
+                unset($rules['state']);
+                unset($rules['zip_code']);
+                unset($rules['price']);
+                unset($rules['bedrooms']);
+                unset($rules['bathrooms']);
+                unset($rules['square_feet']);
+                unset($rules['property_type']);
+                unset($rules['available_from']);
+                unset($rules['amenities']);
+                unset($rules['gallery_images.*']);
+            }
         }
 
         return $request->validate($rules);
