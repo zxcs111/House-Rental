@@ -1,0 +1,321 @@
+body {
+    margin-top: 20px;
+    background: url('../images/profile-page.jpg');
+    background-size: cover;
+}
+.img-account-profile {
+    height: 10rem; 
+    width: 10rem;
+    border-radius: 50% !important; 
+}
+.card {
+    box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
+    border: none;
+    border-radius: 0; 
+    background: rgba(0, 0, 0, 0.8); 
+}
+.card-body {
+    color: white;
+    font-size: 0.875rem; 
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.card .card-header {
+    font-weight: 500;
+    background-color: rgba(33, 40, 50, 0.03);
+    border-bottom: 1px solid rgba(248, 249, 250, 0.13);
+    padding: 1rem 1.35rem;
+    font-size: 1rem;
+    color: white;
+    border-radius: 0;
+}
+.form-control, .dataTable-input {
+    display: block;
+    width: 100%;
+    padding: 0.875rem 1.125rem;
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1;
+    color: white;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #c5ccd6;
+    border-radius: 0;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.nav-borders .nav-link.active {
+    color: #0061f2;
+    border-bottom-color: #0061f2;
+}
+.nav-borders .nav-link {
+    color: white;
+    border-bottom-width: 0.125rem;
+    border-bottom-style: solid;
+    border-bottom-color: transparent;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 1rem;
+    margin-right: 1rem;
+}
+.back-to-home {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    color: white;
+    border: none;
+    border-radius: 0;
+    padding: 10px 20px;
+    text-decoration: none;
+}
+.profile-image-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.profile-image-section img {
+    width: 10rem;
+    height: 10rem;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.profile-image-section h3 {
+    margin-top: 15px;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: white;
+}
+.btn {
+    border-radius: 0;
+}
+.container-xl {
+    margin-top: 60px;
+}
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column;
+    }
+}
+.table {
+    color: white;
+    border-color: #444;
+}
+.table th {
+    border-bottom-width: 1px;
+    border-color: #444;
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 12px 15px;
+}
+.table td {
+    border-color: #444;
+    vertical-align: middle;
+    padding: 12px 15px;
+}
+.table-hover tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+.table thead th {
+    color: white;
+    background-color: #343a40;
+}
+.table tbody tr:hover {
+    background-color: #555;
+}
+/* Ensure consistent width and styling for all badges */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em; /* Default padding */
+    font-size: 0.85em;
+    text-align: center; /* Center-align the text */
+    display: inline-block; /* Ensure proper alignment */
+}
+
+/* Specific styles for warning badges */
+.badge.bg-warning {
+    color: black; /* Ensure text is readable on yellow background */
+}
+
+.btn-action-group {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.btn-action-group .btn {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.85rem;
+}
+.modal-content {
+    background-color: #222;
+    color: white;
+    border-radius: 0;
+    border: 1px solid #444;
+}
+.modal-header {
+    border-bottom: 1px solid #444;
+    padding: 1rem 1.5rem;
+}
+.modal-footer {
+    border-top: 1px solid #444;
+    padding: 1rem 1.5rem;
+}
+.modal-body {
+    padding: 1.5rem;
+}
+.btn-close {
+    filter: invert(1);
+    opacity: 0.8;
+}
+.tenant-info small {
+    font-size: 0.8rem;
+    color: #aaa;
+}
+.rejection-badge {
+    background-color: #dc3545;
+}
+.alert-modal {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-left: 4px solid;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+}
+.alert-modal.alert-danger {
+    border-left-color: #dc3545;
+}
+.alert-modal.alert-warning {
+    border-left-color: #ffc107;
+}
+.property-title {
+    color: white; /* Changed from rgb(42, 87, 224) to white */
+    font-weight: 500;
+    text-decoration: none;
+    cursor: default;
+    margin-left: 10px;
+}
+.card-body .form-group {
+    margin-bottom: 1.25rem;
+}
+.table tr td:not(:last-child) {
+    padding-right: 15px;
+}
+.modal-body .form-group {
+    margin-bottom: 1.5rem;
+}
+.bg-dark {
+    background-color: white !important;
+}
+.table-dark {
+    background-color: #212529;
+    color: white;
+    overflow: hidden;
+}
+.table-dark th,
+.table-dark td {
+    border-color: rgba(255, 255, 255, 0.1);
+    vertical-align: middle;
+    padding: 12px 15px;
+    text-align: left;
+    box-sizing: border-box;
+}
+.table-dark thead th {
+    background-color: #343a40;
+    color: white;
+    font-weight: 600;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+}
+.table-dark tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+.table-dark .badge {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+    font-weight: 500;
+    display: inline-block;
+    text-align: center;
+    margin: 2px 0;
+}
+.table-dark th:nth-child(1),
+.table-dark td:nth-child(1) {
+    width: 18%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.table-dark th:nth-child(2),
+.table-dark td:nth-child(2) {
+    width: 18%;
+    white-space: normal;
+    padding-left: 15px;
+}
+.table-dark td:nth-child(2) span.d-block {
+    display: block;
+    margin-bottom: 5px;
+}
+.table-dark td:nth-child(2) small.text-muted {
+    font-size: 0.75rem;
+    color: #aaa;
+    display: block;
+}
+
+.table-dark th:nth-child(3),
+.table-dark td:nth-child(3) {
+    width: 12%;
+    white-space: nowrap;
+    text-align: center;
+    padding: 12px 15px; /* Ensure consistent padding */
+}
+
+/* Ensure the amount text aligns properly */
+.table-dark td:nth-child(3) span {
+    display: inline-block;
+    text-align: center;
+    width: 100%; /* Ensure it takes the full width of the cell for centering */
+}
+
+/* Ensure consistent alignment for 'Period' column */
+.table-dark th:nth-child(4),
+.table-dark td:nth-child(4) {
+    width: 22%;
+    white-space: nowrap; /* Prevent text wrapping */
+    padding: 12px 15px; /* Match padding with other columns */
+}
+
+/* Ensure consistent alignment for 'Status' column */
+.table-dark th:nth-child(5),
+.table-dark td:nth-child(5) {
+    width: 15%;
+    white-space: normal; /* Allow text wrapping if necessary */
+    text-align: center; /* Center align the text */
+    padding: 12px 15px; /* Match padding with other columns */
+}
+
+.table-dark td:nth-child(5) .badge {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+    font-weight: 500;
+    display: inline-block;
+    text-align: center;
+    margin: 2px 0;
+    width: auto;
+}
+
+.btn-action-group .btn-outline-light {
+    color: white; /* Text color */
+    border-color: rgba(255, 255, 255, 0.5); /* Border color */
+}
+.table-dark th:nth-child(6),
+.table-dark td:nth-child(6) {
+    width: 15%;
+    white-space: nowrap;
+}
+.table-dark .btn-action-group {
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 5px;
+}
+.alert-info {
+    background-color: rgba(0, 123, 255, 0.1);
+    border-left: 4px solid #007bff;
+    color: #007bff;
+}
+
+
