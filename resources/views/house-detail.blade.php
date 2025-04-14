@@ -126,8 +126,7 @@
       					<span class="subheading" style="font-size: 1em">{{ $property->property_type }}</span>
       					<h2>{{ $property->title }}</h2>
 							<p class="location" style="font-size: 1.2em; line-height: 1.5;">
-								<span style="margin-left: 5px;">{{ $property->address }}</span>
-							</p>      					
+							<span style="margin-left: 5px;">{{ $property->address }}, {{ $property->city }}, {{ $property->zip_code }}</span>							</p>      					
 						<div class="rent-button mt-4">	
       					    <p class="d-flex mb-0 d-block justify-content-center">
                                 @auth

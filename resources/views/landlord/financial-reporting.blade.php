@@ -21,6 +21,10 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <style>
         :root {
             --primary-color: #4e73df;
@@ -246,6 +250,7 @@
         }
         /* Badge Styles */
         .badge {
+            display: inline-block; /* Prevent badge from affecting alignment */
             font-weight: 500;
             padding: 5px 10px;
             font-size: 0.9rem;
@@ -272,6 +277,63 @@
             transform: scale(1.05); /* Slight zoom effect */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
         }
+
+        /* Align table columns */
+        .table td:nth-child(1) {
+            text-align: left; /* Date */
+            padding-left: 12px; /* Ensure consistent padding */
+        }
+        .table td:nth-child(2) {
+            text-align: left; /* Property */
+            padding-left: 12px;
+        }
+        .table td:nth-child(3) {
+            text-align: right; /* Amount */
+            padding-right: 12px;
+        }
+        .table td:nth-child(4) {
+            text-align: left; /* Tenant */
+            padding-left: 12px; /* Explicit padding to align with other text columns */
+        }
+        .table td:nth-child(5) {
+            text-align: left; /* Rental Period */
+            padding-left: 12px;
+        }
+        .table td:nth-child(6) {
+            text-align: center; /* Status */
+        }
+        .table td:nth-child(7) {
+            text-align: center; /* Actions */
+        }
+
+        /* Align headers to match the content */
+        .table th:nth-child(1) {
+            text-align: left; /* Date */
+            padding-left: 12px;
+        }
+        .table th:nth-child(2) {
+            text-align: left; /* Property */
+            padding-left: 12px;
+        }
+        .table th:nth-child(3) {
+            text-align: right; /* Amount */
+            padding-right: 12px;
+        }
+        .table th:nth-child(4) {
+            text-align: left; /* Tenant */
+            padding-left: 12px; /* Ensure header aligns with data */
+        }
+        .table th:nth-child(5) {
+            text-align: left; /* Rental Period */
+            padding-left: 12px;
+        }
+        .table th:nth-child(6) {
+            text-align: center; /* Status */
+        }
+        .table th:nth-child(7) {
+            text-align: center; /* Actions */
+        }
+
         /* Responsive Adjustments */
         @media (max-width: 768px) {
             .card-value {
@@ -284,6 +346,7 @@
                 margin: 5px 0;
             }
         }
+
     </style>
 </head>
 <body>
@@ -429,6 +492,7 @@
                     </div>
                 </div>
             </div>
+            
            <!-- Transactions Table -->
            <div class="card1">
                 <div class="card-body">
@@ -473,61 +537,61 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                        <table class="table" id="transactionsTable">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Property</th>
-                                    <th>Amount</th>
-                                    <th>Tenant</th>
-                                    <th>Rental Period</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($transactions as $transaction)
-                                <tr data-status="{{ $transaction->status === 'completed' ? 'rented' : $transaction->status }}">
-                                    <td>{{ $transaction->created_at->format('M d, Y') }}</td>
-                                    <td>{{ $transaction->property->title ?? 'N/A' }}</td>
-                                    <td>${{ number_format($transaction->amount, 2) }}</td>
-                                    <td>{{ $transaction->tenant->name ?? 'N/A' }}</td>
-                                    <td>
-                                        {{ $transaction->start_date->format('M d, Y') }} - 
-                                        {{ $transaction->end_date->format('M d, Y') }}
-                                    </td>
-                                    <td>
-                                        <span class="badge rounded-pill 
-                                            @if($transaction->status === 'completed' || $transaction->status === 'rented') badge-success
-                                            @elseif($transaction->status === 'pending') badge-warning
-                                            @else badge-danger @endif">
-                                            {{ $transaction->status === 'completed' ? 'Rented' : ucfirst($transaction->status) }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            @if($transaction->status === 'completed' || $transaction->status === 'rented')
-                                            <button class="btn btn-sm btn-primary edit-property mr-2 view-receipt" 
-                                                data-transaction-id="{{ $transaction->id }}" 
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="View Receipt">
-                                                <i class="fas fa-receipt"></i>
-                                            </button>
-                                            @endif
-                                            <button class="btn btn-sm btn-danger delete-transaction" 
-                                                data-transaction-id="{{ $transaction->id }}" 
-                                                data-toggle="tooltip" 
-                                                data-placement="top" 
-                                                title="Delete Transaction">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                    <table class="table" id="transactionsTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Property</th>
+                        <th>Amount</th>
+                        <th>Tenant</th>
+                        <th>Rental Period</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($transactions as $transaction)
+                    <tr data-status="{{ $transaction->status === 'completed' ? 'rented' : $transaction->status }}">
+                        <td>{{ $transaction->created_at->format('M d, Y') }}</td>
+                        <td>{{ $transaction->property->title ?? 'N/A' }}</td>
+                        <td>${{ number_format($transaction->amount, 2) }}</td>
+                        <td>{{ $transaction->tenant->name ?? 'N/A' }}</td>
+                        <td>
+                            {{ $transaction->start_date->format('M d, Y') }} - 
+                            {{ $transaction->end_date->format('M d, Y') }}
+                        </td>
+                        <td>
+                            <span class="badge rounded-pill 
+                                @if($transaction->status === 'completed' || $transaction->status === 'rented') badge-success
+                                @elseif($transaction->status === 'pending') badge-warning
+                                @else badge-danger @endif">
+                                {{ $transaction->status === 'completed' ? 'Rented' : ucfirst($transaction->status) }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                @if($transaction->status === 'completed' || $transaction->status === 'rented')
+                                <button class="btn btn-sm btn-primary edit-property mr-2 view-receipt" 
+                                    data-transaction-id="{{ $transaction->id }}" 
+                                    data-toggle="tooltip" 
+                                    data-placement="top" 
+                                    title="View Receipt">
+                                    <i class="fas fa-receipt"></i>
+                                </button>
+                                @endif
+                                <button class="btn btn-sm btn-danger delete-transaction" 
+                                    data-transaction-id="{{ $transaction->id }}" 
+                                    data-toggle="tooltip" 
+                                    data-placement="top" 
+                                    title="Delete Transaction">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <div class="text-muted">
@@ -849,37 +913,70 @@
             `);
             printWindow.document.close();
         });
-        // Delete transaction handler
-        $(document).on('click', '.delete-transaction', function() {
-            const transactionId = $(this).data('transaction-id');
-            const $row = $(this).closest('tr');
-            if (confirm('Are you sure you want to delete this transaction? This action cannot be undone.')) {
+        
+        // Delete transaction handler with SweetAlert
+        $(document).on('click', '.delete-transaction', function () {
+        const transactionId = $(this).data('transaction-id');
+        const $row = $(this).closest('tr');
+
+        // Show SweetAlert confirmation dialog
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This will hide the transaction from your view but keep it in the database.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, hide it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Proceed with AJAX request to hide the transaction
                 $.ajax({
                     url: `/landlord/financial-reporting/${transactionId}`,
                     method: 'DELETE',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function(response) {
+                    success: function (response) {
                         if (response.success) {
-                            $row.fadeOut(300, function() {
+                            // Hide the row with a fade-out effect
+                            $row.fadeOut(300, function () {
                                 $(this).remove();
                                 updatePaginationInfo();
                             });
+
+                            // Show success message using SweetAlert
+                            Swal.fire(
+                                'Hidden!',
+                                'The transaction has been hidden from your view.',
+                                'success'
+                            );
                         } else {
-                            alert('Error: ' + (response.message || 'Failed to delete transaction'));
+                            // Show error message if hiding fails
+                            Swal.fire(
+                                'Error!',
+                                response.message || 'Failed to hide transaction.',
+                                'error'
+                            );
                         }
                     },
-                    error: function(xhr) {
-                        let errorMsg = 'Error deleting transaction';
+                    error: function (xhr) {
+                        let errorMsg = 'Error hiding transaction';
                         if (xhr.responseJSON && xhr.responseJSON.message) {
                             errorMsg = xhr.responseJSON.message;
                         }
-                        alert(errorMsg);
+
+                        // Show error message using SweetAlert
+                        Swal.fire(
+                            'Error!',
+                            errorMsg,
+                            'error'
+                        );
                     }
                 });
             }
         });
+    });
         // Function to update pagination info after deletion
         function updatePaginationInfo() {
             const visibleRows = $('#transactionsTable tbody tr:visible').length;
