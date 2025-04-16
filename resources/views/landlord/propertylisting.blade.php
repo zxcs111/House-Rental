@@ -425,12 +425,6 @@
                 <input type="number" class="form-control" id="square_feet" name="square_feet" min="0" required>
               </div>
             </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <label for="available_from">Available From</label>
-                <input type="date" class="form-control" id="available_from" name="available_from">
-              </div>
-            </div>
           </div>
           
           <div class="form-group">

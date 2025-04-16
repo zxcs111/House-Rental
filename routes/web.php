@@ -27,12 +27,10 @@ Broadcast::routes(['middleware' => ['auth']]);
 // Home route
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index'])->name('home');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/about', [AboutController::class, 'index'])->name('about');
-    Route::get('/services', [ServicesController::class, 'index'])->name('services');
-    Route::get('/blog', [BlogController::class, 'index'])->name('blog');
-    Route::get('/contact', [ContactController::class, 'index'])->name('contact');
-});
+Route::get('/about', [AboutController::class, 'index'])->name('about');
+Route::get('/services', [ServicesController::class, 'index'])->name('services');
+Route::get('/blog', [BlogController::class, 'index'])->name('blog');
+Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 
 // House routes
 Route::get('/houses', [HouseController::class, 'index'])->name('houses');

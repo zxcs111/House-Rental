@@ -150,7 +150,7 @@
 				<div class="row justify-content-end">
 					<div class="col-md-6 heading-section heading-section-white ftco-animate">
                     <h2 class="mb-3">Looking to Rent? Find Your Dream Home with Us!</h2>
-                <a href="#" class="btn btn-primary btn-lg">Rent A House</a>
+                <a href="{{ route('houses') }}" class="btn btn-primary btn-lg">Rent A House</a>
           </div>
 				</div>
 			</div>

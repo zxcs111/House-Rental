@@ -10,8 +10,8 @@ class ServicesController extends Controller
 {
     public function index()
     {
-        if (Auth::user()->role !== 'tenant') {
-            return Redirect::to(url()->previous());
+         if (Auth::check() && Auth::user()->role !== 'tenant') {
+            return redirect()->back();
         }
 
         return view('tenant.services');
