@@ -182,7 +182,6 @@
                                 <div class="card-body payment-body">
                                     <form method="POST" action="{{ route('payment.process', $property->id) }}">
                                         @csrf
-                                        
                                         <div class="form-group">
                                             <label class="font-weight-bold">Rental Period</label>
                                             <div class="row">

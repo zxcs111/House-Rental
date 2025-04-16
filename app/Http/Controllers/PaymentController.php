@@ -58,6 +58,10 @@ class PaymentController extends Controller
 
     public function paymentSuccess($paymentId)
     {
+        if (Auth::user()->role !== 'tenant') {
+            return Redirect::to(url()->previous());
+        }
+
         $payment = Payment::with(['property', 'landlord'])->findOrFail($paymentId);
         return view('payment-success', compact('payment'));
     }
