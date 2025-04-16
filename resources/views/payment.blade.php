@@ -186,13 +186,9 @@
                                         <div class="form-group">
                                             <label class="font-weight-bold">Rental Period</label>
                                             <div class="row">
-                                                <div class="col-md-6">
+                                                <div class="col-md-12">
                                                     <label>Start Date</label>
-                                                    <input type="date" class="form-control" id="start_date" name="start_date" required>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <label>End Date</label>
-                                                    <input type="date" class="form-control" id="end_date" name="end_date" required>
+                                                    <input type="date" class="form-control" id="start_date" name="start_date" required min="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
                                                 </div>
                                             </div>
                                         </div>

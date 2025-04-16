@@ -24,7 +24,7 @@ class PaymentController extends Controller
     public function processPayment(Request $request, $propertyId)
     {
         $property = Property::findOrFail($propertyId);
-        
+
         // Validate that property is available
         if ($property->status !== 'available') {
             return back()->with('error', 'This property is not available for rent.');
@@ -33,15 +33,10 @@ class PaymentController extends Controller
         $validated = $request->validate([
             'payment_method' => 'required|string|in:credit_card,paypal,bank_transfer',
             'start_date' => 'required|date|after_or_equal:today',
-            'end_date' => 'required|date|after:start_date',
             'card_number' => 'required_if:payment_method,credit_card',
             'expiry_date' => 'required_if:payment_method,credit_card',
             'cvv' => 'required_if:payment_method,credit_card',
         ]);
-
-        // Convert dates to Carbon instances
-        $startDate = \Carbon\Carbon::parse($validated['start_date']);
-        $endDate = \Carbon\Carbon::parse($validated['end_date']);
 
         // Create payment record
         $payment = Payment::create([
@@ -51,9 +46,8 @@ class PaymentController extends Controller
             'amount' => $property->price,
             'payment_method' => $validated['payment_method'],
             'status' => 'completed',
-            'start_date' => $startDate,
-            'end_date' => $endDate,
-            'transaction_id' => uniqid('TRX-')
+            'start_date' => \Carbon\Carbon::parse($validated['start_date']),
+            'transaction_id' => uniqid('TRX-'),
         ]);
 
         // Update property status to rented
@@ -114,9 +108,8 @@ class PaymentController extends Controller
             'payment_method' => $payment->payment_method,
             'status' => $payment->status,
             'transaction_id' => $payment->transaction_id,
-            'start_date' => $payment->start_date,
-            'end_date' => $payment->end_date,
-            'created_at' => $payment->created_at
+            'start_date' => $payment->start_date->format('M d, Y'), // Format start_date
+            'created_at' => $payment->created_at->format('M d, Y')
         ]);
     }
 }

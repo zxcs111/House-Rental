@@ -176,10 +176,6 @@
                                         <th>Payment Date:</th>
                                         <td>{{ $payment->created_at->format('M d, Y h:i A') }}</td>
                                     </tr>
-                                    <tr>
-                                        <th>Rental Period:</th>
-                                        <td>{{ $payment->start_date->format('M d, Y') }} to {{ $payment->end_date->format('M d, Y') }}</td>
-                                    </tr>
                                 </table>
                             </div>
                             

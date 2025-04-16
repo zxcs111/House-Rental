@@ -545,6 +545,7 @@
                         <th>Amount</th>
                         <th>Tenant</th>
                         <th>Rental Period</th>
+                        <th>Next Payment</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -557,8 +558,20 @@
                         <td>${{ number_format($transaction->amount, 2) }}</td>
                         <td>{{ $transaction->tenant->name ?? 'N/A' }}</td>
                         <td>
-                            {{ $transaction->start_date->format('M d, Y') }} - 
-                            {{ $transaction->end_date->format('M d, Y') }}
+                            {{ $transaction->start_date->format('M d, Y') }} 
+                        </td>
+                        <td>
+                            @if($transaction->status === 'completed' || $transaction->status === 'rented')
+                                @php
+                                    // Calculate the next payment date
+                                    $nextPaymentDate = \Carbon\Carbon::parse($transaction->start_date)->addMonth();
+                                    // Format the text for the next payment
+                                    $nextPaymentText = $nextPaymentDate->format('M d, Y');
+                                @endphp
+                                {{ $nextPaymentText }}
+                            @else
+                                N/A
+                            @endif
                         </td>
                         <td>
                             <span class="badge rounded-pill 
@@ -842,7 +855,6 @@
                             <div class="col-md-6">
                                 <h6>Rental Period</h6>
                                 <p>${response.start_date ? new Date(response.start_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'} to 
-                                ${response.end_date ? new Date(response.end_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'N/A'}</p>
                             </div>
                         </div>
                     `;

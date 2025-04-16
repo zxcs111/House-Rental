@@ -37,8 +37,7 @@ class Payment extends Model
         'payment_method',
         'transaction_id',
         'status',
-        'start_date',
-        'end_date',
+        'start_date', // Keep start_date
         'notes',
         'cancellation_requested',
         'cancellation_reason',
@@ -47,13 +46,13 @@ class Payment extends Model
     ];
 
     protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
+        'start_date' => 'date', // Keep start_date cast
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'cancellation_requested' => 'boolean',
         'amount' => 'float'
     ];
+
 
     public function scopePendingCancellations($query)
     {
