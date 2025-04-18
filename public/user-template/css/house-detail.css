@@ -1,0 +1,68 @@
+ /* Gallery Carousel Styles */
+ .gallery-carousel {
+    padding: 15px 0;
+}
+
+.gallery-carousel .owl-item img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.gallery-carousel .owl-item a:hover img {
+    transform: scale(1.05);
+}
+
+/* Customize Owl Carousel Navigation Arrows */
+.gallery-carousel .owl-nav {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    transform: translateY(-50%);
+    display: flex;
+    justify-content: space-between;
+    pointer-events: none;
+}
+
+.gallery-carousel .owl-nav button {
+    font-size: 24px;
+    background: rgba(0, 0, 0, 0.5) !important;
+    color: #fff !important;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 50%;
+    pointer-events: auto;
+    transition: background 0.3s ease;
+}
+
+.gallery-carousel .owl-nav button:hover {
+    background: rgba(0, 0, 0, 0.8) !important;
+}
+
+.gallery-carousel .owl-prev {
+    margin-left: 10px;
+}
+
+.gallery-carousel .owl-next {
+    margin-right: 10px;
+}
+
+/* Magnific Popup Styles */
+.mfp-bg {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.mfp-figure img {
+    max-height: 80vh;
+    width: auto;
+    margin: 0 auto;
+}
+
+.mfp-close {
+    color: #fff !important;
+    font-size: 28px;
+}
