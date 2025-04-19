@@ -1,0 +1,185 @@
+
+/* Updated dropdown to match search bar exactly */
+.propertydropdown {
+    --width-of-input: 200px;
+    --height-of-input: 50px; /* Match form height */
+    --border-radius: 30px; /* Match form border radius */
+    width: var(--width-of-input);
+    height: var(--height-of-input);
+    padding: 0 1em 0 1em; /* Adjusted padding */
+    font-size: 1rem; /* Match input font size */
+    border: 1px solid #ced4da; /* Match form border */
+    border-radius: var(--border-radius);
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23495057' d='M0 0l6 8 6-8z'/%3E%3C/svg%3E") 
+                no-repeat right 1rem center / 12px 8px;
+    color: #495057;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Match form transitions */
+}
+
+/* Add focus state to match form */
+.propertydropdown:focus {
+    outline: none;
+    border-color: #4e73df;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+/* Adjust the form-group container to ensure proper alignment */
+.form-group.ml-2 {
+    margin: 0 !important; /* Remove all margins */
+    display: flex;
+    align-items: center;
+    height: 50px; /* Match form height */
+}
+
+    .overlay-rented {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0,0,0,0.5);
+      border-radius: 4px 4px 0 0;
+  }
+
+  .rented-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #6c757d;
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-weight: bold;
+      font-size: 0.8rem;
+  }
+
+  .car-wrap {
+      position: relative;
+      overflow: hidden;
+  }
+
+  .car-wrap .img {
+      position: relative;
+      height: 200px;
+      background-size: cover;
+      background-position: center center;
+  }
+
+  .block-27 ul li span.ellipsis {
+      border: none;
+      color: #666;
+      font-weight: bold;
+  }
+  #filterForm {
+    display: flex;
+    align-items: center; /* Vertical alignment */
+    justify-content: center; /* Horizontal alignment */
+    gap: 0.75rem; /* Space between elements */
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+}
+
+
+  .form {
+    --timing: 0.3s;
+    --width-of-input: 500px; /* Increased from 400px to 500px */
+    --height-of-input: 50px; /* Increased from 40px to 50px */
+    --border-height: 2px;
+    --input-bg: #fff;
+    --border-color: #4e73df;
+    --border-radius: 30px;
+    --after-border-radius: 4px;
+    position: relative;
+    width: var(--width-of-input);
+    height: var(--height-of-input);
+    display: flex;
+    align-items: center;
+    padding-inline: 1em;
+    border-radius: var(--border-radius);
+    transition: border-radius 0.5s ease;
+    background: var(--input-bg, #fff);
+    border: 1px solid #ced4da;
+    }
+
+    .input {
+        font-size: 1rem; /* Slightly larger font size for better visibility */
+        background-color: transparent;
+        width: 100%;
+        height: 100%;
+        padding-inline: 0.75em;
+        padding-block: 0.5em;
+        border: none;
+        color: #495057;
+    }
+
+    .form button {
+        border: none;
+        background: none;
+        color: #8b8ba7;
+        padding: 0;
+        margin-right: 0.75rem;
+    }
+
+    .form:before {
+        content: "";
+        position: absolute;
+        background: var(--border-color);
+        transform: scaleX(0);
+        transform-origin: center;
+        width: 100%;
+        height: var(--border-height);
+        left: 0;
+        bottom: 0;
+        border-radius: 1px;
+        transition: transform var(--timing) ease;
+    }
+
+    .form:focus-within {
+        border-radius: var(--after-border-radius);
+        outline: none;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+
+    .input:focus {
+        outline: none;
+    }
+
+    .form:focus-within:before {
+        transform: scale(1);
+    }
+
+    .reset {
+        border: none;
+        background: none;
+        opacity: 0;
+        visibility: hidden;
+        padding: 0;
+        margin-left: 0.75rem;
+    }
+
+    .input:not(:placeholder-shown) ~ .reset {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .form svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    @media (max-width: 576px) {
+        #filterForm {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .form {
+            width: 100%;
+        }
+        
+        .form-group.ml-2 {
+            height: auto; /* Reset height on mobile */
+        }
+}
