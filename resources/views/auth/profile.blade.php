@@ -153,8 +153,8 @@
                                                                 <i class="fas fa-receipt"></i> Receipt
                                                             </button>
                                                             <!-- Message Landlord Button -->
-                                                            @if($payment->landlord_id && $payment->status == 'completed') 
-                                                                <a href="{{ route('messages.conversation', ['user' => $payment->landlord_id]) }}" class="btn btn-sm btn-outline-light">
+                                                            @if($payment->landlord_id && $payment->status == 'completed')
+                                                                <a href="{{ route('messages.conversation', $payment->landlord_id) }}?property_id={{ $payment->property_id }}" class="btn btn-sm btn-outline-light">
                                                                     <i class="fas fa-comment-dots"></i> Message
                                                                 </a>
                                                             @endif
