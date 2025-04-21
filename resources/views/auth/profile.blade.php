@@ -10,7 +10,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/profile.css') }}">
-    
 </head>
 <body>
     <div class="container-xl px-4">
@@ -18,11 +17,9 @@
         <a href="{{ route('home') }}" class="btn back-to-home">
             <i class="fas fa-arrow-left"></i> Back to Home
         </a>
-        <hr class="mt-0 mb-4">
-
-        <div class="row">
+        <div class="row profile-row">
             <!-- Profile Section -->
-            <div class="col-xl-4">
+            <div class="col-xl-4 profile-column">
                 <div class="card mb-4 mb-xl-0">
                     <div class="card-header">Profile Picture</div>
                     <div class="card-body text-center">
@@ -50,48 +47,59 @@
             </div>
 
             <!-- Personal Information Section -->
-            <div class="col-xl-8">
-                <div class="card mb-4">
+            <div class="col-xl-8 info-column">
+                <!-- Personal Information Card -->
+                <div class="card personal-info-card">
                     <div class="card-header">Personal Information</div>
-                        <div class="card-body">
-                            <form action="{{ route('profile.update') }}" method="POST">
-                                @csrf
-                                <div class="form-group">
-                                    <label for="name">Account Name</label>
-                                    <input type="text" name="name" id="name" class="form-control" value="{{ Auth::user()->name }}" maxlength="15" oninput="validateName(this)">
+                    <div class="card-body">
+                        <form action="{{ route('profile.update') }}" method="POST">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="name">Account Name</label>
+                                        <input type="text" name="name" id="name" class="form-control" value="{{ Auth::user()->name }}" maxlength="15" oninput="validateName(this)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="first_name">First Name</label>
+                                        <input type="text" name="first_name" id="first_name" class="form-control" value="{{ Auth::user()->first_name }}" maxlength="20" oninput="validateName(this)">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="last_name">Last Name</label>
+                                        <input type="text" name="last_name" id="last_name" class="form-control" value="{{ Auth::user()->last_name }}" maxlength="15" oninput="validateName(this)">
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="first_name">First Name</label>
-                                    <input type="text" name="first_name" id="first_name" class="form-control" value="{{ Auth::user()->first_name }}" maxlength="20" oninput="validateName(this)">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="email">Email</label>
+                                        <input type="email" name="email" id="email" class="form-control" value="{{ Auth::user()->email }}" maxlength="255">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="phone_number">Phone</label>
+                                        <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ Auth::user()->phone_number }}" oninput="validatePhone(this)" maxlength="11" pattern="\d{0,11}">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="address">Address</label>
+                                        <input type="text" name="address" id="address" class="form-control" value="{{ Auth::user()->address ?? '' }}">
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="last_name">Last Name</label>
-                                    <input type="text" name="last_name" id="last_name" class="form-control" value="{{ Auth::user()->last_name }}" maxlength="15" oninput="validateName(this)">
-                                </div>
-                                <div class="form-group">
-                                    <label for="email">Email</label>
-                                    <input type="email" name="email" id="email" class="form-control" value="{{ Auth::user()->email }}" maxlength="255">
-                                </div>
-                                <div class="form-group">
-                                    <label for="phone_number">Phone</label>
-                                    <input type="text" name="phone_number" id="phone_number" class="form-control" value="{{ Auth::user()->phone_number }}" oninput="validatePhone(this)" maxlength="11" pattern="\d{0,11}">
-                                </div>
-                                <div class="form-group">
-                                    <label for="address">Address</label>
-                                    <input type="text" name="address" id="address" class="form-control" value="{{ Auth::user()->address ?? '' }}">
-                                </div>
-                                <div class="form-group text-center mt-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="fas fa-save"></i> Save Changes
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
+                            </div>
+                            <div class="form-group text-center mt-4">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </div>
+                        </form>
                     </div>
+                </div>
+            </div>
+        </div>
 
-                <!-- Tenant Rent History Section -->
-                @if(Auth::user()->role === 'tenant')
-                    <div class="card mt-4">
+        <!-- Tenant Rent History Section in a Separate Full-Width Row -->
+        @if(Auth::user()->role === 'tenant')
+            <div class="row rent-history-row mt-4">
+                <div class="col-12">
+                    <div class="card rent-history-card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5 class="mb-0" style="color: white; font-size: 1rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Rent History</h5>
                         </div>
@@ -105,12 +113,18 @@
                                                 <th scope="col">Landlord</th>
                                                 <th scope="col">Amount</th>
                                                 <th scope="col">Period</th>
+                                                <th scope="col">Next Payment</th>
                                                 <th scope="col">Status</th>
                                                 <th scope="col">Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach(Auth::user()->payments as $payment)
+                                                @php
+                                                    $hasReviewed = App\Models\Review::where('user_id', Auth::id())
+                                                        ->where('property_id', $payment->property_id)
+                                                        ->exists();
+                                                @endphp
                                                 <tr>
                                                     <td>
                                                         <span class="property-title d-block">
@@ -129,8 +143,18 @@
                                                         <span>${{ number_format($payment->amount, 2) }}</span>
                                                     </td>
                                                     <td>
-                                                        {{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }} - 
-                                                        {{ \Carbon\Carbon::parse($payment->end_date)->format('M d, Y') }}
+                                                        {{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }}
+                                                    </td>
+                                                    <td>
+                                                        @if($payment->status === 'completed' || $payment->status === 'rented')
+                                                            @php
+                                                                $nextPaymentDate = \Carbon\Carbon::parse($payment->start_date)->addMonth();
+                                                                $nextPaymentText = $nextPaymentDate->format('M d, Y');
+                                                            @endphp
+                                                            {{ $nextPaymentText }}
+                                                        @else
+                                                            N/A
+                                                        @endif
                                                     </td>
                                                     <td>
                                                         <span class="badge bg-{{ $payment->status == 'completed' ? 'success' : ($payment->status == 'pending' ? 'warning' : 'secondary') }}">
@@ -150,33 +174,94 @@
                                                         <div class="btn-action-group">
                                                             <!-- View Receipt Button -->
                                                             <button class="btn btn-sm btn-outline-primary view-receipt" data-payment-id="{{ $payment->id }}">
-                                                                <i class="fas fa-receipt"></i> Receipt
+                                                                <i class="fas fa-receipt"></i> 
                                                             </button>
                                                             <!-- Message Landlord Button -->
                                                             @if($payment->landlord_id && $payment->status == 'completed')
                                                                 <a href="{{ route('messages.conversation', $payment->landlord_id) }}?property_id={{ $payment->property_id }}" class="btn btn-sm btn-outline-light">
-                                                                    <i class="fas fa-comment-dots"></i> Message
+                                                                    <i class="fas fa-comment-dots"></i>
                                                                 </a>
+                                                            @endif
+                                                            <!-- Review Button -->
+                                                            @if($payment->status == 'completed' && !$hasReviewed)
+                                                                <button class="btn btn-sm btn-outline-warning review-property" data-bs-toggle="modal" data-bs-target="#reviewModal{{ $payment->id }}">
+                                                                    <i class="fas fa-star"></i>
+                                                                </button>
                                                             @endif
                                                             <!-- Cancel Rent Button -->
                                                             @if($payment->status == 'completed')
                                                                 @if($payment->cancellation_requested && $payment->cancellation_status == 'pending')
                                                                 @elseif($payment->cancellation_status == 'rejected')
                                                                     <button class="btn btn-sm btn-outline-info" data-bs-toggle="modal" data-bs-target="#rejectedModal{{ $payment->id }}">
-                                                                        <i class="fas fa-info-circle"></i> Details
+                                                                        <i class="fas fa-info-circle"></i>
                                                                     </button>
                                                                     <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
-                                                                        <i class="fas fa-redo"></i> Re-request
+                                                                        <i class="fas fa-redo"></i>
                                                                     </button>
                                                                 @elseif(!$payment->cancellation_requested || $payment->cancellation_status == 'approved')
                                                                     <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
-                                                                        <i class="fas fa-times-circle"></i> Cancel
+                                                                        <i class="fas fa-times-circle"></i>
                                                                     </button>
                                                                 @endif
                                                             @endif
                                                         </div>
                                                     </td>
                                                 </tr>
+
+                                                <!-- Review Modal -->
+                                                @if($payment->status == 'completed' && !$hasReviewed)
+                                                    <div class="modal fade" id="reviewModal{{ $payment->id }}" tabindex="-1" aria-hidden="true">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Review Property</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <form action="{{ route('reviews.store', $payment->property_id) }}" method="POST">
+                                                                    @csrf
+                                                                    <div class="modal-body">
+                                                                        <div class="mb-4">
+                                                                            <p>You are reviewing:</p>
+                                                                            <div class="card bg-dark p-3">
+                                                                                <p class="mb-1"><strong>Property:</strong> {{ $payment->property->title }}</p>
+                                                                                <p class="mb-1"><strong>Landlord:</strong> {{ $payment->landlord->name ?? 'N/A' }}</p>
+                                                                                <p class="mb-0"><strong>Rental Period:</strong> 
+                                                                                    {{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }} - 
+                                                                                    {{ \Carbon\Carbon::parse($payment->end_date)->format('M d, Y') }}
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="form-group">
+                                                                            <label for="rating">Rating</label>
+                                                                            <select name="rating" id="rating" class="form-control" required>
+                                                                                <option value="">Select Rating</option>
+                                                                                <option value="5">5 Stars</option>
+                                                                                <option value="4">4 Stars</option>
+                                                                                <option value="3">3 Stars</option>
+                                                                                <option value="2">2 Stars</option>
+                                                                                <option value="1">1 Star</option>
+                                                                            </select>
+                                                                            @error('rating')
+                                                                                <span class="text-danger">{{ $message }}</span>
+                                                                            @enderror
+                                                                        </div>
+                                                                        <div class="form-group mt-3">
+                                                                            <label for="comment">Your Review</label>
+                                                                            <textarea name="comment" id="comment" class="form-control bg-dark text-white" rows="3" placeholder="Write your review here..." required></textarea>
+                                                                            @error('comment')
+                                                                                <span class="text-danger">{{ $message }}</span>
+                                                                            @enderror
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endif
 
                                                 <!-- Cancel Rent Modal -->
                                                 <div class="modal fade" id="cancelModal{{ $payment->id }}" tabindex="-1" aria-hidden="true">
@@ -263,9 +348,9 @@
                             @endif
                         </div>
                     </div>
-                @endif
+                </div>
             </div>
-        </div>
+        @endif
     </div>
 
     <!-- Receipt Modal -->
