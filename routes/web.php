@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\HouseController;
 use App\Http\Controllers\PaymentController;
 
+use App\Http\Controllers\ReviewController;
+
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\MessageController;
 use Illuminate\Support\Facades\Broadcast;
@@ -36,6 +38,11 @@ Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::get('/houses', [HouseController::class, 'index'])->name('houses');
 Route::get('/houses/{id}', [HouseController::class, 'show'])->name('house-detail');
 Route::get('/messages/unread-count', [MessageController::class, 'unreadCount'])->name('messages.unread-count');
+
+Route::post('/properties/{property}/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
+
+
+
 
 // Payment routes (authenticated only)
 Route::middleware(['auth'])->group(function () {

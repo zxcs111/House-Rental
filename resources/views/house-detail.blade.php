@@ -4,7 +4,8 @@
     <title>Stay Haven - {{ $property->title }}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
@@ -20,23 +21,20 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/flaticon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
-	<link rel="stylesheet" href="{{ asset('user-template/css/house-detail.css') }}">
-
+    <link rel="stylesheet" href="{{ asset('user-template/css/house-detail.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
   <body>
-    
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
       <div class="container">
           <a class="navbar-brand" href="{{ route('home') }}">Stay<span> Haven</span></a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
               <span class="oi oi-menu"></span> Menu
           </button>
-
           <div class="collapse navbar-collapse" id="ftco-nav">
               <ul class="navbar-nav ml-auto">
                   @auth
                       @if(Auth::user()->role === 'tenant')
-                          <!-- Tenant Menu Items -->
                           <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                           <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
                           <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
@@ -44,7 +42,6 @@
                           <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
                           <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
                       @elseif(Auth::user()->role === 'landlord')
-                          <!-- Landlord Menu Items -->
                           <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                           <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
                           <li class="nav-item"><a href="{{ route('property.listing') }}" class="nav-link">Property Listing</a></li>
@@ -62,8 +59,6 @@
                               </a>
                           </li>
                       @endif
-                      
-                      <!-- Profile Dropdown (Common for both roles) -->
                       <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               @if(Auth::user()->profile_picture)
@@ -85,7 +80,6 @@
                           </div>
                       </li>
                   @else
-                      <!-- Default Menu Items (for non-logged in users) -->
                       <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                       <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
                       <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
@@ -99,8 +93,6 @@
       </div>
     </nav>
 
-    <!-- END nav -->
-    
     <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('{{ $property->main_image ? asset('storage/' . $property->main_image) : asset('user-template/images/house-detail.jpg') }}');" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
       <div class="container">
@@ -129,7 +121,17 @@
                   <p class="d-flex mb-0 d-block justify-content-center">
                     @auth
                       @if(Auth::user()->role === 'tenant')
-                        <a href="{{ route('payment.form', $property->id) }}" class="btn btn-primary py-2 mr-1">Rent now</a>
+                        @php
+                          $hasRented = App\Models\Payment::where('tenant_id', Auth::id())
+                              ->where('property_id', $property->id)
+                              ->where('status', 'completed')
+                              ->exists();
+                        @endphp
+                        @if($hasRented)
+                          <a href="{{ route('profile') }}" class="btn btn-primary py-2 mr-1">View Rental Details</a>
+                        @else
+                          <a href="{{ route('payment.form', $property->id) }}" class="btn btn-primary py-2 mr-1">Rent now</a>
+                        @endif
                       @endif
                     @else
                       <a href="{{ route('login') }}" class="btn btn-primary py-2 mr-1">Login to Rent</a>
@@ -219,7 +221,6 @@
           </div>
         </div>
 
-        <!-- Gallery Carousel Section -->
         <div class="row justify-content-center mt-5">
           <div class="col-md-12">
             <h3 class="mb-4 text-center">Property Pictures</h3>
@@ -338,128 +339,77 @@
                 <div class="tab-pane fade" id="pills-review" role="tabpanel" aria-labelledby="pills-review-tab">
                   <div class="row">
                     <div class="col-md-7">
-                      <h3 class="head">23 Reviews</h3>
-                      <div class="review d-flex">
-                        <div class="user-img" style="background-image: url(user-template/images/person_1.jpg)"></div>
-                        <div class="desc">
-                          <h4>
-                            <span class="text-left">Jacob Webb</span>
-                            <span class="text-right">14 March 2018</span>
-                          </h4>
-                          <p class="star">
-                            <span>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                            </span>
-                            <span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
-                          </p>
-                          <p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrov</p>
-                        </div>
-                      </div>
-                      <div class="review d-flex">
-                        <div class="user-img" style="background-image: url(user-template/images/person_2.jpg)"></div>
-                        <div class="desc">
-                          <h4>
-                            <span class="text-left">Jacob Webb</span>
-                            <span class="text-right">14 March 2018</span>
-                          </h4>
-                          <p class="star">
-                            <span>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                            </span>
-                            <span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
-                          </p>
-                          <p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrov</p>
-                        </div>
-                      </div>
-                      <div class="review d-flex">
-                        <div class="user-img" style="background-image: url(user-template/images/person_3.jpg)"></div>
-                        <div class="desc">
-                          <h4>
-                            <span class="text-left">Jacob Webb</span>
-                            <span class="text-right">14 March 2018</span>
-                          </h4>
-                          <p class="star">
-                            <span>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                            </span>
-                            <span class="text-right"><a href="#" class="reply"><i class="icon-reply"></i></a></span>
-                          </p>
-                          <p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrov</p>
-                        </div>
+                      <h3 class="head">{{ $reviews->count() }} Reviews</h3>
+                      <div id="reviews-container">
+                        @forelse($reviews as $review)
+                          <div class="review d-flex">
+                            <div class="user-img" style="background-image: url('{{ $review->user->profile_picture ? asset('storage/' . $review->user->profile_picture) : asset('user-template/images/person_1.jpg') }}')"></div>
+                            <div class="desc">
+                              <h4>
+                                <span class="text-left">{{ $review->user->name }}</span>
+                                <span class="text-right">{{ $review->created_at->format('d M Y') }}</span>
+                              </h4>
+                              <p class="star">
+                                <span>
+                                  @for($i = 1; $i <= 5; $i++)
+                                    <i class="ion-ios-star {{ $i <= $review->rating ? '' : 'outline' }}"></i>
+                                  @endfor
+                                </span>
+                              </p>
+                              <p>{{ $review->comment }}</p>
+                            </div>
+                          </div>
+                        @empty
+                          <p class="text-muted" id="no-reviews">No reviews yet. Be the first to leave a review!</p>
+                        @endforelse
                       </div>
                     </div>
                     <div class="col-md-5">
                       <div class="rating-wrap">
                         <h3 class="head">Give a Review</h3>
-                        <div class="wrap">
-                          <p class="star">
-                            <span>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              (98%)
-                            </span>
-                            <span>20 Reviews</span>
-                          </p>
-                          <p class="star">
-                            <span>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              (85%)
-                            </span>
-                            <span>10 Reviews</span>
-                          </p>
-                          <p class="star">
-                            <span>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              (70%)
-                            </span>
-                            <span>5 Reviews</span>
-                          </p>
-                          <p class="star">
-                            <span>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              (10%)
-                            </span>
-                            <span>0 Reviews</span>
-                          </p>
-                          <p class="star">
-                            <span>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              <i class="ion-ios-star"></i>
-                              (0%)
-                            </span>
-                            <span>0 Reviews</span>
-                          </p>
-                        </div>
+                        @auth
+                          @if(Auth::user()->role === 'tenant')
+                            @php
+                              $hasPaid = App\Models\Payment::where('tenant_id', Auth::id())
+                                  ->where('property_id', $property->id)
+                                  ->where('status', 'completed')
+                                  ->exists();
+                            @endphp
+                            @if($hasPaid)
+                              <form action="{{ route('reviews.store', $property->id) }}" method="POST" class="review-form">
+                                @csrf
+                                <div class="form-group">
+                                  <label for="rating">Rating</label>
+                                  <select name="rating" id="rating" class="form-control" required>
+                                    <option value="">Select Rating</option>
+                                    <option value="5">5 Stars</option>
+                                    <option value="4">4 Stars</option>
+                                    <option value="3">3 Stars</option>
+                                    <option value="2">2 Stars</option>
+                                    <option value="1">1 Star</option>
+                                  </select>
+                                  @error('rating')
+                                    <span class="text-danger">{{ $message }}</span>
+                                  @enderror
+                                </div>
+                                <div class="form-group">
+                                  <label for="comment">Your Review</label>
+                                  <textarea name="comment" id="comment" class="form-control" rows="5" placeholder="Write your review here..." required></textarea>
+                                  @error('comment')
+                                    <span class="text-danger">{{ $message }}</span>
+                                  @enderror
+                                </div>
+                                <button type="submit" class="btn btn-primary">Submit Review</button>
+                              </form>
+                            @else
+                              <p class="text-muted">You must rent this property to leave a review.</p>
+                            @endif
+                          @else
+                            <p class="text-muted">Only tenants can leave reviews for this property.</p>
+                          @endif
+                        @else
+                          <p class="text-muted">Please <a href="{{ route('login') }}">log in</a> to leave a review.</p>
+                        @endauth
                       </div>
                     </div>
                   </div>
@@ -524,15 +474,14 @@
         </div>
         <div class="row">
           <div class="col-md-12 text-center">
-            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-              Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-              <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+            <p>
+              Copyright ©<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+            </p>
           </div>
         </div>
       </div>
     </footer>
     
-    <!-- loader -->
     <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
     <script src="{{ asset('user-template/js/jquery.min.js') }}"></script>
@@ -548,9 +497,9 @@
     <script src="{{ asset('user-template/js/jquery.animateNumber.min.js') }}"></script>
     <script src="{{ asset('user-template/js/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('user-template/js/jquery.timepicker.min.js') }}"></script>
-    <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>>
+    <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
     <script src="{{ asset('user-template/js/main.js') }}"></script>
-	<script src="{{ asset('user-template/js/house-detail-carousel.js') }}"></script>
+    <script src="{{ asset('user-template/js/house-detail-carousel.js') }}"></script>
     
   </body>
 </html>

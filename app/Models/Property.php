@@ -55,6 +55,7 @@ class Property extends Model
     {
         return $this->belongsTo(User::class);
     }
+    
 
     public function payments()
     {
@@ -111,5 +112,10 @@ class Property extends Model
     public function isUnderMaintenance()
     {
         return $this->status === self::STATUS_MAINTENANCE;
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }
