@@ -1,16 +1,24 @@
 $(document).ready(function() {
-    // Initialize date range picker
-    flatpickr("#dateRangePicker", {
-        mode: "range",
-        dateFormat: "Y-m-d",
-        onChange: function(selectedDates, dateStr, instance) {
-            if (selectedDates.length === 2) {
-                filterTransactions();
-            }
+    // Submit the search form when the user presses Enter
+    $('#searchInput').on('keypress', function(e) {
+        if (e.which === 13) { // Enter key
+            e.preventDefault();
+            $('#searchForm').submit();
         }
     });
 
-    
+    // Submit the search form when the search button is clicked
+    $('#searchForm button[type="submit"]').on('click', function(e) {
+        e.preventDefault();
+        $('#searchForm').submit();
+    });
+
+    // Clear search when reset button is clicked
+    $(document).on('click', '.reset', function() {
+        $('#searchInput').val('');
+        $('#searchForm').submit();
+    });
+
     // Filter transactions by status
     $('.filter-status').on('click', function(e) {
         e.preventDefault();
@@ -29,7 +37,51 @@ $(document).ready(function() {
                 }
             });
         }
+        updatePaginationInfo();
     });
+
+    // Filter transactions by time period
+    $('.filter-period').on('click', function(e) {
+        e.preventDefault();
+        const period = $(this).data('period');
+        const now = new Date();
+        const currentYear = now.getFullYear();
+        const currentMonth = now.getMonth(); // 0-based (0 = January, 11 = December)
+
+        $('#transactionsTable tbody tr').each(function() {
+            const rowDateText = $(this).find('td:nth-child(1)').text().trim(); // Date column
+            const rowDate = new Date(rowDateText); // Parse date like "Apr 22, 2025"
+
+            if (isNaN(rowDate)) {
+                $(this).hide(); // Hide rows with invalid dates
+                return;
+            }
+
+            let shouldShow = false;
+
+            if (period === 'this_month') {
+                // Show rows from the current month and year
+                shouldShow = rowDate.getFullYear() === currentYear && rowDate.getMonth() === currentMonth;
+            } else if (period === 'last_month') {
+                // Show rows from the previous month
+                const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1;
+                const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear;
+                shouldShow = rowDate.getFullYear() === lastMonthYear && rowDate.getMonth() === lastMonth;
+            } else if (period === 'this_year') {
+                // Show rows from the current year
+                shouldShow = rowDate.getFullYear() === currentYear;
+            }
+
+            if (shouldShow) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        });
+
+        updatePaginationInfo();
+    });
+
     // View receipt handler
     $(document).on('click', '.view-receipt', function() {
         const transactionId = $(this).data('transaction-id');
@@ -123,6 +175,7 @@ $(document).ready(function() {
             }
         });
     });
+
     // Print receipt handler
     $(document).on('click', '#printReceipt', function() {
         const printContent = $('#receiptContent').html();
@@ -167,13 +220,13 @@ $(document).ready(function() {
                             }, 1000);
                         }, 200);
                     };
-                <\/script>
+                </script>
             </body>
             </html>
         `);
         printWindow.document.close();
     });
-    
+
     // Delete transaction handler with SweetAlert
     $(document).on('click', '.delete-transaction', function() {
         const transactionId = $(this).data('transaction-id');
@@ -237,49 +290,16 @@ $(document).ready(function() {
             }
         });
     });
-    // Function to update pagination info after deletion
+
+    // Function to update pagination info after client-side filtering
     function updatePaginationInfo() {
         const visibleRows = $('#transactionsTable tbody tr:visible').length;
         const totalRows = $('#transactionsTable tbody tr').length;
         const $paginationInfo = $('.text-muted');
-        
-        if ($('#searchInput').val().length > 0) {
+
+        // Base pagination info is handled server-side, but adjust for client-side filters
+        if (visibleRows < totalRows) {
             $paginationInfo.text(`Showing ${visibleRows} of ${totalRows} entries (filtered)`);
-        } else {
-            $paginationInfo.text(`Showing ${$('#transactionsTable tbody tr:visible').length} of ${totalRows} entries`);
         }
     }
-    // Filter transactions function
-    function filterTransactions() {
-        const dateRange = $('#dateRangePicker').val();
-        if (!dateRange) return;
-        const dates = dateRange.split(' to ');
-        if (dates.length !== 2) return;
-        const startDate = dates[0];
-        const endDate = dates[1];
-        console.log('Filtering by date range:', startDate, 'to', endDate);
-    }
-});
-
-// Search functionality
-$('#searchInput').on('input', function() {
-    const searchTerm = $(this).val().toLowerCase();
-    
-    $('#transactionsTable tbody tr').each(function() {
-        const propertyName = $(this).find('td:nth-child(2)').text().toLowerCase();
-        const tenantName = $(this).find('td:nth-child(4)').text().toLowerCase();
-        
-        if (propertyName.includes(searchTerm) || tenantName.includes(searchTerm)) {
-            $(this).show();
-        } else {
-            $(this).hide();
-        }
-    });
-    
-    updatePaginationInfo();
-});
-
-// Clear search when reset button is clicked
-$(document).on('click', '.reset', function() {
-    $('#searchInput').val('').trigger('input');
 });

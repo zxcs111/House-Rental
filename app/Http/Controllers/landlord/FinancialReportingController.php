@@ -12,13 +12,16 @@ use Illuminate\Support\Facades\Redirect;
 
 class FinancialReportingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if (Auth::user()->role !== 'landlord') {
             return Redirect::to(url()->previous());
         }
 
         $landlord = Auth::user();
+
+        // Get the search term from the request
+        $searchTerm = $request->query('search', '');
 
         // Calculate total sales excluding hidden and cancelled transactions
         $totalSales = $landlord->receivedPayments()
@@ -41,19 +44,32 @@ class FinancialReportingController extends Controller
             ->where('hidden_by_landlord', false)
             ->sum('amount');
 
-        // Fetch transactions excluding hidden ones
-        $transactions = $landlord->receivedPayments()
+        // Fetch transactions excluding hidden ones, with search filtering
+        $query = $landlord->receivedPayments()
             ->with(['property', 'tenant'])
-            ->where('hidden_by_landlord', false)
-            ->orderBy('created_at', 'desc')
-            ->paginate(5);
+            ->where('hidden_by_landlord', false);
+
+        if ($searchTerm) {
+            $query->where(function ($q) use ($searchTerm) {
+                $q->whereHas('property', function ($q) use ($searchTerm) {
+                    $q->where('title', 'like', '%' . $searchTerm . '%');
+                })->orWhereHas('tenant', function ($q) use ($searchTerm) {
+                    $q->where('name', 'like', '%' . $searchTerm . '%');
+                });
+            });
+        }
+
+        $transactions = $query->orderBy('created_at', 'desc')
+            ->paginate(5)
+            ->appends(['search' => $searchTerm]);
 
         return view('landlord.financial-reporting', [
             'totalSales' => $totalSales,
             'monthlySales' => $monthlySales,
             'annualSales' => $annualSales,
             'transactions' => $transactions,
-            'landlord' => $landlord
+            'landlord' => $landlord,
+            'searchTerm' => $searchTerm // Pass the search term to the view
         ]);
     }
 

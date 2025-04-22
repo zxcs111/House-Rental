@@ -20,7 +20,6 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/flaticon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -500,13 +499,13 @@
                         <h4 class="mb-0">Rental History</h4>
                         <div class="d-flex align-items-center">
                             <!-- Search Bar -->
-                            <form class="form mr-3" style="--width-of-input: 200px; --height-of-input: 30px; --border-color: #4e73df;">
-                                <button type="button">
+                            <form id="searchForm" class="form mr-3" action="{{ route('landlord.financial-reporting') }}" method="GET" style="--width-of-input: 200px; --height-of-input: 30px; --border-color: #4e73df;">
+                                <button type="submit">
                                     <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
                                         <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9" stroke="#8b8ba7" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"></path>
                                     </svg>
                                 </button>
-                                <input class="input" id="searchInput" placeholder="Search property or tenant..." type="text">
+                                <input class="input" id="searchInput" name="search" placeholder="Search property or tenant..." type="text" value="{{ $searchTerm }}">
                                 <button class="reset" type="reset">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="none" viewBox="0 0 24 24" stroke="#8b8ba7">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
@@ -521,7 +520,6 @@
                                     <i class="fas fa-filter mr-1"></i> Filter
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-right">
-
                                     <h6 class="dropdown-header">Filter by Status</h6>
                                     <a class="dropdown-item filter-status" href="#" data-status="all">All Transactions</a>
                                     <a class="dropdown-item filter-status" href="#" data-status="rented">Rented</a>
@@ -529,9 +527,8 @@
                                     <div class="dropdown-divider"></div>
                                     <h6 class="dropdown-header">Time Period</h6>
                                     <a class="dropdown-item filter-period" href="#" data-period="this_month">This Month</a>
-                                    <a class="dropdown-item filter-period" href="#" data-period="last_month">Last Month</a>
+                                    <a class="dropdown-item filter-period" href="#" data-status="this_month">Last Month</a>
                                     <a class="dropdown-item filter-period" href="#" data-period="this_year">This Year</a>
-                                    <a class="dropdown-item filter-period" href="#" data-period="all_time">All Time</a>
                                 </div>
                             </div>
                         </div>
@@ -607,6 +604,9 @@
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <div class="text-muted">
                             Showing {{ $transactions->firstItem() }} to {{ $transactions->lastItem() }} of {{ $transactions->total() }} entries
+                            @if($searchTerm)
+                                (filtered)
+                            @endif
                         </div>
                         <div>
                             <!-- Adjusted Pagination Controls -->
@@ -745,7 +745,6 @@
     <script src="{{ asset('user-template/js/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('user-template/js/jquery.timepicker.min.js') }}"></script>
     <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="{{ asset('user-template/js/main.js') }}"></script>
     <script src="{{ asset('user-template/js/financial-report.js') }}"></script>
 
