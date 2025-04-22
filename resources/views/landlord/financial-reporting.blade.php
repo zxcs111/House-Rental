@@ -558,14 +558,12 @@
                         <td>${{ number_format($transaction->amount, 2) }}</td>
                         <td>{{ $transaction->tenant->name ?? 'N/A' }}</td>
                         <td>
-                            {{ $transaction->start_date->format('M d, Y') }} 
+                            {{ $transaction->start_date->format('M d, Y') }}
                         </td>
                         <td>
                             @if($transaction->status === 'completed' || $transaction->status === 'rented')
                                 @php
-                                    // Calculate the next payment date
                                     $nextPaymentDate = \Carbon\Carbon::parse($transaction->start_date)->addMonth();
-                                    // Format the text for the next payment
                                     $nextPaymentText = $nextPaymentDate->format('M d, Y');
                                 @endphp
                                 {{ $nextPaymentText }}
@@ -596,8 +594,8 @@
                                     data-transaction-id="{{ $transaction->id }}" 
                                     data-toggle="tooltip" 
                                     data-placement="top" 
-                                    title="Delete Transaction">
-                                    <i class="fas fa-trash"></i>
+                                    title="Hide Transaction">
+                                    <i class="fas fa-eye-slash"></i>
                                 </button>
                             </div>
                         </td>

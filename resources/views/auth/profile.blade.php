@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Stay Haven - Profile</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -104,9 +105,9 @@
                             <h5 class="mb-0" style="color: white; font-size: 1rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Rent History</h5>
                         </div>
                         <div class="card-body">
-                            @if(Auth::user()->payments->count() > 0)
+                            @if(Auth::user()->payments->where('hidden_by_tenant', false)->count() > 0)
                                 <div class="table-responsive">
-                                    <table class="table table-hover table-dark table-striped">
+                                    <table class="table table-hover table-dark table-striped" id="rentHistoryTable">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Property</th>
@@ -119,13 +120,13 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach(Auth::user()->payments as $payment)
+                                            @foreach(Auth::user()->payments->where('hidden_by_tenant', false) as $payment)
                                                 @php
                                                     $hasReviewed = App\Models\Review::where('user_id', Auth::id())
                                                         ->where('property_id', $payment->property_id)
                                                         ->exists();
                                                 @endphp
-                                                <tr>
+                                                <tr data-payment-id="{{ $payment->id }}">
                                                     <td>
                                                         <span class="property-title d-block">
                                                             {{ $payment->property->title }}
@@ -174,7 +175,7 @@
                                                         <div class="btn-action-group">
                                                             <!-- View Receipt Button -->
                                                             <button class="btn btn-sm btn-outline-primary view-receipt" data-payment-id="{{ $payment->id }}">
-                                                                <i class="fas fa-receipt"></i> 
+                                                                <i class="fas fa-receipt"></i>
                                                             </button>
                                                             <!-- Message Landlord Button -->
                                                             @if($payment->landlord_id && $payment->status == 'completed')
@@ -204,6 +205,10 @@
                                                                     </button>
                                                                 @endif
                                                             @endif
+                                                            <!-- Hide Transaction Button -->
+                                                            <button class="btn btn-sm btn-outline-danger hide-transaction" data-payment-id="{{ $payment->id }}" data-toggle="tooltip" title="Hide Transaction">
+                                                                <i class="fas fa-eye-slash"></i>
+                                                            </button>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -217,7 +222,7 @@
                                                                     <h5 class="modal-title">Review Property</h5>
                                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                                 </div>
-                                                                <form action="{{ route('reviews.store', $payment->property_id) }}" method="POST">
+                                                                <form action="{{ route('reviews.store', $payment->property_id) }}" method="POST" class="review-form">
                                                                     @csrf
                                                                     <div class="modal-body">
                                                                         <div class="mb-4">
@@ -268,10 +273,10 @@
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class="modal-title">Request Rent Cancellation</h5>
+                                                                <h5 class_FONTS="modal-title">Request Rent Cancellation</h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
-                                                            <form action="{{ route('payment.cancel', $payment->id) }}" method="POST">
+                                                            <form action="{{ route('payment.cancel', $payment->id) }}" method="POST" class="cancel-form">
                                                                 @csrf
                                                                 <div class="modal-body">
                                                                     <div class="mb-4">
@@ -343,7 +348,7 @@
                                 </div>
                             @else
                                 <div class="alert alert-info d-flex align-items-center">
-                                    <i class="fas fa-info-circle me-2"></i> You haven't rented any properties yet.
+                                    <i class="fas fa-info-circle me-2"></i> You haven't rented any properties yet or all transactions are hidden.
                                 </div>
                             @endif
                         </div>

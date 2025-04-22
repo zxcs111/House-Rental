@@ -175,68 +175,68 @@ $(document).ready(function() {
     });
     
     // Delete transaction handler with SweetAlert
-    $(document).on('click', '.delete-transaction', function () {
-    const transactionId = $(this).data('transaction-id');
-    const $row = $(this).closest('tr');
+    $(document).on('click', '.delete-transaction', function() {
+        const transactionId = $(this).data('transaction-id');
+        const $row = $(this).closest('tr');
 
-    // Show SweetAlert confirmation dialog
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "This will hide the transaction from your view but keep it in the database.",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, hide it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // Proceed with AJAX request to hide the transaction
-            $.ajax({
-                url: `/landlord/financial-reporting/${transactionId}`,
-                method: 'DELETE',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function (response) {
-                    if (response.success) {
-                        // Hide the row with a fade-out effect
-                        $row.fadeOut(300, function () {
-                            $(this).remove();
-                            updatePaginationInfo();
-                        });
+        // Show SweetAlert confirmation dialog
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This will hide the transaction from your view but keep it in the database.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, hide it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Proceed with AJAX request to hide the transaction
+                $.ajax({
+                    url: `/landlord/financial-reporting/${transactionId}`,
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Hide the row with a fade-out effect
+                            $row.fadeOut(300, function() {
+                                $(this).remove();
+                                updatePaginationInfo();
+                            });
 
-                        // Show success message using SweetAlert
-                        Swal.fire(
-                            'Hidden!',
-                            'The transaction has been hidden from your view.',
-                            'success'
-                        );
-                    } else {
-                        // Show error message if hiding fails
+                            // Show success message using SweetAlert
+                            Swal.fire(
+                                'Hidden!',
+                                'The transaction has been hidden from your view.',
+                                'success'
+                            );
+                        } else {
+                            // Show error message if hiding fails
+                            Swal.fire(
+                                'Error!',
+                                response.message || 'Failed to hide transaction.',
+                                'error'
+                            );
+                        }
+                    },
+                    error: function(xhr) {
+                        let errorMsg = 'Error hiding transaction';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMsg = xhr.responseJSON.message;
+                        }
+
+                        // Show error message using SweetAlert
                         Swal.fire(
                             'Error!',
-                            response.message || 'Failed to hide transaction.',
+                            errorMsg,
                             'error'
                         );
                     }
-                },
-                error: function (xhr) {
-                    let errorMsg = 'Error hiding transaction';
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        errorMsg = xhr.responseJSON.message;
-                    }
-
-                    // Show error message using SweetAlert
-                    Swal.fire(
-                        'Error!',
-                        errorMsg,
-                        'error'
-                    );
-                }
-            });
-        }
+                });
+            }
+        });
     });
-});
     // Function to update pagination info after deletion
     function updatePaginationInfo() {
         const visibleRows = $('#transactionsTable tbody tr:visible').length;

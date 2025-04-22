@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
     // View receipt handler
     $(document).on('click', '.view-receipt', function() {
@@ -157,3 +158,238 @@ function validatePhone(input) {
         input.value = input.value.slice(0, 11);
     }
 }
+
+
+    // Set up CSRF token for AJAX requests
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    
+
+    $(document).ready(function() {
+
+        $(document).on('click', '.hide-transaction', function() {
+            const paymentId = $(this).data('payment-id');
+            const $row = $(this).closest('tr');
+    
+            // Show SweetAlert confirmation dialog
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "This will hide the transaction from your view but keep it in the database.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, hide it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Proceed with AJAX request to hide the transaction
+                    $.ajax({
+                        url: `/tenant/payments/${paymentId}/hide`,
+                        method: 'DELETE',
+                        success: function(response) {
+                            if (response.success) {
+                                // Hide the row with a fade-out effect
+                                $row.fadeOut(300, function() {
+                                    $(this).remove();
+                                    updateTableInfo();
+                                });
+    
+                                // Show success message using SweetAlert
+                                Swal.fire(
+                                    'Hidden!',
+                                    'The transaction has been hidden from your view.',
+                                    'success'
+                                );
+                            } else {
+                                // Show error message if hiding fails
+                                Swal.fire(
+                                    'Error!',
+                                    response.message || 'Failed to hide transaction.',
+                                    'error'
+                                );
+                            }
+                        },
+                        error: function(xhr) {
+                            let errorMsg = 'Error hiding transaction';
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                errorMsg = xhr.responseJSON.message;
+                            }
+    
+                            // Show error message using SweetAlert
+                            Swal.fire(
+                                'Error!',
+                                errorMsg,
+                                'error'
+                            );
+                        }
+                    });
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            // Existing code...
+        
+            // Hide transaction handler with SweetAlert
+            $(document).on('click', '.hide-transaction', function() {
+                const paymentId = $(this).data('payment-id');
+                const $row = $(this).closest('tr');
+        
+                // Show SweetAlert confirmation dialog
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "This will hide the transaction from your view but keep it in the database.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, hide it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Proceed with AJAX request to hide the transaction
+                        $.ajax({
+                            url: `/tenant/payments/${paymentId}/hide`,
+                            method: 'DELETE',
+                            success: function(response) {
+                                if (response.success) {
+                                    // Hide the row with a fade-out effect
+                                    $row.fadeOut(300, function() {
+                                        $(this).remove();
+                                        updateTableInfo();
+                                    });
+        
+                                    // Show success message using SweetAlert
+                                    Swal.fire(
+                                        'Hidden!',
+                                        'The transaction has been hidden from your view.',
+                                        'success'
+                                    );
+                                } else {
+                                    // Show error message if hiding fails
+                                    Swal.fire(
+                                        'Error!',
+                                        response.message || 'Failed to hide transaction.',
+                                        'error'
+                                    );
+                                }
+                            },
+                            error: function(xhr) {
+                                let errorMsg = 'Error hiding transaction';
+                                if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    errorMsg = xhr.responseJSON.message;
+                                }
+        
+                                // Show error message using SweetAlert
+                                Swal.fire(
+                                    'Error!',
+                                    errorMsg,
+                                    'error'
+                                );
+                            }
+                        });
+                    }
+                });
+            });
+        
+            // Function to update table info after hiding
+            function updateTableInfo() {
+                const visibleRows = $('#rentHistoryTable tbody tr:visible').length;
+                if (visibleRows === 0) {
+                    $('#rentHistoryTable').hide();
+                    $('.rent-history-card .card-body').html(`
+                        <div class="alert alert-info d-flex align-items-center">
+                            <i class="fas fa-info-circle me-2"></i> You haven't rented any properties yet or all transactions are hidden.
+                        </div>
+                    `);
+                }
+            }
+        });
+        
+        // Handle review form submission
+        $('.review-form').on('submit', function(e) {
+            e.preventDefault();
+            let form = $(this);
+            let modal = form.closest('.modal');
+
+            $.ajax({
+                url: form.attr('action'),
+                method: 'POST',
+                data: form.serialize(),
+                success: function(response) {
+                    // Show SweetAlert success message
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message,
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    // Close the modal
+                    modal.modal('hide');
+
+                    // Refresh the page to reflect the updated review status
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                },
+                error: function(xhr) {
+                    // Show SweetAlert error message
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: xhr.responseJSON.error || 'Something went wrong!',
+                        timer: 2500,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+
+        // Handle cancellation request form submission
+        $('.cancel-form').on('submit', function(e) {
+            e.preventDefault();
+            let form = $(this);
+            let modal = form.closest('.modal');
+
+            $.ajax({
+                url: form.attr('action'),
+                method: 'POST',
+                data: form.serialize(),
+                success: function(response) {
+                    // Show SweetAlert success message
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: response.message || 'Cancellation request submitted successfully!',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+
+                    // Close the modal
+                    modal.modal('hide');
+
+                    // Refresh the page to reflect the updated cancellation status
+                    setTimeout(() => {
+                        location.reload();
+                    }, 2000);
+                },
+                error: function(xhr) {
+                    // Show SweetAlert error message
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: xhr.responseJSON.error || 'Something went wrong!',
+                        timer: 2500,
+                        showConfirmButton: false
+                    });
+                }
+            });
+        });
+    });
+
+
+    

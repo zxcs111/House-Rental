@@ -99,6 +99,7 @@ $(document).ready(function() {
         e.preventDefault();
         let form = $(this);
         
+        
         $.ajax({
             url: form.attr('action'),
             method: 'POST',

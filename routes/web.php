@@ -58,9 +58,10 @@ Route::post('/register', [LoginController::class, 'register'])->name('register')
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Profile routes (authenticated only)
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
     Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::delete('/tenant/payments/{id}/hide', [ProfileController::class, 'hidePayment'])->name('tenant.payment.hide');
 });
 
 // Admin routes
