@@ -33,10 +33,6 @@ body {
     border-radius: 0;
 }
 
-.modal-title1 {
-    color: white;
-}
-
 .form-control, .dataTable-input {
     display: block;
     width: 100%;
@@ -296,29 +292,48 @@ body {
 }
 
 .modal-content {
-    background-color: #222;
+    background-color: #1a1a1a;
     color: white;
-    border-radius: 0;
-    border: 1px solid #444;
+    border: 1px solid #555;
+    border-radius: 10px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 .modal-header {
-    border-bottom: 1px solid #444;
-    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #343a40 0%, #212529 100%);
+    border-bottom: 1px solid #555;
+    padding: 1.25rem 1.5rem;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.modal-title {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 
 .modal-footer {
-    border-top: 1px solid #444;
+    border-top: 1px solid #555;
     padding: 1rem 1.5rem;
+    background: #212529;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .modal-body {
-    padding: 1.5rem;
+    padding: 2rem;
+    background: #1a1a1a;
 }
 
 .btn-close {
     filter: invert(1);
     opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.btn-close:hover {
+    opacity: 1;
 }
 
 .tenant-info small {
@@ -335,14 +350,19 @@ body {
     border-left: 4px solid;
     padding: 0.75rem 1.25rem;
     margin-bottom: 1rem;
+    border-radius: 5px;
 }
 
 .alert-modal.alert-danger {
     border-left-color: #dc3545;
+    background-color: rgba(220, 53, 69, 0.1);
+    color: #ff6b6b;
 }
 
 .alert-modal.alert-warning {
     border-left-color: #ffc107;
+    background-color: rgba(255, 193, 7, 0.1);
+    color: #ffda6a;
 }
 
 .property-title {
@@ -368,4 +388,147 @@ body {
     background-color: rgba(0, 123, 255, 0.1);
     border-left: 4px solid #007bff;
     color: #007bff;
+}
+
+/* Custom Modal Info Card */
+.modal-info-card {
+    background: #2a2a2a;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 1.25rem;
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.modal-info-card p {
+    margin-bottom: 0.5rem;
+}
+
+.modal-info-card strong {
+    color: #ffffff;
+}
+
+/* Modal Form Controls */
+.modal-body .form-control {
+    background-color: #2a2a2a;
+    border: 1px solid #555;
+    color: white;
+    border-radius: 5px;
+    padding: 0.75rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-body .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+    background-color: #2a2a2a;
+}
+
+/* Modal Buttons */
+.modal-footer .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.modal-footer .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.modal-footer .btn-secondary {
+    background-color: #444;
+    border-color: #444;
+    color: white;
+}
+
+.modal-footer .btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    border: none;
+}
+
+.modal-footer .btn-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #b02a37 100%);
+    border: none;
+}
+
+/* Specific Adjustments for Rejected Modal */
+#rejectedModal .card-header.bg-secondary {
+    background: #343a40;
+    border-bottom: 1px solid #555;
+    color: white;
+}
+
+#rejectedModal .card-body {
+    background: #2a2a2a;
+}
+
+/* Ensure text visibility in Rejected Modal */
+#rejectedModal .text-dark {
+    color: white !important;
+}
+
+/* Container for the pagination section */
+.pagination-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    padding: 0 15px;
+}
+
+/* Style for the "Showing 1 to 1 of 2 results" text */
+.pagination-container .pagination-info {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+/* Main pagination wrapper */
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Space between pagination items */
+}
+
+/* Style for pagination items (arrows and numbers) */
+.pagination .page-item .page-link {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Circular background */
+    background-color: #f8f9fa;
+    color: #007bff;
+    font-size: 1rem;
+    border: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Active page number styling */
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+/* Hover effect for non-active items */
+.pagination .page-item:not(.active) .page-link:hover {
+    background-color: #007bff;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Arrow icons styling */
+.pagination .page-item:first-child .page-link,
+.pagination .page-item:last-child .page-link {
+    font-size: 1.2rem;
+}
+
+/* Ensure proper spacing for the entire pagination section */
+.pagination-container .pagination {
+    margin: 0;
 }

@@ -105,7 +105,7 @@
                             <h5 class="mb-0" style="color: white; font-size: 1rem; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Rent History</h5>
                         </div>
                         <div class="card-body">
-                            @if(Auth::user()->payments->where('hidden_by_tenant', false)->count() > 0)
+                            @if($payments->count() > 0)
                                 <div class="table-responsive">
                                     <table class="table table-hover table-dark table-striped" id="rentHistoryTable">
                                         <thead>
@@ -120,7 +120,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach(Auth::user()->payments->where('hidden_by_tenant', false) as $payment)
+                                            @foreach($payments as $payment)
                                                 @php
                                                     $hasReviewed = App\Models\Review::where('user_id', Auth::id())
                                                         ->where('property_id', $payment->property_id)
@@ -197,7 +197,7 @@
                                                                         <i class="fas fa-info-circle"></i>
                                                                     </button>
                                                                     <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
-                                                                        <i class="fas fa-redo"></i>
+                                                                        <i class="fas fa-redotho"></i>
                                                                     </button>
                                                                 @elseif(!$payment->cancellation_requested || $payment->cancellation_status == 'approved')
                                                                     <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
@@ -216,7 +216,7 @@
                                                 <!-- Review Modal -->
                                                 @if($payment->status == 'completed' && !$hasReviewed)
                                                     <div class="modal fade" id="reviewModal{{ $payment->id }}" tabindex="-1" aria-hidden="true">
-                                                        <div class="modal-dialog">
+                                                        <div class="modal-dialog modal-lg">
                                                             <div class="modal-content">
                                                                 <div class="modal-header">
                                                                     <h5 class="modal-title">Review Property</h5>
@@ -227,12 +227,11 @@
                                                                     <div class="modal-body">
                                                                         <div class="mb-4">
                                                                             <p>You are reviewing:</p>
-                                                                            <div class="card bg-dark p-3">
+                                                                            <div class="card modal-info-card">
                                                                                 <p class="mb-1"><strong>Property:</strong> {{ $payment->property->title }}</p>
                                                                                 <p class="mb-1"><strong>Landlord:</strong> {{ $payment->landlord->name ?? 'N/A' }}</p>
-                                                                                <p class="mb-0"><strong>Rental Period:</strong> 
-                                                                                    {{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }} - 
-                                                                                    {{ \Carbon\Carbon::parse($payment->end_date)->format('M d, Y') }}
+                                                                                <p class="mb-0"><strong>Rental Start</strong> 
+                                                                                    {{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }}
                                                                                 </p>
                                                                             </div>
                                                                         </div>
@@ -270,10 +269,10 @@
 
                                                 <!-- Cancel Rent Modal -->
                                                 <div class="modal fade" id="cancelModal{{ $payment->id }}" tabindex="-1" aria-hidden="true">
-                                                    <div class="modal-dialog">
+                                                    <div class="modal-dialog modal-lg">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class_FONTS="modal-title1">Request Rent Cancellation</h5>
+                                                                <h5 class="modal-title">Request Rent Cancellation</h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <form action="{{ route('payment.cancel', $payment->id) }}" method="POST" class="cancel-form">
@@ -281,18 +280,28 @@
                                                                 <div class="modal-body">
                                                                     <div class="mb-4">
                                                                         <p>You are requesting cancellation for:</p>
-                                                                        <div class="card bg-dark p-3">
+                                                                        <div class="card modal-info-card">
                                                                             <p class="mb-1"><strong>Property:</strong> {{ $payment->property->title }}</p>
                                                                             <p class="mb-1"><strong>Landlord:</strong> {{ $payment->landlord->name }}</p>
                                                                             <p class="mb-0"><strong>Rental Period:</strong> 
-                                                                                {{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }} - 
-                                                                                {{ \Carbon\Carbon::parse($payment->end_date)->format('M d, Y') }}
+                                                                                {{ \Carbon\Carbon::parse($payment->start_date)->format('M d, Y') }} 
+                                                                            </p>
+                                                                            <p class="mb-0"><strong>Rental Next Payment:</strong> 
+                                                                                @if($payment->status === 'completed' || $payment->status === 'rented')
+                                                                                    @php
+                                                                                        $nextPaymentDate = \Carbon\Carbon::parse($payment->start_date)->addMonth();
+                                                                                        $nextPaymentText = $nextPaymentDate->format('M d, Y');
+                                                                                    @endphp
+                                                                                    {{ $nextPaymentText }}
+                                                                                @else
+                                                                                    N/A
+                                                                                @endif
                                                                             </p>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group">
                                                                         <label for="cancellation_reason" class="form-label">Reason for Cancellation:</label>
-                                                                        <textarea class="form-control bg-dark text-white" id="cancellation_reason" name="cancellation_reason" rows="3" required placeholder="Please explain your reason for cancellation..."></textarea>
+                                                                        <textarea class="form-control bg-dark text-white" id="cancellation_reason" name="cancellation_reason" rows="4" required placeholder="Please explain your reason for cancellation..."></textarea>
                                                                     </div>
                                                                     <div class="alert-modal alert-warning mt-4">
                                                                         <i class="fas fa-exclamation-triangle me-2"></i> 
@@ -310,7 +319,7 @@
 
                                                 <!-- Rejected Cancellation Modal -->
                                                 <div class="modal fade" id="rejectedModal{{ $payment->id }}" tabindex="-1" aria-hidden="true">
-                                                    <div class="modal-dialog">
+                                                    <div class="modal-dialog modal-lg">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
                                                                 <h5 class="modal-title">Cancellation Rejected</h5>
@@ -320,11 +329,11 @@
                                                                 <div class="alert-modal alert-danger">
                                                                     <i class="fas fa-exclamation-circle me-2"></i> Your cancellation request was rejected by the landlord.
                                                                 </div>
-                                                                <div class="card mt-3 bg-dark">
+                                                                <div class="card modal-info-card">
                                                                     <div class="card-header bg-secondary">Rejection Details</div>
                                                                     <div class="card-body">
-                                                                        <p class="text-dark"><strong>Reason:</strong></p>
-                                                                        <p class="text-dark">{{ $payment->rejection_reason }}</p>
+                                                                        <p class="text-white"><strong>Reason:</strong></p>
+                                                                        <p class="text-white">{{ $payment->rejection_reason }}</p>
                                                                         <p class="text-muted small mt-2">
                                                                             Rejected on: {{ $payment->updated_at->format('M d, Y h:i A') }}<br>
                                                                             <strong class="text-muted">Landlord:</strong> {{ $payment->landlord->name ?? 'N/A' }}
@@ -345,6 +354,43 @@
                                             @endforeach
                                         </tbody>
                                     </table>
+                                    <div class="pagination-container mt-4">
+                                        <div class="pagination-info">
+                                            Showing {{ $payments->firstItem() }} to {{ $payments->lastItem() }} of {{ $payments->total() }} results
+                                        </div>
+                                        <ul class="pagination">
+                                            <!-- Previous Page Link -->
+                                            @if($payments->onFirstPage())
+                                                <li class="page-item disabled">
+                                                    <span class="page-link">«</span>
+                                                </li>
+                                            @else
+                                                <li class="page-item">
+                                                    <a class="page-link" href="{{ $payments->previousPageUrl() }}" rel="prev">«</a>
+                                                </li>
+                                            @endif
+
+                                            <!-- Page Numbers -->
+                                            @foreach(range(1, $payments->lastPage()) as $i)
+                                                @if($i >= $payments->currentPage() - 2 && $i <= $payments->currentPage() + 2)
+                                                    <li class="page-item {{ ($payments->currentPage() == $i) ? 'active' : '' }}">
+                                                        <a class="page-link" href="{{ $payments->url($i) }}">{{ $i }}</a>
+                                                    </li>
+                                                @endif
+                                            @endforeach
+
+                                            <!-- Next Page Link -->
+                                            @if($payments->hasMorePages())
+                                                <li class="page-item">
+                                                    <a class="page-link" href="{{ $payments->nextPageUrl() }}" rel="next">»</a>
+                                                </li>
+                                            @else
+                                                <li class="page-item disabled">
+                                                    <span class="page-link">»</span>
+                                                </li>
+                                            @endif
+                                        </ul>
+                                    </div>
                                 </div>
                             @else
                                 <div class="alert alert-info d-flex align-items-center">
