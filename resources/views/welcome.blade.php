@@ -7,6 +7,8 @@
     
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
 
     <link rel="stylesheet" href="{{ asset('user-template/css/open-iconic-bootstrap.min.css') }}">   
     <link rel="stylesheet" href="{{ asset('user-template/css/animate.css') }}"> 
@@ -25,73 +27,73 @@
   </head>
   <body>
     
-  <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
-    <div class="container">
-        <a class="navbar-brand" href="{{ route('home') }}">Stay<span> Haven</span></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="oi oi-menu"></span> Menu
-        </button>
+    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+      <div class="container">
+          <a class="navbar-brand" href="{{ route('home') }}">Stay<span> Haven</span></a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="oi oi-menu"></span> Menu
+          </button>
 
-        <div class="collapse navbar-collapse" id="ftco-nav">
-            <ul class="navbar-nav ml-auto">
-                @auth
-                    @if(Auth::user()->role === 'tenant')
-                        <!-- Tenant Menu Items -->
-                        <li class="nav-item active"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
-                        <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
-                        <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
-                        <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                        <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
-                    @elseif(Auth::user()->role === 'landlord')
-                        <!-- Landlord Menu Items (restricted access) -->
-                        <li class="nav-item active"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
-                        <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                        <li class="nav-item"><a href="{{ route('property.listing') }}" class="nav-link">Property Listing</a></li>
-                        <li class="nav-item">
-                            <a href="{{ route('landlord.cancellation-requests') }}" class="nav-link">
-                                Cancellation Requests
-                                @if(($pendingCancellationCount ?? 0) > 0)
-                                    <span class="badge bg-danger">{{ $pendingCancellationCount }}</span>
-                                @endif
-                            </a>
-                        </li>
-                        <li class="nav-item"><a href="{{ route('landlord.financial-reporting') }}" class="nav-link">Financial Reporting</a></li>
-                    @endif
-                    
-                    <!-- Profile Dropdown (Common for both roles) -->
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @if(Auth::user()->profile_picture)
-                                <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
-                            @else
-                                <i class="fas fa-user-circle" style="font-size: 24px;"></i>
-                            @endif
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
-                            <a class="dropdown-item" href="{{ route('messages.index') }}">Messages</a>
-                            <a class="dropdown-item" href="{{ route('logout') }}"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                Logout
-                            </a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                @csrf
-                            </form>
-                        </div>
-                    </li>
-                @else
-                    <!-- Default Menu Items (for non-logged in users) -->
-                    <li class="nav-item active"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
-                    <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
-                    <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                    <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
-                    <li class="nav-item"><a href="{{ route('login') }}" class="nav-link">Login</a></li>
-                @endauth
-            </ul>
-        </div>
-    </div>
-</nav>
+          <div class="collapse navbar-collapse" id="ftco-nav">
+              <ul class="navbar-nav ml-auto">
+                  @auth
+                      @if(Auth::user()->role === 'tenant')
+                          <!-- Tenant Menu Items -->
+                          <li class="nav-item active"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                          <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
+                          <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
+                          <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
+                          <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
+                      @elseif(Auth::user()->role === 'landlord')
+                          <!-- Landlord Menu Items (restricted access) -->
+                          <li class="nav-item active"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                          <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
+                          <li class="nav-item"><a href="{{ route('property.listing') }}" class="nav-link">Property Listing</a></li>
+                          <li class="nav-item">
+                              <a href="{{ route('landlord.cancellation-requests') }}" class="nav-link">
+                                  Cancellation Requests
+                                  @if(($pendingCancellationCount ?? 0) > 0)
+                                      <span class="badge bg-danger">{{ $pendingCancellationCount }}</span>
+                                  @endif
+                              </a>
+                          </li>
+                          <li class="nav-item"><a href="{{ route('landlord.financial-reporting') }}" class="nav-link">Financial Reporting</a></li>
+                      @endif
+                      
+                      <!-- Profile Dropdown (Common for both roles) -->
+                      <li class="nav-item dropdown">
+                          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              @if(Auth::user()->profile_picture)
+                                  <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                              @else
+                                  <i class="fas fa-user-circle" style="font-size: 24px;"></i>
+                              @endif
+                          </a>
+                          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                              <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
+                              <a class="dropdown-item" href="{{ route('messages.index') }}">Messages</a>
+                              <a class="dropdown-item" href="{{ route('logout') }}"
+                                  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                  Logout
+                              </a>
+                              <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                  @csrf
+                              </form>
+                          </div>
+                      </li>
+                  @else
+                      <!-- Default Menu Items (for non-logged in users) -->
+                      <li class="nav-item active"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
+                      <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
+                      <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
+                      <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
+                      <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
+                      <li class="nav-item"><a href="{{ route('login') }}" class="nav-link">Login</a></li>
+                  @endauth
+              </ul>
+          </div>
+      </div>
+    </nav>
     <!-- END nav -->
     
     <div class="hero-wrap ftco-degree-bg" style="background-image: url('user-template/images/landing-image.jpg')" data-stellar-background-ratio="0.5">
@@ -164,9 +166,9 @@
               </div>
           </div>
       </div>
-  </section>
-  
+    </section>
 
+  
     <section class="ftco-section ftco-about">
 			<div class="container">
 				<div class="row no-gutters">
@@ -185,6 +187,63 @@
 				</div>
 			</div>
 		</section>
+
+    <section class="ftco-section">
+      <div class="container">
+          <div class="row justify-content-center mb-5">
+              <div class="col-md-7 text-center heading-section ftco-animate">
+                  <span class="subheading">Services</span>
+                  <h2 class="mb-3">Our Latest Services</h2>
+              </div>
+          </div>
+          <div class="row text-center">
+              <div class="col-md-3">
+                  <div class="services services-2 w-100 text-center">
+                      <div class="icon d-flex align-items-center justify-content-center">
+                          <span class="bi bi-house-heart" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                      </div>
+                      <div class="text w-100">
+                          <h3 class="heading mb-2">Relaxing Retreats</h3>
+                          <p>Experience tranquility in our serene accommodations designed for ultimate relaxation and comfort.</p>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-3">
+                  <div class="services services-2 w-100 text-center">
+                      <div class="icon d-flex align-items-center justify-content-center">
+                          <span class="bi bi-person-check" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                      </div>
+                      <div class="text w-100">
+                          <h3 class="heading mb-2">Personalized Getaways</h3>
+                          <p>Custom-tailored stay packages that let you unwind and recharge in a peaceful environment.</p>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-3">
+                  <div class="services services-2 w-100 text-center">
+                      <div class="icon d-flex align-items-center justify-content-center">
+                          <span class="bi bi-map" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                      </div>
+                      <div class="text w-100">
+                          <h3 class="heading mb-2">Serene City Tours</h3>
+                          <p>Explore the charm of the city while enjoying a restful stay at Stay Haven, where comfort meets adventure.</p>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-3">
+                  <div class="services services-2 w-100 text-center">
+                      <div class="icon d-flex align-items-center justify-content-center">
+                          <span class="bi bi-car-front" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                      </div>
+                      <div class="text w-100">
+                          <h3 class="heading mb-2">Luxury Transport Services</h3>
+                          <p>Experience effortless travel with our premium transport options tailored for your convenience during your stay.</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </section>
     
     <section class="ftco-section testimony-section bg-light">
       <div class="container">

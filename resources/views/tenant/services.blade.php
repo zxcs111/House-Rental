@@ -87,61 +87,61 @@
     </section>
 
     <section class="ftco-section">
-    <div class="container">
-        <div class="row justify-content-center mb-5">
-            <div class="col-md-7 text-center heading-section ftco-animate">
-                <span class="subheading">Services</span>
-                <h2 class="mb-3">Our Latest Services</h2>
-            </div>
-        </div>
-        <div class="row text-center">
-            <div class="col-md-3">
-                <div class="services services-2 w-100 text-center">
-                    <div class="icon d-flex align-items-center justify-content-center">
-                        <span class="bi bi-house-heart" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
-                    </div>
-                    <div class="text w-100">
-                        <h3 class="heading mb-2">Relaxing Retreats</h3>
-                        <p>Experience tranquility in our serene accommodations designed for ultimate relaxation and comfort.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="services services-2 w-100 text-center">
-                    <div class="icon d-flex align-items-center justify-content-center">
-                        <span class="bi bi-person-check" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
-                    </div>
-                    <div class="text w-100">
-                        <h3 class="heading mb-2">Personalized Getaways</h3>
-                        <p>Custom-tailored stay packages that let you unwind and recharge in a peaceful environment.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="services services-2 w-100 text-center">
-                    <div class="icon d-flex align-items-center justify-content-center">
-                        <span class="bi bi-map" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
-                    </div>
-                    <div class="text w-100">
-                        <h3 class="heading mb-2">Serene City Tours</h3>
-                        <p>Explore the charm of the city while enjoying a restful stay at Stay Haven, where comfort meets adventure.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="services services-2 w-100 text-center">
-                    <div class="icon d-flex align-items-center justify-content-center">
-                        <span class="bi bi-car-front" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
-                    </div>
-                    <div class="text w-100">
-                        <h3 class="heading mb-2">Luxury Transport Services</h3>
-                        <p>Experience effortless travel with our premium transport options tailored for your convenience during your stay.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+      <div class="container">
+          <div class="row justify-content-center mb-5">
+              <div class="col-md-7 text-center heading-section ftco-animate">
+                  <span class="subheading">Services</span>
+                  <h2 class="mb-3">Our Latest Services</h2>
+              </div>
+          </div>
+          <div class="row text-center">
+              <div class="col-md-3">
+                  <div class="services services-2 w-100 text-center">
+                      <div class="icon d-flex align-items-center justify-content-center">
+                          <span class="bi bi-house-heart" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                      </div>
+                      <div class="text w-100">
+                          <h3 class="heading mb-2">Relaxing Retreats</h3>
+                          <p>Experience tranquility in our serene accommodations designed for ultimate relaxation and comfort.</p>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-3">
+                  <div class="services services-2 w-100 text-center">
+                      <div class="icon d-flex align-items-center justify-content-center">
+                          <span class="bi bi-person-check" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                      </div>
+                      <div class="text w-100">
+                          <h3 class="heading mb-2">Personalized Getaways</h3>
+                          <p>Custom-tailored stay packages that let you unwind and recharge in a peaceful environment.</p>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-3">
+                  <div class="services services-2 w-100 text-center">
+                      <div class="icon d-flex align-items-center justify-content-center">
+                          <span class="bi bi-map" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                      </div>
+                      <div class="text w-100">
+                          <h3 class="heading mb-2">Serene City Tours</h3>
+                          <p>Explore the charm of the city while enjoying a restful stay at Stay Haven, where comfort meets adventure.</p>
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-3">
+                  <div class="services services-2 w-100 text-center">
+                      <div class="icon d-flex align-items-center justify-content-center">
+                          <span class="bi bi-car-front" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                      </div>
+                      <div class="text w-100">
+                          <h3 class="heading mb-2">Luxury Transport Services</h3>
+                          <p>Experience effortless travel with our premium transport options tailored for your convenience during your stay.</p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+    </section>
 		
 		<section class="ftco-section ftco-intro" style="background-image: url(user-template/images/services-landing.jpg);">
 			<div class="overlay"></div>
@@ -237,8 +237,6 @@
     <script src="{{ asset('user-template/js/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('user-template/js/jquery.timepicker.min.js') }}"></script>
     <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-    <script src="{{ asset('user-template/js/google-map.js') }}"></script>
     <script src="{{ asset('user-template/js/main.js') }}"></script>
     
   </body>
