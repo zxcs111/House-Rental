@@ -222,6 +222,12 @@
   <!-- loader -->
   <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
+    <script>
+      window.chatbaseConfig = {
+        chatbotId: "4RSSrtK8VY3M7j0m4Tiye", // Replace with your actual Chatbase chatbot ID
+      };
+    </script>
+    <script src="https://www.chatbase.co/embed.min.js" defer></script>
 
     <script src="{{ asset('user-template/js/jquery.min.js') }}"></script>
     <script src="{{ asset('user-template/js/jquery-migrate-3.0.1.min.js') }}"></script>

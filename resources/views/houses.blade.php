@@ -334,6 +334,14 @@
       </svg>
     </div>
 
+    <script>
+      window.chatbaseConfig = {
+        chatbotId: "4RSSrtK8VY3M7j0m4Tiye", // Replace with your actual Chatbase chatbot ID
+      };
+    </script>
+    
+    <script src="https://www.chatbase.co/embed.min.js" defer></script>
+
     <script src="{{ asset('user-template/js/jquery.min.js') }}"></script>
     <script src="{{ asset('user-template/js/jquery-migrate-3.0.1.min.js') }}"></script>
     <script src="{{ asset('user-template/js/popper.min.js') }}"></script>

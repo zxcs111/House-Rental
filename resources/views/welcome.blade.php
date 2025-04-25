@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/welcome.css') }}">
+    
   </head>
   <body>
     

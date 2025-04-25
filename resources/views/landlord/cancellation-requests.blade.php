@@ -24,179 +24,10 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/flaticon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('user-template/css/cancellation-request.css') }}">
 
     <style>
-        .hero-wrap {
-            background-image: url('user-template/images/house-landing.jpg');
-            background-size: cover;
-            background-position: center center;
-            height: 400px;
-            position: relative;
-        }
         
-        .hero-wrap .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.3);
-        }
-        
-        .card {
-            box-shadow: 0 0.15rem 1.75rem 0 rgb(33 40 50 / 15%);
-            border: none;
-            border-radius: 0.25rem; 
-            background: rgba(255, 255, 255, 0.95);
-            color: #333;
-        }
-        
-        .card-header {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-            font-size: 1rem;
-            color: #333;
-            background-color: rgba(255, 255, 255, 0.95);
-        }
-        
-        .table {
-            color: #333;
-            border-color: #dee2e6;
-        }
-        
-        .table th {
-            border-bottom-width: 1px;
-            border-color: #dee2e6;
-            font-weight: 600;
-        }
-        
-        .table td {
-            border-color: #dee2e6;
-            vertical-align: middle;
-        }
-        
-        .table-hover tbody tr:hover {
-            background-color: rgba(0, 0, 0, 0.03);
-        }
-        
-        .modal-content {
-            background-color: #fff;
-            color: #333;
-        }
-        
-        .modal-header {
-            border-bottom: 1px solid #dee2e6;
-        }
-        
-        .modal-footer {
-            border-top: 1px solid #dee2e6;
-        }
-        
-        .bg-warning {
-            background-color: #ffc107 !important;
-        }
-        
-        .breadcrumbs {
-            color: rgba(255, 255, 255, 0.8);
-        }
-        
-        .breadcrumbs a {
-            color: white;
-        }
-        
-        .breadcrumbs .ion-ios-arrow-forward {
-            color: rgba(255, 255, 255, 0.8);
-        }
-
-        .reason-column {
-            max-width: 300px; /* Set a maximum width for the reason column */
-            white-space: normal; /* Allow text to wrap */
-            word-wrap: break-word; /* Break long words if needed */
-            overflow-wrap: break-word; /* Modern alternative to word-wrap */
-            text-align: left; /* Align text to left (looks better for paragraphs) */
-            padding: 8px 12px; /* Add some padding */
-        }
-
-        /* Custom Table Design */
-        .custom-table {
-            border: 1px solid #dee2e6;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .custom-table thead {
-            background-color: #f8f9fa;
-        }
-
-        .custom-table th {
-            font-weight: 600;
-            color: #333;
-            white-space: nowrap;
-            vertical-align: middle;
-        }
-
-        .custom-table td {
-            vertical-align: middle;
-            padding: 12px 15px;
-            border-bottom: 1px solid #dee2e6;
-        }
-
-        .custom-table tbody tr:hover {
-            background-color: #f1f8ff;
-        }
-
-        .reason-column {
-            max-width: 300px;
-            white-space: normal;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-            text-align: left;
-            padding: 8px 12px;
-        }
-
-        /* Action Buttons */
-        .btn-success {
-            background-color: #28a745;
-            border-color: #28a745;
-        }
-
-        .btn-success:hover {
-            background-color: #218838;
-            border-color: #1e7e34;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-            border-color: #dc3545;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-            border-color: #bd2130;
-        }
-
-        /* Card Header */
-        .card-header {
-            border-bottom: 1px solid #dee2e6;
-            font-size: 1rem;
-            color: #fff;
-            background-color: #ffc107; /* Warning color */
-        }
-
-        .card-header .badge {
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-
-        /* Alert Styling */
-        .alert-info {
-            background-color: #d1ecf1;
-            border-color: #bee5eb;
-            color: #0c5460;
-        }
-
-        .alert-info i {
-            margin-right: 8px;
-        }
     </style>
   </head>
   <body>
@@ -431,6 +262,14 @@
     <!-- loader -->
     <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
+    <script>
+      window.chatbaseConfig = {
+        chatbotId: "4RSSrtK8VY3M7j0m4Tiye", // Replace with your actual Chatbase chatbot ID
+      };
+    </script>
+    
+    <script src="https://www.chatbase.co/embed.min.js" defer></script>   
+
     <!-- Bootstrap JS and Dependencies -->
     <script src="{{ asset('user-template/js/jquery.min.js') }}"></script>
     <script src="{{ asset('user-template/js/jquery-migrate-3.0.1.min.js') }}"></script>
@@ -446,8 +285,6 @@
     <script src="{{ asset('user-template/js/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('user-template/js/jquery.timepicker.min.js') }}"></script>
     <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-    <script src="{{ asset('user-template/js/google-map.js') }}"></script>
     <script src="{{ asset('user-template/js/main.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
