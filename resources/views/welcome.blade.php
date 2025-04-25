@@ -9,7 +9,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 
-
     <link rel="stylesheet" href="{{ asset('user-template/css/open-iconic-bootstrap.min.css') }}">   
     <link rel="stylesheet" href="{{ asset('user-template/css/animate.css') }}"> 
     <link rel="stylesheet" href="{{ asset('user-template/css/owl.carousel.min.css') }}">
@@ -23,7 +22,6 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/welcome.css') }}">
-
   </head>
   <body>
     
@@ -59,7 +57,6 @@
                           </li>
                           <li class="nav-item"><a href="{{ route('landlord.financial-reporting') }}" class="nav-link">Financial Reporting</a></li>
                       @endif
-                      
                       <!-- Profile Dropdown (Common for both roles) -->
                       <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -102,15 +99,16 @@
         <div class="row no-gutters slider-text justify-content-start align-items-center justify-content-center">
           <div class="col-lg-8 ftco-animate">
           	<div class="text w-100 text-center mb-md-5 pb-md-5">
-              <h1 class="mb-4">Fast &amp; Easy Way To Rent A Home</h1>
-              <p style="font-size: 18px;">A charming neighborhood surrounds our rental home, providing a peaceful atmosphere and essential amenities. It is a tranquil haven, where comfort meets convenience.</p>	            <a href="https://vimeo.com/45830194" class="icon-wrap popup-vimeo d-flex align-items-center mt-4 justify-content-center">
-	            	<div class="icon d-flex align-items-center justify-content-center">
-	            		<span class="ion-ios-play"></span>
-	            	</div>
-	            	<div class="heading-title ml-5">
-		            	<span>Easy steps for renting a house</span>
-	            	</div>
-	            </a>
+              <h1 class="mb-4">Fast & Easy Way To Rent A Home</h1>
+              <p style="font-size: 18px;">A charming neighborhood surrounds our rental home, providing a peaceful atmosphere and essential amenities. It is a tranquil haven, where comfort meets convenience.</p>
+              <a href="https://vimeo.com/45830194" class="icon-wrap popup-vimeo d-flex align-items-center mt-4 justify-content-center">
+                <div class="icon d-flex align-items-center justify-content-center">
+                  <span class="ion-ios-play"></span>
+                </div>
+                <div class="heading-title ml-5">
+                  <span>Easy steps for renting a house</span>
+                </div>
+              </a>
             </div>
           </div>
         </div>
@@ -168,25 +166,23 @@
       </div>
     </section>
 
-  
     <section class="ftco-section ftco-about">
-			<div class="container">
-				<div class="row no-gutters">
-					<div class="col-md-6 p-md-5 img img-2 d-flex justify-content-center align-items-center" style="background-image: url(user-template/images/about-landing.jpg);">
-					</div>
-					<div class="col-md-6 wrap-about ftco-animate">
-	          <div class="heading-section heading-section-white pl-md-5">
-	          	<span class="subheading">About us</span>
-	            <h2 class="mb-4">Welcome to Stay Haven</h2>
-
-                <p>Discover your perfect home with Stay Haven, where a variety of stunning properties await you. Our experienced team is dedicated to helping you find the ideal space that suits your lifestyle and needs.</p>
-                <p>Whether you’re looking for a cozy apartment in the city or a spacious house in the suburbs, we have the right options for you. Explore our listings to find the perfect place to call home.</p>
-                <p><a href="{{ route ('houses') }}" class="btn btn-primary py-3 px-4">View Available Properties</a></p>
+      <div class="container">
+        <div class="row no-gutters">
+          <div class="col-md-6 p-md-5 img img-2 d-flex justify-content-center align-items-center" style="background-image: url(user-template/images/about-landing.jpg);">
+          </div>
+          <div class="col-md-6 wrap-about ftco-animate">
+            <div class="heading-section heading-section-white pl-md-5">
+              <span class="subheading">About us</span>
+              <h2 class="mb-4">Welcome to Stay Haven</h2>
+              <p>Discover your perfect home with Stay Haven, where a variety of stunning properties await you. Our experienced team is dedicated to helping you find the ideal space that suits your lifestyle and needs.</p>
+              <p>Whether you’re looking for a cozy apartment in the city or a spacious house in the suburbs, we have the right options for you. Explore our listings to find the perfect place to call home.</p>
+              <p><a href="{{ route('houses') }}" class="btn btn-primary py-3 px-4">View Available Properties</a></p>
             </div>
-					</div>
-				</div>
-			</div>
-		</section>
+          </div>
+        </div>
+      </div>
+    </section>
 
     <section class="ftco-section">
       <div class="container">
@@ -200,7 +196,7 @@
               <div class="col-md-3">
                   <div class="services services-2 w-100 text-center">
                       <div class="icon d-flex align-items-center justify-content-center">
-                          <span class="bi bi-house-heart" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                          <span class="bi bi-house-heart" style="font-size: 2rem;"></span>
                       </div>
                       <div class="text w-100">
                           <h3 class="heading mb-2">Relaxing Retreats</h3>
@@ -211,7 +207,7 @@
               <div class="col-md-3">
                   <div class="services services-2 w-100 text-center">
                       <div class="icon d-flex align-items-center justify-content-center">
-                          <span class="bi bi-person-check" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                          <span class="bi bi-person-check" style="font-size: 2rem;"></span>
                       </div>
                       <div class="text w-100">
                           <h3 class="heading mb-2">Personalized Getaways</h3>
@@ -222,7 +218,7 @@
               <div class="col-md-3">
                   <div class="services services-2 w-100 text-center">
                       <div class="icon d-flex align-items-center justify-content-center">
-                          <span class="bi bi-map" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                          <span class="bi bi-map" style="font-size: 2rem;"></span>
                       </div>
                       <div class="text w-100">
                           <h3 class="heading mb-2">Serene City Tours</h3>
@@ -233,7 +229,7 @@
               <div class="col-md-3">
                   <div class="services services-2 w-100 text-center">
                       <div class="icon d-flex align-items-center justify-content-center">
-                          <span class="bi bi-car-front" style="font-size: 2rem;"></span> <!-- Updated Bootstrap Icon -->
+                          <span class="bi bi-car-front" style="font-size: 2rem;"></span>
                       </div>
                       <div class="text w-100">
                           <h3 class="heading mb-2">Luxury Transport Services</h3>
@@ -249,7 +245,7 @@
       <div class="container">
         <div class="row justify-content-center mb-5">
           <div class="col-md-7 text-center heading-section ftco-animate">
-          	<span class="subheading">Testimonial</span>
+            <span class="subheading">Testimonial</span>
             <h2 class="mb-3">Happy Clients</h2>
           </div>
         </div>
@@ -404,7 +400,7 @@
                 </div>
                 <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#faqAccordion">
                   <div class="card-body">
-                    You can reach Stay Haven’s support team via the "Contact Us" page on our website, by emailing info@yourdomain.com, or by calling +2 392 3929 210. We also offer a messaging feature for logged-in users to communicate directly with landlords or our support staff for quick assistance.
+                    You can reach Stay Haven’s support team via the "Contact Us" page on our website, by emailing arjheezyb@gmail.com, or by calling +2 392 3929 210. We also offer a messaging feature for logged-in users to communicate directly with landlords or our support staff for quick assistance.
                   </div>
                 </div>
               </div>
@@ -436,7 +432,7 @@
                 <li><a href="#" class="py-2 d-block">Services</a></li>
                 <li><a href="#" class="py-2 d-block">Term and Conditions</a></li>
                 <li><a href="#" class="py-2 d-block">Best Price Guarantee</a></li>
-                <li><a href="#" class="py-2 d-block">Privacy &amp; Cookies Policy</a></li>
+                <li><a href="#" class="py-2 d-block">Privacy & Cookies Policy</a></li>
               </ul>
             </div>
           </div>
@@ -454,49 +450,53 @@
           </div>
           <div class="col-md">
             <div class="ftco-footer-widget mb-4">
-            	<h2 class="ftco-heading-2">Have a Questions?</h2>
-            	<div class="block-23 mb-3">
-	              <ul>
-	                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
-	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
-	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
-	              </ul>
-	            </div>
+              <h2 class="ftco-heading-2">Have a Questions?</h2>
+              <div class="block-23 mb-3">
+                <ul>
+                  <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
+                  <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+                  <li><a href="#"><span class="icon icon-envelope"></span><span class="text">arjheezyb@gmail.com</span></a></li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-12 text-center">
-
             <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+  Copyright ©<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
   <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
           </div>
         </div>
       </div>
     </footer>
     
-  
+    <!-- loader -->
+    <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
-  <!-- loader -->
-  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
+    <!-- Chatbase Chatbot Script -->
+    <script>
+      window.chatbaseConfig = {
+        chatbotId: "4RSSrtK8VY3M7j0m4Tiye", // Replace with your actual Chatbase chatbot ID
+      };
+    </script>
+    <script src="https://www.chatbase.co/embed.min.js" defer></script>
 
-
-  <script src="{{ asset('user-template/js/jquery.min.js') }}"></script>
-  <script src="{{ asset('user-template/js/jquery-migrate-3.0.1.min.js') }}"></script>
-  <script src="{{ asset('user-template/js/popper.min.js') }}"></script>
-  <script src="{{ asset('user-template/js/bootstrap.min.js') }}"></script>
-  <script src="{{ asset('user-template/js/jquery.easing.1.3.js') }}"></script>
-  <script src="{{ asset('user-template/js/jquery.waypoints.min.js') }}"></script>
-  <script src="{{ asset('user-template/js/jquery.stellar.min.js') }}"></script>
-  <script src="{{ asset('user-template/js/owl.carousel.min.js') }}"></script>
-  <script src="{{ asset('user-template/js/jquery.magnific-popup.min.js') }}"></script>
-  <script src="{{ asset('user-template/js/aos.js') }}"></script>
-  <script src="{{ asset('user-template/js/jquery.animateNumber.min.js') }}"></script>
-  <script src="{{ asset('user-template/js/bootstrap-datepicker.js') }}"></script>
-  <script src="{{ asset('user-template/js/jquery.timepicker.min.js') }}"></script>
-  <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
-  <script src="{{ asset('user-template/js/main.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery-migrate-3.0.1.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/popper.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.easing.1.3.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.waypoints.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.stellar.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/aos.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.animateNumber.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.timepicker.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/main.js') }}"></script>
     
   </body>
 </html>
