@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Redirect;
 
 class PaymentController extends Controller
 {
-    
     public function showPaymentForm($propertyId)
     {
         if (Auth::user()->role !== 'tenant') {
@@ -18,6 +17,12 @@ class PaymentController extends Controller
         }
 
         $property = Property::findOrFail($propertyId);
+
+        // If the property is not available (e.g., already rented), redirect to houses
+        if ($property->status !== 'available') {
+            return Redirect::route('houses')->with('info', 'This property has already been rented.');
+        }
+
         return view('payment', compact('property'));
     }
 
@@ -27,7 +32,12 @@ class PaymentController extends Controller
 
         // Validate that property is available
         if ($property->status !== 'available') {
-            return back()->with('error', 'This property is not available for rent.');
+            if ($request->ajax()) {
+                return response()->json([
+                    'message' => 'This property is not available for rent.'
+                ], 400);
+            }
+            return Redirect::route('houses')->with('info', 'This property has already been rented.');
         }
 
         $validated = $request->validate([
@@ -52,6 +62,13 @@ class PaymentController extends Controller
 
         // Update property status to rented
         $property->update(['status' => 'rented']);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'message' => 'Payment processed successfully!',
+                'redirect_url' => route('payment.success', $payment->id)
+            ]);
+        }
 
         return redirect()->route('payment.success', $payment->id);
     }
@@ -89,9 +106,6 @@ class PaymentController extends Controller
             'cancellation_status' => 'pending',
         ]);
 
-        // Here you might want to send a notification to the landlord
-        // Notification::send($payment->landlord, new CancellationRequested($payment));
-
         return redirect()->route('profile')->with('success', 'Cancellation request submitted. Waiting for landlord approval.');
     }
 
@@ -112,7 +126,7 @@ class PaymentController extends Controller
             'payment_method' => $payment->payment_method,
             'status' => $payment->status,
             'transaction_id' => $payment->transaction_id,
-            'start_date' => $payment->start_date->format('M d, Y'), // Format start_date
+            'start_date' => $payment->start_date->format('M d, Y'),
             'created_at' => $payment->created_at->format('M d, Y')
         ]);
     }

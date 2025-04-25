@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/houses.css') }}">
+    <!-- Include SweetAlert2 CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -327,6 +329,7 @@
             </div>
         </div>
     </nav>
+    
     <section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('user-template/images/bg_3.jpg') }}');" data-stellar-background-ratio="0.5">
         <div class="overlay"></div>
         <div class="container">
@@ -338,6 +341,7 @@
             </div>
         </div>
     </section>
+
     <section class="payment-section">
         <div class="payment-container">
             <div class="payment-grid">
@@ -369,7 +373,7 @@
                         <h3>Payment Information</h3>
                     </div>
                     <div class="payment-body">
-                        <form method="POST" action="{{ route('payment.process', $property->id) }}">
+                        <form id="payment-form" method="POST" action="{{ route('payment.process', $property->id) }}">
                             @csrf
                             <div class="form-group">
                                 <label for="start_date">Rental Start Date</label>
@@ -473,29 +477,69 @@
     <script src="{{ asset('user-template/js/jquery.timepicker.min.js') }}"></script>
     <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
     <script src="{{ asset('user-template/js/main.js') }}"></script>
+    <!-- Include SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <script>
         $(document).ready(function() {
-            // Initially show the credit card details
+            // Payment method toggle functionality
             $('.payment-details.credit-card-details').addClass('active');
 
             $('.payment-method').click(function() {
-                // Remove active class from all payment methods
                 $('.payment-method').removeClass('active');
-                // Add active class to the clicked payment method
                 $(this).addClass('active');
-                // Check the radio input
                 $(this).find('input[type="radio"]').prop('checked', true);
 
-                // Hide all payment details
                 $('.payment-details').removeClass('active');
-
-                // Show the corresponding details based on the selected method
                 var method = $(this).data('method');
                 if (method === 'credit_card') {
                     $('.payment-details.credit-card-details').addClass('active');
                 } else if (method === 'paypal') {
                     $('.payment-details.paypal-details').addClass('active');
                 }
+            });
+
+            // Handle form submission with AJAX
+            $('#payment-form').on('submit', function(e) {
+                e.preventDefault(); // Prevent default form submission
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(response) {
+                        // Show SweetAlert on success
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Payment Successful!',
+                            text: 'Your rental payment has been processed successfully.',
+                            confirmButtonText: 'Proceed',
+                            confirmButtonColor: '#8b5cf6'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Redirect to the success page
+                                window.location.href = response.redirect_url;
+                            }
+                        });
+                    },
+                    error: function(xhr) {
+                        var errorMessage = xhr.responseJSON && xhr.responseJSON.message 
+                            ? xhr.responseJSON.message 
+                            : 'An error occurred while processing your payment. Please try again.';
+                        
+                        // Show SweetAlert on error
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Payment Failed',
+                            text: errorMessage,
+                            confirmButtonText: 'Try Again',
+                            confirmButtonColor: '#8b5cf6'
+                        });
+                    }
+                });
             });
         });
     </script>

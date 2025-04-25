@@ -273,7 +273,7 @@
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
                                                             <div class="modal-header">
-                                                                <h5 class_FONTS="modal-title">Request Rent Cancellation</h5>
+                                                                <h5 class_FONTS="modal-title1">Request Rent Cancellation</h5>
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <form action="{{ route('payment.cancel', $payment->id) }}" method="POST" class="cancel-form">

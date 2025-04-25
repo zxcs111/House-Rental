@@ -33,6 +33,10 @@ body {
     border-radius: 0;
 }
 
+.modal-title1 {
+    color: white;
+}
+
 .form-control, .dataTable-input {
     display: block;
     width: 100%;
