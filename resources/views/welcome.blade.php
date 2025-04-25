@@ -8,25 +8,20 @@
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('user-template/css/open-iconic-bootstrap.min.css') }}">
-    
-    <link rel="stylesheet" href="{{ asset('user-template/css/animate.css') }}">
-    
+    <link rel="stylesheet" href="{{ asset('user-template/css/open-iconic-bootstrap.min.css') }}">   
+    <link rel="stylesheet" href="{{ asset('user-template/css/animate.css') }}"> 
     <link rel="stylesheet" href="{{ asset('user-template/css/owl.carousel.min.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/owl.theme.default.min.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/magnific-popup.css') }}">
-
     <link rel="stylesheet" href="{{ asset('user-template/css/aos.css') }}">
-
     <link rel="stylesheet" href="{{ asset('user-template/css/ionicons.min.css') }}">
-
     <link rel="stylesheet" href="{{ asset('user-template/css/bootstrap-datepicker.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/jquery.timepicker.css') }}">
-
-    
     <link rel="stylesheet" href="{{ asset('user-template/css/flaticon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('user-template/css/welcome.css') }}">
+
   </head>
   <body>
     
@@ -46,7 +41,6 @@
                         <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
                         <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
                         <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                        <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
                         <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
                     @elseif(Auth::user()->role === 'landlord')
                         <!-- Landlord Menu Items (restricted access) -->
@@ -91,7 +85,6 @@
                     <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
                     <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
                     <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                    <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
                     <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
                     <li class="nav-item"><a href="{{ route('login') }}" class="nav-link">Login</a></li>
                 @endauth
@@ -269,53 +262,92 @@
       <div class="container">
         <div class="row justify-content-center mb-5">
           <div class="col-md-7 heading-section text-center ftco-animate">
-          	<span class="subheading">Blog</span>
-            <h2>Recent Blog</h2>
+            <span class="subheading">FAQ</span>
+            <h2>Frequently Asked Questions</h2>
           </div>
         </div>
         <div class="row d-flex">
-          <div class="col-md-4 d-flex ftco-animate">
-          	<div class="blog-entry justify-content-end">
-              <a href="blog-single.html" class="block-20" style="background-image: url('user-template/images/home-blog1.jpg')">
-              </a>
-              <div class="text pt-4">
-              	<div class="meta mb-3">
-                  <div><a href="#">Oct. 29, 2019</a></div>
-                  <div><a href="#">Admin</a></div>
-                  <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
+          <div class="col-md-12 ftco-animate">
+            <div class="accordion" id="faqAccordion">
+              <!-- FAQ Item 1 -->
+              <div class="card">
+                <div class="card-header" id="headingOne">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      How does Stay Haven help me find the perfect rental home?
+                      <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                  </h5>
                 </div>
-                <h3 class="heading mt-2"><a href="#">Top 10 Luxury Stays That Redefine Comfort</a></h3>
-                <p><a href="{{ route ('blog') }}" class="btn btn-primary">Read more</a></p>
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#faqAccordion">
+                  <div class="card-body">
+                    Stay Haven offers a user-friendly platform with a wide range of rental properties, from cozy apartments to spacious houses. Our experienced team provides personalized support to match your lifestyle and needs, ensuring you find a home that feels just right. Browse our listings, filter by preferences, and connect with landlords directly through our platform.
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-          	<div class="blog-entry justify-content-end">
-              <a href="blog-single.html" class="block-20" style="background-image: url('user-template/images/home-blog2.jpg')">
-              </a>
-              <div class="text pt-4">
-              	<div class="meta mb-3">
-                  <div><a href="#">Oct. 29, 2019</a></div>
-                  <div><a href="#">Admin</a></div>
-                  <div><a href="#" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
+              <!-- FAQ Item 2 -->
+              <div class="card">
+                <div class="card-header" id="headingTwo">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                      What is the process for renting a property through Stay Haven?
+                      <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                  </h5>
                 </div>
-                <h3 class="heading mt-2"><a href="#">How to Choose the Perfect Stay for Your Vacation</a></h3>
-                <p><a href="{{ route ('blog') }}" class="btn btn-primary">Read more</a></p>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#faqAccordion">
+                  <div class="card-body">
+                    To rent a property, start by browsing available listings on Stay Haven. Once you find a property you like, log in as a tenant to access the "Rent Now" option. Complete the payment form, submit any required documents, and coordinate with the landlord for lease signing and move-in details. Our platform streamlines the process for a hassle-free experience.
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="col-md-4 d-flex ftco-animate">
-          	<div class="blog-entry">
-              <a href="blog-single.html" class="block-20" style="background-image: url('user-template/images/home-blog3.jpg')">
-              </a>
-              <div class="text pt-4">
-              	<div class="meta mb-3">
-                  <div><a href="#">Oct. 29, 2019</a></div>
-                  <div><a href="#">Admin</a></div>
-                  <div><a href="" class="meta-chat"><span class="icon-chat"></span> 3</a></div>
+              <!-- FAQ Item 3 -->
+              <div class="card">
+                <div class="card-header" id="headingThree">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                      Can landlords list their properties on Stay Haven?
+                      <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                  </h5>
                 </div>
-                <h3 class="heading mt-2"><a href="#">5 Essential Tips for a Luxurious Stay Experience</a></h3>
-                <p><a href="{{ route ('blog') }}" class="btn btn-primary">Read more</a></p>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#faqAccordion">
+                  <div class="card-body">
+                    Yes! Landlords can easily list their properties on Stay Haven by creating an account and accessing the "Property Listing" feature. You can upload photos, set pricing, and manage bookings. Our platform also provides tools like financial reporting and cancellation request management to simplify property management.
+                  </div>
+                </div>
+              </div>
+              <!-- FAQ Item 4 -->
+              <div class="card">
+                <div class="card-header" id="headingFour">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                      What if I need to cancel a rental agreement?
+                      <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                  </h5>
+                </div>
+                <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#faqAccordion">
+                  <div class="card-body">
+                    Tenants can submit a cancellation request through their Stay Haven account. The request will be reviewed by the landlord, who can approve or deny it based on the lease terms. Landlords can manage cancellation requests via the "Cancellation Requests" section in their dashboard, ensuring clear communication and transparency.
+                  </div>
+                </div>
+              </div>
+              <!-- FAQ Item 5 -->
+              <div class="card">
+                <div class="card-header" id="headingFive">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                      How can I contact Stay Haven for support?
+                      <span class="arrow"><i class="fas fa-chevron-down"></i></span>
+                    </button>
+                  </h5>
+                </div>
+                <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#faqAccordion">
+                  <div class="card-body">
+                    You can reach Stay Haven’s support team via the "Contact Us" page on our website, by emailing info@yourdomain.com, or by calling +2 392 3929 210. We also offer a messaging feature for logged-in users to communicate directly with landlords or our support staff for quick assistance.
+                  </div>
+                </div>
               </div>
             </div>
           </div>

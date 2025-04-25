@@ -37,7 +37,6 @@
                     <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
                     <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
                     <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
-                    <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
                     <li class="nav-item active"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
 
                     <!-- Conditional Rendering for Login/Profile -->
