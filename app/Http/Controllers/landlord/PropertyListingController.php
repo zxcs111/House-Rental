@@ -11,14 +11,26 @@ use Illuminate\Support\Facades\Redirect;
 
 class PropertyListingController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-
         if (Auth::user()->role !== 'landlord') {
             return Redirect::to(url()->previous());
         }
 
-        $properties = Property::where('user_id', Auth::id())->latest()->get();
+        $query = Property::where('user_id', Auth::id())->latest();
+
+        // Get the requested page number from the query string
+        $requestedPage = $request->query('page', 1);
+
+        // Paginate with 5 items per page
+        $properties = $query->paginate(6);
+
+        // Check if the requested page exceeds the total number of pages
+        if ($requestedPage > $properties->lastPage()) {
+            // Redirect to the last page
+            return redirect()->route('property.listing', ['page' => $properties->lastPage()]);
+        }
+
         return view('landlord.propertylisting', compact('properties'));
     }
 

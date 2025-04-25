@@ -1,0 +1,194 @@
+.edit-property {
+    cursor: pointer;
+}
+.property-image {
+  width: 80px;
+  height: 60px;
+  object-fit: cover;
+}
+.property-placeholder {
+  width: 80px;
+  height: 60px;
+  background: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.badge {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: white !important; /* Force white text for all badges */
+}
+.badge-pending {
+  background-color: #f6c23e; /* Warning color from financial reporting */
+}
+.badge-available {
+  background-color: #4e73df; /* Success color from financial reporting */
+}
+.badge-rented {
+  background-color: #1cc88a; /* Primary color from financial reporting */
+}
+.badge-maintenance {
+  background-color: #e74a3b; /* Danger color from financial reporting */
+}
+/* Table container */
+.table-responsive {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+/* Table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    min-width: 1000px; /* Ensure the table doesn't shrink too much */
+}
+
+/* Table header */
+thead th {
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: bold;
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 2px solid #dee2e6;
+}
+
+/* Table body */
+tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+
+/* Image column */
+td img {
+    max-width: 100px;
+    height: auto;
+    border-radius: 8px;
+}
+
+/* Status badges */
+.status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 4px;
+    text-transform: capitalize;
+}
+
+.status-pending {
+    background-color: #ffcc80;
+    color: #333;
+}
+
+.status-rented {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-available {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Hover effect for table rows */
+tr:hover {
+    background-color: #f1f8ff;
+}
+.image-preview {
+  max-height: 150px;
+  margin-bottom: 10px;
+}
+.gallery-preview-container {
+  position: relative;
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.gallery-preview {
+  width: 100px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.remove-gallery-image {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 12px;
+}
+.remove-gallery-image:hover {
+  background: #c82333;
+}
+
+.feature-checkbox {
+  margin-right: 10px;
+}
+#createPropertyModal .modal-dialog {
+  max-width: 800px;
+}
+.update-status {
+    transition: all 0.3s ease;
+}
+.update-status:hover {
+    transform: scale(1.05);
+}
+
+/* Pagination */
+.pagination-container {
+display: flex;
+justify-content: space-between;
+align-items: center;
+flex-wrap: wrap;
+}
+
+.pagination-info {
+font-size: 14px;
+color: #666;
+}
+
+.pagination {
+margin: 0;
+}
+
+.pagination .page-item {
+margin: 0 2px;
+}
+
+.pagination .page-link {
+border-radius: 4px;
+color: #007bff;
+border: 1px solid #dee2e6;
+padding: 6px 12px;
+}
+
+.pagination .page-item.active .page-link {
+background-color: #007bff;
+border-color: #007bff;
+color: white;
+}
+
+.pagination .page-item.disabled .page-link {
+color: #6c757d;
+pointer-events: none;
+background-color: #fff;
+border-color: #dee2e6;
+}
+
+.pagination .page-link:hover {
+background-color: #e9ecef;
+border-color: #dee2e6;
+color: #0056b3;
+}

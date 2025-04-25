@@ -23,156 +23,11 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/flaticon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('user-template/css/property-listing.css') }}">
     
     <!-- Additional CSS for the property listing -->
     <style>
-    .edit-property {
-        cursor: pointer;
-    }
-    .property-image {
-      width: 80px;
-      height: 60px;
-      object-fit: cover;
-    }
-    .property-placeholder {
-      width: 80px;
-      height: 60px;
-      background: #eee;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .badge {
-      font-size: 0.9rem;
-      font-weight: 500;
-      color: white !important; /* Force white text for all badges */
-    }
-    .badge-pending {
-      background-color: #f6c23e; /* Warning color from financial reporting */
-    }
-    .badge-available {
-      background-color: #4e73df; /* Success color from financial reporting */
-    }
-    .badge-rented {
-      background-color: #1cc88a; /* Primary color from financial reporting */
-    }
-    .badge-maintenance {
-      background-color: #e74a3b; /* Danger color from financial reporting */
-    }
-    /* Table container */
-    .table-responsive {
-        overflow-x: auto;
-        margin-bottom: 20px;
-    }
-
-    /* Table */
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 14px;
-        min-width: 1000px; /* Ensure the table doesn't shrink too much */
-    }
-
-    /* Table header */
-    thead th {
-        background-color: #f8f9fa;
-        color: #333;
-        font-weight: bold;
-        padding: 12px 15px;
-        text-align: left;
-        border-bottom: 2px solid #dee2e6;
-    }
-
-    /* Table body */
-    tbody td {
-        padding: 12px 15px;
-        border-bottom: 1px solid #dee2e6;
-        vertical-align: middle;
-    }
-
-    /* Image column */
-    td img {
-        max-width: 100px;
-        height: auto;
-        border-radius: 8px;
-    }
-
-    /* Status badges */
-    .status-badge {
-        display: inline-block;
-        padding: 5px 10px;
-        font-size: 12px;
-        font-weight: bold;
-        border-radius: 4px;
-        text-transform: capitalize;
-    }
-
-    .status-pending {
-        background-color: #ffcc80;
-        color: #333;
-    }
-
-    .status-rented {
-        background-color: #28a745;
-        color: white;
-    }
-
-    .status-available {
-        background-color: #007bff;
-        color: white;
-    }
-
-    /* Hover effect for table rows */
-    tr:hover {
-        background-color: #f1f8ff;
-    }
-    .image-preview {
-      max-height: 150px;
-      margin-bottom: 10px;
-  }
-  .gallery-preview-container {
-      position: relative;
-      display: inline-block;
-      margin-right: 10px;
-      margin-bottom: 10px;
-  }
-  .gallery-preview {
-      width: 100px;
-      height: 75px;
-      object-fit: cover;
-      border-radius: 8px;
-  }
-  .remove-gallery-image {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background: #dc3545;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-      text-align: center;
-      cursor: pointer;
-      font-size: 12px;
-  }
-  .remove-gallery-image:hover {
-      background: #c82333;
-  }
-
-    .feature-checkbox {
-      margin-right: 10px;
-    }
-    #createPropertyModal .modal-dialog {
-      max-width: 800px;
-    }
-    .update-status {
-        transition: all 0.3s ease;
-    }
-    .update-status:hover {
-        transform: scale(1.05);
-    }
+    
   </style>
   </head>
   <body>
@@ -262,96 +117,134 @@
 
               <div class="card-body">
                 @if(session('success'))
-                  <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    {{ session('success') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ session('success') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
                 @endif
 
                 @if($properties->isEmpty())
-                  <div class="text-center py-5">
-                    <i class="fas fa-home fa-4x text-muted mb-4"></i>
-                    <h4>No properties found</h4>
-                    <p class="text-muted">You haven't listed any properties yet. Get started by adding your first property!</p>
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createPropertyModal">
-                      <i class="fas fa-plus"></i> Add Property
-                    </button>
-                  </div>
+                    <div class="text-center py-5">
+                        <i class="fas fa-home fa-4x text-muted mb-4"></i>
+                        <h4>No properties found</h4>
+                        <p class="text-muted">You haven't listed any properties yet. Get started by adding your first property!</p>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createPropertyModal">
+                            <i class="fas fa-plus"></i> Add Property
+                        </button>
+                    </div>
                 @else
-                  <div class="table-responsive">
-                    <table class="table table-hover">
-                      <thead class="thead-light">
-                        <tr>
-                          <th>Image</th>
-                          <th>Title</th>
-                          <th>Location</th>
-                          <th>Price</th>
-                          <th>Details</th>
-                          <th>Status</th>
-                          <th>Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        @foreach($properties as $property)
-                          <tr>
-                            <td>
-                              @if($property->main_image)
-                                <img src="{{ asset('storage/' . $property->main_image) }}" alt="{{ $property->title }}" class="property-image rounded">
-                              @else
-                                <div class="property-placeholder rounded">
-                                  <i class="fas fa-home text-muted"></i>
-                                </div>
-                              @endif
-                            </td>
-                            <td>{{ $property->title }}</td>
-                            <td>
-                              {{ $property->city }}, {{ $property->state }}<br>
-                              <small class="text-muted">{{ $property->address }}</small>
-                            </td>
-                            <td>${{ number_format($property->price, 2) }}/mo</td>
-                            <td>
-                              {{ $property->bedrooms }} BR / {{ $property->bathrooms }} BA<br>
-                              {{ number_format($property->square_feet) }} sqft
-                            </td>
-                            <td>
-                                @if($property->status === 'pending')
-                                    <span class="badge badge-pending">Pending Approval</span>
-                                @elseif($property->status === 'available')
-                                    <span class="badge badge-available">Available</span>
-                                @elseif($property->status === 'rented')
-                                    <span class="badge badge-rented">Rented</span>
-                                @elseif($property->status === 'maintenance')
-                                    <span class="badge badge-maintenance">Under Maintenance</span>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th>Image</th>
+                                    <th>Title</th>
+                                    <th>Location</th>
+                                    <th>Price</th>
+                                    <th>Details</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($properties as $property)
+                                    <tr>
+                                        <td>
+                                            @if($property->main_image)
+                                                <img src="{{ asset('storage/' . $property->main_image) }}" alt="{{ $property->title }}" class="property-image rounded">
+                                            @else
+                                                <div class="property-placeholder rounded">
+                                                    <i class="fas fa-home text-muted"></i>
+                                                </div>
+                                            @endif
+                                        </td>
+                                        <td>{{ $property->title }}</td>
+                                        <td>
+                                            {{ $property->city }}, {{ $property->state }}<br>
+                                            <small class="text-muted">{{ $property->address }}</small>
+                                        </td>
+                                        <td>${{ number_format($property->price, 2) }}/mo</td>
+                                        <td>
+                                            {{ $property->bedrooms }} BR / {{ $property->bathrooms }} BA<br>
+                                            {{ number_format($property->square_feet) }} sqft
+                                        </td>
+                                        <td>
+                                            @if($property->status === 'pending')
+                                                <span class="badge badge-pending">Pending Approval</span>
+                                            @elseif($property->status === 'available')
+                                                <span class="badge badge-available">Available</span>
+                                            @elseif($property->status === 'rented')
+                                                <span class="badge badge-rented">Rented</span>
+                                            @elseif($property->status === 'maintenance')
+                                                <span class="badge badge-maintenance">Under Maintenance</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <button class="btn btn-sm btn-primary edit-property mr-2" 
+                                                        data-toggle="modal" 
+                                                        data-target="#createPropertyModal"
+                                                        data-edit="true"
+                                                        data-id="{{ $property->id }}"
+                                                        title="Edit">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                @if($property->status !== 'rented' && $property->status !== 'maintenance')
+                                                    <button class="btn btn-sm btn-danger delete-property" 
+                                                            data-id="{{ $property->id }}"
+                                                            title="Delete">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                        <!-- Pagination -->
+                        <div class="pagination-container mt-4">
+                            <div class="pagination-info">
+                                Showing {{ $properties->firstItem() }} to {{ $properties->lastItem() }} of {{ $properties->total() }} results
+                            </div>
+                            <ul class="pagination">
+                                <!-- Previous Page Link -->
+                                @if($properties->onFirstPage())
+                                    <li class="page-item disabled">
+                                        <span class="page-link">«</span>
+                                    </li>
+                                @else
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ $properties->previousPageUrl() }}" rel="prev">«</a>
+                                    </li>
                                 @endif
-                            </td>
-                            <td>
-                              <div class="btn-group" role="group">
-                                  <button class="btn btn-sm btn-primary edit-property mr-2" 
-                                          data-toggle="modal" 
-                                          data-target="#createPropertyModal"
-                                          data-edit="true"
-                                          data-id="{{ $property->id }}"
-                                          title="Edit">
-                                      <i class="fas fa-edit"></i>
-                                  </button>
-                                  @if($property->status !== 'rented' && $property->status !== 'maintenance')
-                                      <button class="btn btn-sm btn-danger delete-property" 
-                                              data-id="{{ $property->id }}"
-                                              title="Delete">
-                                          <i class="fas fa-trash"></i>
-                                      </button>
-                                  @endif
-                              </div>
-                          </td>
-                          </tr>
-                        @endforeach
-                      </tbody>
-                    </table>
-                  </div>
+
+                                <!-- Page Numbers -->
+                                @foreach(range(1, $properties->lastPage()) as $i)
+                                    @if($i >= $properties->currentPage() - 2 && $i <= $properties->currentPage() + 2)
+                                        <li class="page-item {{ ($properties->currentPage() == $i) ? 'active' : '' }}">
+                                            <a class="page-link" href="{{ $properties->url($i) }}">{{ $i }}</a>
+                                        </li>
+                                    @endif
+                                @endforeach
+
+                                <!-- Next Page Link -->
+                                @if($properties->hasMorePages())
+                                    <li class="page-item">
+                                        <a class="page-link" href="{{ $properties->nextPageUrl() }}" rel="next">»</a>
+                                    </li>
+                                @else
+                                    <li class="page-item disabled">
+                                        <span class="page-link">»</span>
+                                    </li>
+                                @endif
+                            </ul>
+                        </div>
+                    </div>
                 @endif
-              </div>
+            </div>
             </div>
           </div>
         </div>
@@ -588,9 +481,8 @@
         </div>
         <div class="row">
           <div class="col-md-12 text-center">
-            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+            <p>
+              Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved </a>
           </div>
         </div>
       </div>
