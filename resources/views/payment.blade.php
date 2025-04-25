@@ -5,9 +5,9 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
-    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-
+    
     <link rel="stylesheet" href="{{ asset('user-template/css/open-iconic-bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/animate.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/owl.carousel.min.css') }}">
@@ -20,69 +20,256 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/flaticon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('user-template/css/houses.css') }}">
     <style>
-        .payment-card {
-            border-radius: 10px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-            border: none;
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
         }
-        .payment-header {
-            border-radius: 10px 10px 0 0 !important;
-            padding: 1.5rem;
+        .payment-section {
+            padding: 60px 0;
+            background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
         }
-        .payment-body {
-            padding: 2rem;
+        .payment-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
         }
-        .payment-method {
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            transition: all 0.3s;
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: stretch;
         }
-        .payment-method:hover {
-            border-color: #007bff;
-            background-color: #f8f9fa;
+        .property-card, .payment-card {
+            background: #ffffff;
+            border-radius: 0;
+            box-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
         }
-        .payment-method.active {
-            border-color: #007bff;
-            background-color: #f0f7ff;
+        .property-header, .payment-header {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6b21a8 100%);
+            color: #ffffff;
+            padding: 28px 40px;
+            border-radius: 0;
+        }
+        .property-header h3, .payment-header h3 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: #ffffff;
+        }
+        .property-body, .payment-body {
+            padding: 40px;
+            background: #ffffff;
+        }
+        .property-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        }
+        .property-details h4 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 16px;
+        }
+        .property-details p {
+            color: #475569;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .property-specs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 24px 0;
+            padding: 16px 0;
+            border-top: 1px solid #e2e8f0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .property-specs p {
+            margin: 0;
+            font-size: 1rem;
+            color: #475569;
+        }
+        .property-specs p strong {
+            color: #0f172a;
+            font-weight: 600;
+        }
+        .price-tag {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            text-align: right;
+            margin-top: 24px;
+        }
+        .price-tag small {
+            font-size: 1.25rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .form-group {
+            margin-bottom: 28px;
+        }
+        .form-group label {
+            font-weight: 600;
+            color: #0f172a;
+            display: block;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+        .form-control {
+            width: 100%;
+            padding: 14px 20px;
+            border: 1px solid #d1d5db;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: #ffffff;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
         }
         .form-control:focus {
-            box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.1);
-            border-color: #80bdff;
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+            background: #ffffff;
+        }
+        .payment-method {
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #ffffff;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        }
+        .payment-method:hover {
+            border-color: #8b5cf6;
+            background: #f5f3ff;
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.1);
+        }
+        .payment-method.active {
+            border-color: #8b5cf6;
+            background: #f5f3ff;
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.15);
+        }
+        .payment-method input {
+            display: none;
+        }
+        .payment-method label {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #0f172a;
         }
         .card-icon {
             font-size: 2rem;
-            margin-right: 10px;
-            color: #555;
+            margin-right: 16px;
+            color: #8b5cf6;
+            transition: transform 0.3s ease;
+        }
+        .payment-method:hover .card-icon {
+            transform: scale(1.1);
+        }
+        .payment-details {
+            margin-top: 28px;
+            padding: 24px;
+            background: #f8fafc;
+            border-radius: 16px;
+            display: none;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.03);
+        }
+        .payment-details.active {
+            display: block;
+        }
+        .credit-card-details .form-group {
+            margin-bottom: 20px;
+        }
+        .credit-card-details .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .paypal-info {
+            color: #475569;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .paypal-info a {
+            color: #8b5cf6;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        .paypal-info a:hover {
+            color: #6b21a8;
+            text-decoration: underline;
         }
         .btn-pay {
-            font-size: 1.1rem;
-            padding: 12px;
-            letter-spacing: 0.5px;
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #6b21a8 100%);
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
         }
-        .property-img {
-            height: 180px;
-            object-fit: cover;
-            border-radius: 8px;
+        .btn-pay:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 24px rgba(139, 92, 246, 0.4);
+            background: linear-gradient(135deg, #7c3aed 0%, #5b1a8b 100%);
+        }
+        .btn-pay i {
+            margin-right: 12px;
+        }
+        @media (max-width: 768px) {
+            .payment-grid {
+                grid-template-columns: 1fr;
+            }
+            .property-card, .payment-card {
+                margin-bottom: 40px;
+            }
+            .property-img {
+                height: 240px;
+            }
+            .price-tag {
+                font-size: 2rem;
+            }
+            .property-header h3, .payment-header h3 {
+                font-size: 1.75rem;
+            }
         }
     </style>
 </head>
 <body>
-    
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">Stay<span> Haven</span></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
             </button>
-
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
                     @auth
                         @if(Auth::user()->role === 'tenant')
-                            <!-- Tenant Menu Items -->
                             <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                             <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
                             <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
@@ -90,13 +277,23 @@
                             <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
                             <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
                         @elseif(Auth::user()->role === 'landlord')
-                            <!-- Landlord Menu Items -->
                             <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                             <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
                             <li class="nav-item"><a href="{{ route('property.listing') }}" class="nav-link">Property Listing</a></li>
+                            <li class="nav-item">
+                                <a href="{{ route('landlord.cancellation-requests') }}" class="nav-link">
+                                    Cancellation Requests
+                                    @if(($pendingCancellationCount ?? 0) > 0)
+                                        <span class="badge bg-danger">{{ $pendingCancellationCount }}</span>
+                                    @endif
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('landlord.financial-reporting') }}" class="nav-link">
+                                    Financial Reporting
+                                </a>
+                            </li>
                         @endif
-                        
-                        <!-- Profile Dropdown (Common for both roles) -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 @if(Auth::user()->profile_picture)
@@ -107,7 +304,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
-                                <a class="dropdown-item" href="{{ route('messages.index') }}" >Messages</a>
+                                <a class="dropdown-item" href="{{ route('messages.index') }}">Messages</a>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     Logout
@@ -118,7 +315,6 @@
                             </div>
                         </li>
                     @else
-                        <!-- Default Menu Items (for non-logged in users) -->
                         <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                         <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
                         <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
@@ -131,136 +327,100 @@
             </div>
         </div>
     </nav>
-
     <section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('user-template/images/bg_3.jpg') }}');" data-stellar-background-ratio="0.5">
         <div class="overlay"></div>
         <div class="container">
             <div class="row no-gutters slider-text align-items-end">
                 <div class="col-md-9 ftco-animate pb-5">
-                    <p class="breadcrumbs mb-2"><span class="mr-2"><a href="{{ route('home') }}">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Payment <i class="ion-ios-arrow-forward"></i></span></p>
-                    <h1 class="mb-0 bread">Complete Your Payment</h1>
+                    <p class="breadcrumbs"><span class="mr-2"><a href="{{ route('home') }}">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Payment <i class="ion-ios-arrow-forward"></i></span></p>
+                    <h1 class="mb-3 bread">Complete Your Payment</h1>
                 </div>
             </div>
         </div>
     </section>
-
-    <section class="ftco-section bg-light">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-10">
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <div class="card payment-card h-100">
-                                <div class="card-header bg-primary text-white payment-header">
-                                    <h3 class="mb-0">Property Details</h3>
+    <section class="payment-section">
+        <div class="payment-container">
+            <div class="payment-grid">
+                <div class="property-card">
+                    <div class="property-header">
+                        <h3>Property Details</h3>
+                    </div>
+                    <div class="property-body">
+                        <img src="{{ $property->main_image ? asset('storage/' . $property->main_image) : asset('user-template/images/house-placeholder.jpg') }}" class="property-img" alt="Property Image">
+                        <div class="property-details">
+                            <h4>{{ $property->title }}</h4>
+                            <p>{{ $property->address }}, {{ $property->city }}, {{ $property->state }}</p>
+                            <div class="property-specs">
+                                <div>
+                                    <p><strong>Bedrooms:</strong> {{ $property->bedrooms }}</p>
+                                    <p><strong>Bathrooms:</strong> {{ $property->bathrooms }}</p>
                                 </div>
-                                <div class="card-body payment-body">
-                                    <img src="{{ $property->main_image ? asset('storage/' . $property->main_image) : asset('user-template/images/house-placeholder.jpg') }}" class="img-fluid property-img mb-4 w-100" alt="Property Image">
-                                    <h4>{{ $property->title }}</h4>
-                                    <p class="text-muted">{{ $property->address }}, {{ $property->city }}, {{ $property->state }}</p>
-                                    <hr>
-                                    <div class="d-flex justify-content-between">
-                                        <div>
-                                            <p class="mb-1"><strong>Bedrooms:</strong> {{ $property->bedrooms }}</p>
-                                            <p class="mb-1"><strong>Bathrooms:</strong> {{ $property->bathrooms }}</p>
-                                        </div>
-                                        <div>
-                                            <p class="mb-1"><strong>Area:</strong> {{ number_format($property->square_feet) }} sqft</p>
-                                            <p class="mb-1"><strong>Type:</strong> {{ $property->property_type }}</p>
-                                        </div>
+                                <div>
+                                    <p><strong>Area:</strong> {{ number_format($property->square_feet) }} sqft</p>
+                                    <p><strong>Type:</strong> {{ $property->property_type }}</p>
+                                </div>
+                            </div>
+                            <div class="price-tag">${{ number_format($property->price, 2) }} <small>/month</small></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="payment-card">
+                    <div class="payment-header">
+                        <h3>Payment Information</h3>
+                    </div>
+                    <div class="payment-body">
+                        <form method="POST" action="{{ route('payment.process', $property->id) }}">
+                            @csrf
+                            <div class="form-group">
+                                <label for="start_date">Rental Start Date</label>
+                                <input type="date" class="form-control" id="start_date" name="start_date" required min="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Payment Method</label>
+                                <div class="payment-method active" data-method="credit_card">
+                                    <label>
+                                        <input type="radio" name="payment_method" value="credit_card" checked>
+                                        <i class="far fa-credit-card card-icon"></i>
+                                        Credit/Debit Card
+                                    </label>
+                                </div>
+                                <div class="payment-method" data-method="paypal">
+                                    <label>
+                                        <input type="radio" name="payment_method" value="paypal">
+                                        <i class="fab fa-paypal card-icon"></i>
+                                        PayPal
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="payment-details credit-card-details active">
+                                <div class="form-group">
+                                    <label for="card_number">Card Number</label>
+                                    <input type="text" class="form-control" id="card_number" name="card_number" placeholder="1234 5678 9012 3456">
+                                </div>
+                                <div class="grid">
+                                    <div class="form-group">
+                                        <label for="expiry_date">Expiry Date</label>
+                                        <input type="text" class="form-control" id="expiry_date" name="expiry_date" placeholder="MM/YY">
                                     </div>
-                                    <hr>
-                                    <h4 class="text-right">${{ number_format($property->price, 2) }} <small class="text-muted">/month</small></h4>
+                                    <div class="form-group">
+                                        <label for="cvv">CVV</label>
+                                        <input type="text" class="form-control" id="cvv" name="cvv" placeholder="123">
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card payment-card">
-                                <div class="card-header bg-primary text-white payment-header">
-                                    <h3 class="mb-0">Payment Information</h3>
-                                </div>
-                                <div class="card-body payment-body">
-                                    <form method="POST" action="{{ route('payment.process', $property->id) }}">
-                                        @csrf
-                                        <div class="form-group">
-                                            <label class="font-weight-bold">Rental Period</label>
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <label>Start Date</label>
-                                                    <input type="date" class="form-control" id="start_date" name="start_date" required min="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="font-weight-bold mb-3">Payment Method</label>
-                                            
-                                            <div class="payment-method active" id="credit-card-method">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="payment_method" id="credit_card" value="credit_card" checked>
-                                                    <label class="form-check-label d-flex align-items-center" for="credit_card">
-                                                        <i class="far fa-credit-card card-icon"></i>
-                                                        <span>Credit/Debit Card</span>
-                                                    </label>
-                                                </div>
-                                                <div class="mt-3" id="credit-card-details">
-                                                    <div class="form-group">
-                                                        <label>Card Number</label>
-                                                        <input type="text" class="form-control" id="card_number" name="card_number" placeholder="1234 5678 9012 3456">
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label>Expiry Date</label>
-                                                                <input type="text" class="form-control" id="expiry_date" name="expiry_date" placeholder="MM/YY">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label>CVV</label>
-                                                                <input type="text" class="form-control" id="cvv" name="cvv" placeholder="123">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="payment-method" id="paypal-method">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="payment_method" id="paypal" value="paypal">
-                                                    <label class="form-check-label d-flex align-items-center" for="paypal">
-                                                        <i class="fab fa-paypal card-icon"></i>
-                                                        <span>PayPal</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="payment-method" id="bank-method">
-                                                <div class="form-check">
-                                                    <input class="form-check-input" type="radio" name="payment_method" id="bank_transfer" value="bank_transfer">
-                                                    <label class="form-check-label d-flex align-items-center" for="bank_transfer">
-                                                        <i class="fas fa-university card-icon"></i>
-                                                        <span>Bank Transfer</span>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group mt-4">
-                                            <button type="submit" class="btn btn-primary btn-block btn-pay">
-                                                <i class="fas fa-lock mr-2"></i> Complete Payment
-                                            </button>
-                                        </div>
-                                    </form>
+                            <div class="payment-details paypal-details">
+                                <div class="paypal-info">
+                                    <p>You will be redirected to PayPal's secure payment page to complete your transaction.</p>
+                                    <p>Please ensure you have an active PayPal account. <a href="https://www.paypal.com/signup" target="_blank">Create one here</a> if you don't have an account.</p>
                                 </div>
                             </div>
-                        </div>
+                            <button type="submit" class="btn-pay"><i class="fas fa-lock"></i> Complete Payment</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-
     <footer class="ftco-footer ftco-bg-dark ftco-section">
         <div class="container">
             <div class="row mb-5">
@@ -293,23 +453,49 @@
             </div>
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved</p>
+                    <p>Copyright ©<script>document.write(new Date().getFullYear());</script> All rights reserved</p>
                 </div>
             </div>
         </div>
     </footer>
-
     <script src="{{ asset('user-template/js/jquery.min.js') }}"></script>
     <script src="{{ asset('user-template/js/jquery-migrate-3.0.1.min.js') }}"></script>
     <script src="{{ asset('user-template/js/popper.min.js') }}"></script>
     <script src="{{ asset('user-template/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.easing.1.3.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.waypoints.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.stellar.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/aos.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.animateNumber.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.timepicker.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/main.js') }}"></script>
     <script>
         $(document).ready(function() {
-            // Show/hide credit card details based on payment method
+            // Initially show the credit card details
+            $('.payment-details.credit-card-details').addClass('active');
+
             $('.payment-method').click(function() {
+                // Remove active class from all payment methods
                 $('.payment-method').removeClass('active');
+                // Add active class to the clicked payment method
                 $(this).addClass('active');
+                // Check the radio input
                 $(this).find('input[type="radio"]').prop('checked', true);
+
+                // Hide all payment details
+                $('.payment-details').removeClass('active');
+
+                // Show the corresponding details based on the selected method
+                var method = $(this).data('method');
+                if (method === 'credit_card') {
+                    $('.payment-details.credit-card-details').addClass('active');
+                } else if (method === 'paypal') {
+                    $('.payment-details.paypal-details').addClass('active');
+                }
             });
         });
     </script>
