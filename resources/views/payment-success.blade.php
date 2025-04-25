@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
-    <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 
     <link rel="stylesheet" href="{{ asset('user-template/css/open-iconic-bootstrap.min.css') }}">
@@ -21,54 +21,184 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .success-section {
+            padding: 60px 0;
+            background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+        }
+        .success-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
         .success-card {
-            border-radius: 10px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-            border: none;
+            background: #ffffff;
+            border-radius: 0;
+            box-shadow: 0 8px 32px rgba(15, 23, 42, 0.08);
+            overflow: hidden;
         }
         .success-header {
-            border-radius: 10px 10px 0 0 !important;
-            padding: 1.5rem;
+            background: linear-gradient(135deg, #8b5cf6 0%, #6b21a8 100%);
+            color: #ffffff; /* Explicitly set to white */
+            padding: 28px 40px;
+            border-radius: 0;
+        }
+        .success-header h3 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: #ffffff; /* Reinforced white color for the header text */
+        }
+        .success-header h3 i {
+            color: #ffffff; /* Ensure the icon is also white */
         }
         .success-body {
-            padding: 2rem;
+            padding: 40px;
+            text-align: center;
         }
         .success-icon {
-            font-size: 5rem;
-            color: #28a745;
-            margin-bottom: 1.5rem;
+            font-size: 4rem;
+            color: #10b981;
+            margin-bottom: 24px;
+        }
+        .success-body h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 16px;
+        }
+        .success-body .lead {
+            font-size: 1.25rem;
+            color: #475569;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        .receipt-details {
+            background: #f8fafc;
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.03);
+            margin-bottom: 40px;
+        }
+        .receipt-details h4 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 24px;
         }
         .receipt-table {
             width: 100%;
+            border-collapse: collapse;
+        }
+        .receipt-table th, .receipt-table td {
+            padding: 14px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
         }
         .receipt-table th {
-            padding: 10px;
-            text-align: left;
-            width: 30%;
+            width: 35%;
+            font-weight: 600;
+            color: #0f172a;
         }
         .receipt-table td {
-            padding: 10px;
+            color: #475569;
+        }
+        .receipt-table .font-weight-bold {
+            color: #0f172a;
+            font-weight: 700;
+        }
+        .confirmation-message {
+            font-size: 1.1rem;
+            color: #475569;
+            margin-bottom: 40px;
         }
         .btn-dashboard {
-            padding: 10px 25px;
+            padding: 14px 28px;
             font-size: 1.1rem;
+            font-weight: 700;
+            border: none;
+            border-radius: 12px;
+            color: #ffffff;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin: 0 12px;
+            box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6b21a8 100%);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 24px rgba(139, 92, 246, 0.4);
+            background: linear-gradient(135deg, #7c3aed 0%, #5b1a8b 100%);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+        }
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 24px rgba(71, 85, 105, 0.4);
+            background: linear-gradient(135deg, #5b677d 0%, #3f4b5e 100%);
+        }
+        .btn-dashboard i {
+            margin-right: 8px;
+        }
+        @media (max-width: 768px) {
+            .success-section {
+                padding: 40px 0;
+            }
+            .success-body {
+                padding: 24px;
+            }
+            .success-header h3 {
+                font-size: 1.75rem;
+            }
+            .success-body h2 {
+                font-size: 2rem;
+            }
+            .success-body .lead {
+                font-size: 1.1rem;
+            }
+            .receipt-table th, .receipt-table td {
+                padding: 10px;
+                display: block;
+                width: 100%;
+                text-align: center;
+                border-bottom: none;
+            }
+            .receipt-table th {
+                margin-top: 12px;
+                color: #0f172a;
+                font-weight: 600;
+            }
+            .receipt-table td {
+                border-bottom: 1px solid #e2e8f0;
+            }
+            .btn-dashboard {
+                display: block;
+                margin: 12px auto;
+                width: 100%;
+                max-width: 300px;
+            }
         }
     </style>
 </head>
 <body>
-    
     <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">Stay<span> Haven</span></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="oi oi-menu"></span> Menu
             </button>
-
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
                     @auth
                         @if(Auth::user()->role === 'tenant')
-                            <!-- Tenant Menu Items -->
                             <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                             <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
                             <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
@@ -76,13 +206,23 @@
                             <li class="nav-item"><a href="{{ route('blog') }}" class="nav-link">Blog</a></li>
                             <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
                         @elseif(Auth::user()->role === 'landlord')
-                            <!-- Landlord Menu Items -->
                             <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                             <li class="nav-item active"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
                             <li class="nav-item"><a href="{{ route('property.listing') }}" class="nav-link">Property Listing</a></li>
+                            <li class="nav-item">
+                                <a href="{{ route('landlord.cancellation-requests') }}" class="nav-link">
+                                    Cancellation Requests
+                                    @if(($pendingCancellationCount ?? 0) > 0)
+                                        <span class="badge bg-danger">{{ $pendingCancellationCount }}</span>
+                                    @endif
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ route('landlord.financial-reporting') }}" class="nav-link">
+                                    Financial Reporting
+                                </a>
+                            </li>
                         @endif
-                        
-                        <!-- Profile Dropdown (Common for both roles) -->
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 @if(Auth::user()->profile_picture)
@@ -93,7 +233,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
-                                <a class="dropdown-item" href="{{ route('messages.index') }}" >Messages</a>
+                                <a class="dropdown-item" href="{{ route('messages.index') }}">Messages</a>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     Logout
@@ -104,7 +244,6 @@
                             </div>
                         </li>
                     @else
-                        <!-- Default Menu Items (for non-logged in users) -->
                         <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                         <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
                         <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
@@ -118,80 +257,76 @@
         </div>
     </nav>
 
-    <section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('user-template/images/bg_1.jpg') }}');" data-stellar-background-ratio="0.5">
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('{{ asset('user-template/images/bg_3.jpg') }}');" data-stellar-background-ratio="0.5">
         <div class="overlay"></div>
         <div class="container">
             <div class="row no-gutters slider-text align-items-end">
                 <div class="col-md-9 ftco-animate pb-5">
-                    <p class="breadcrumbs mb-2"><span class="mr-2"><a href="{{ route('home') }}">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Payment Success <i class="ion-ios-arrow-forward"></i></span></p>
-                    <h1 class="mb-0 bread">Payment Successful</h1>
+                    <p class="breadcrumbs"><span class="mr-2"><a href="{{ route('home') }}">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Payment Success <i class="ion-ios-arrow-forward"></i></span></p>
+                    <h1 class="mb-3 bread">Successful Payment</h1>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="ftco-section bg-light">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="card success-card">
-                        <div class="card-header bg-success text-white success-header">
-                            <h3 class="mb-0"><i class="fas fa-check-circle mr-2"></i> Payment Confirmed</h3>
-                        </div>
-                        <div class="card-body success-body text-center">
-                            <div class="success-icon">
-                                <i class="fas fa-check-circle"></i>
-                            </div>
-                            <h2 class="mb-3">Thank You for Your Payment!</h2>
-                            <p class="lead mb-5">Your rental payment has been processed successfully. Below are your payment details.</p>
-                            
-                            <div class="receipt-details text-left mb-5">
-                                <h4 class="mb-4 text-center">Payment Receipt</h4>
-                                <table class="receipt-table">
-                                    <tr>
-                                        <th>Property:</th>
-                                        <td>{{ $payment->property->title }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Address:</th>
-                                        <td>{{ $payment->property->address }}, {{ $payment->property->city }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Landlord:</th>
-                                        <td>{{ $payment->landlord->name }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Amount Paid:</th>
-                                        <td class="font-weight-bold">${{ number_format($payment->amount, 2) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Payment Method:</th>
-                                        <td>{{ ucfirst(str_replace('_', ' ', $payment->payment_method)) }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Transaction ID:</th>
-                                        <td>{{ $payment->transaction_id }}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Payment Date:</th>
-                                        <td>{{ $payment->created_at->format('M d, Y h:i A') }}</td>
-                                    </tr>
-                                </table>
-                            </div>
-                            
-                            <div class="mt-4">
-                                <p>A confirmation email has been sent to your registered email address.</p>
-                            </div>
-                            
-                            <div class="mt-5">
-                                <a href="{{ route('profile') }}" class="btn btn-primary btn-dashboard mr-3">
-                                    <i class="fas fa-user-circle mr-2"></i> View Your Rentals
-                                </a>
-                                <a href="{{ route('houses') }}" class="btn btn-secondary btn-dashboard">
-                                    <i class="fas fa-home mr-2"></i> Browse More Properties
-                                </a>
-                            </div>
-                        </div>
+    <section class="success-section">
+        <div class="success-container">
+            <div class="success-card">
+                <div class="success-header">
+                    <h3><i class="fas fa-check-circle mr-2"></i> Payment Confirmed</h3>
+                </div>
+                <div class="success-body">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 class="mb-3">Thank You for Your Payment!</h2>
+                    <p class="lead mb-5">Your rental payment has been processed successfully. Below are your payment details.</p>
+                    
+                    <div class="receipt-details">
+                        <h4 class="text-center">Payment Receipt</h4>
+                        <table class="receipt-table">
+                            <tr>
+                                <th>Property:</th>
+                                <td>{{ $payment->property->title }}</td>
+                            </tr>
+                            <tr>
+                                <th>Address:</th>
+                                <td>{{ $payment->property->address }}, {{ $payment->property->city }}</td>
+                            </tr>
+                            <tr>
+                                <th>Landlord:</th>
+                                <td>{{ $payment->landlord->name }}</td>
+                            </tr>
+                            <tr>
+                                <th>Amount Paid:</th>
+                                <td class="font-weight-bold">${{ number_format($payment->amount, 2) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Payment Method:</th>
+                                <td>{{ ucfirst(str_replace('_', ' ', $payment->payment_method)) }}</td>
+                            </tr>
+                            <tr>
+                                <th>Transaction ID:</th>
+                                <td>{{ $payment->transaction_id }}</td>
+                            </tr>
+                            <tr>
+                                <th>Payment Date:</th>
+                                <td>{{ $payment->created_at->format('M d, Y h:i A') }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="confirmation-message">
+                        <p>A confirmation email has been sent to your registered email address.</p>
+                    </div>
+                    
+                    <div>
+                        <a href="{{ route('profile') }}" class="btn btn-primary btn-dashboard">
+                            <i class="fas fa-user-circle"></i> View Your Rentals
+                        </a>
+                        <a href="{{ route('houses') }}" class="btn btn-secondary btn-dashboard">
+                            <i class="fas fa-home"></i> Browse More Properties
+                        </a>
                     </div>
                 </div>
             </div>
@@ -230,7 +365,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12 text-center">
-                    <p>Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved</p>
+                    <p>Copyright ©<script>document.write(new Date().getFullYear());</script> All rights reserved</p>
                 </div>
             </div>
         </div>
@@ -240,5 +375,16 @@
     <script src="{{ asset('user-template/js/jquery-migrate-3.0.1.min.js') }}"></script>
     <script src="{{ asset('user-template/js/popper.min.js') }}"></script>
     <script src="{{ asset('user-template/js/bootstrap.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.easing.1.3.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.waypoints.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.stellar.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/owl.carousel.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/aos.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.animateNumber.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/bootstrap-datepicker.js') }}"></script>
+    <script src="{{ asset('user-template/js/jquery.timepicker.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
+    <script src="{{ asset('user-template/js/main.js') }}"></script>
 </body>
 </html>
