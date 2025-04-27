@@ -4,6 +4,7 @@
     <title>Stay Haven - Cancellation Requests</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -25,10 +26,6 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/cancellation-request.css') }}">
-
-    <style>
-        
-    </style>
   </head>
   <body>
     
@@ -69,7 +66,7 @@
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
-                                <a class="dropdown-item" href="{{ route('messages.index') }}" >Messages</a>
+                                <a class="dropdown-item" href="{{ route('messages.index') }}">Messages</a>
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                     onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                     Logout
@@ -267,7 +264,6 @@
         chatbotId: "4RSSrtK8VY3M7j0m4Tiye", // Replace with your actual Chatbase chatbot ID
       };
     </script>
-    
     <script src="https://www.chatbase.co/embed.min.js" defer></script>   
 
     <!-- Bootstrap JS and Dependencies -->
@@ -289,92 +285,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="{{ asset('user-template/js/cancellation-request.js') }}"></script>
 
-
-    <script>
-    // SweetAlert Confirmation for Approve
-    document.querySelectorAll('.approve-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const paymentId = this.dataset.id;
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You want to approve this cancellation request?",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#28a745',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, approve it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Send AJAX request to approve the cancellation
-                    axios.post(`/cancellation-requests/${paymentId}/approve`, {
-                        _token: '{{ csrf_token() }}'
-                    }).then(response => {
-                        Swal.fire({
-                            title: 'Success!',
-                            text: 'Cancellation approved successfully.',
-                            icon: 'success',
-                            confirmButtonColor: '#28a745'
-                        }).then(() => {
-                            location.reload(); // Optionally refresh the page or update the UI dynamically
-                        });
-                    }).catch(error => {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: 'An error occurred while approving the cancellation.',
-                            icon: 'error',
-                            confirmButtonColor: '#d33'
-                        });
-                    });
-                }
-            });
-        });
-    });
-
-        // Handle Rejection via AJAX
-        document.querySelectorAll('.submit-reject').forEach(button => {
-            button.addEventListener('click', function (event) {
-                event.preventDefault();
-                const paymentId = this.dataset.id;
-                const form = document.getElementById(`rejectForm${paymentId}`);
-                const formData = new FormData(form);
-
-                Swal.fire({
-                    title: 'Are you sure?',
-                    text: "You want to reject this cancellation request?",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#dc3545',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Yes, reject it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Send AJAX request to reject the cancellation
-                        axios.post(`/cancellation-requests/${paymentId}/reject`, formData)
-                            .then(response => {
-                                Swal.fire({
-                                    title: 'Success!',
-                                    text: 'Successfully rejected the cancellation.',
-                                    icon: 'success',
-                                    confirmButtonColor: '#28a745'
-                                }).then(() => {
-                                    // Optionally refresh the table or update the UI
-                                    location.reload(); // Remove this line if you want to dynamically update the UI
-                                });
-                            }).catch(error => {
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: 'An error occurred while rejecting the cancellation.',
-                                    icon: 'error',
-                                    confirmButtonColor: '#d33'
-                                });
-                            });
-                    }
-                });
-            });
-        });
-    </script>
-
-</body>
+  </body>
 </html>

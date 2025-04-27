@@ -197,7 +197,7 @@
                                                                         <i class="fas fa-info-circle"></i>
                                                                     </button>
                                                                     <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
-                                                                        <i class="fas fa-redotho"></i>
+                                                                        <i class="fas fa-redo"></i>
                                                                     </button>
                                                                 @elseif(!$payment->cancellation_requested || $payment->cancellation_status == 'approved')
                                                                     <button class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#cancelModal{{ $payment->id }}">
