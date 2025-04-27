@@ -4,6 +4,7 @@
     <title>Stay Haven - Contact</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     
     <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
@@ -20,7 +21,8 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/flaticon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
-
+    <!-- Include SweetAlert2 CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   </head>
   <body>
     
@@ -39,16 +41,13 @@
                     <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
                     <li class="nav-item active"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
 
-                    <!-- Conditional Rendering for Login/Profile -->
                     @auth
-                        <!-- Display User Profile Icon if Logged In -->
                         <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                              <!-- Circular Profile Picture or Default Icon -->
                               @if(Auth::user()->profile_picture)
                                   <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
                               @else
-                                  <i class="fas fa-user-circle" style="font-size: 24px;"></i> <!-- Default Icon -->
+                                  <i class="fas fa-user-circle" style="font-size: 24px;"></i>
                               @endif
                           </a>
                           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -64,21 +63,19 @@
                         </div>
                       </li>
                     @else
-                        <!-- Display Login Button if Not Logged In -->
                         <li class="nav-item"><a href="{{ route('login') }}" class="nav-link">Login</a></li>
                     @endauth
                 </ul>
             </div>
         </div>
     </nav>
-    <!-- END nav -->
     
-    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('user-template/images/contact-landing.jpg');" data-stellar-background-ratio="0.5">
+    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('{{ asset('user-template/images/contact-landing.jpg') }}');" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
       <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
           <div class="col-md-9 ftco-animate pb-5">
-          	<p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Contact <i class="ion-ios-arrow-forward"></i></span></p>
+          	<p class="breadcrumbs"><span class="mr-2"><a href="{{ route('home') }}">Home <i class="ion-ios-arrow-forward"></i></a></span> <span>Contact <i class="ion-ios-arrow-forward"></i></span></p>
             <h1 class="mb-3 bread">Contact Us</h1>
           </div>
         </div>
@@ -103,7 +100,7 @@
 			          	<div class="icon mr-3">
 			          		<span class="icon-mobile-phone"></span>
 			          	</div>
-			            <p><span>Phone:</span> <a href="tel://1234567920">+ 1235 2355 98</a></p>
+			            <p><span>Phone:</span> <a href="tel://+639955142653">+63 995 5142 653</a></p>
 			          </div>
 		          </div>
 		          <div class="col-md-12">
@@ -111,24 +108,29 @@
 			          	<div class="icon mr-3">
 			          		<span class="icon-envelope-o"></span>
 			          	</div>
-			            <p><span>Email:</span> <a href="mailto:info@yoursite.com">info@yoursite.com</a></p>
+			            <p><span>Email:</span> <a href="mailto:johnlloydjustiniane13@gmail.com">johnlloydjustiniane13@gmail.com</a></p>
 			          </div>
 		          </div>
 		        </div>
           </div>
           <div class="col-md-8 block-9 mb-md-5">
-            <form action="#" class="bg-light p-5 contact-form">
+            <form action="{{ route('contact.send') }}" method="POST" class="bg-light p-5 contact-form" id="contact-form">
+              @csrf
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="Your Name">
+                <input type="text" class="form-control" name="name" id="name" placeholder="Your Name" value="{{ old('name') }}">
+                <div class="invalid-feedback"></div>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="Your Email">
+                <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" value="{{ old('email') }}">
+                <div class="invalid-feedback"></div>
               </div>
               <div class="form-group">
-                <input type="text" class="form-control" placeholder="Subject">
+                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" value="{{ old('subject') }}">
+                <div class="invalid-feedback"></div>
               </div>
               <div class="form-group">
-                <textarea name="" id="" cols="30" rows="7" class="form-control" placeholder="Message"></textarea>
+                <textarea name="message" id="message" cols="30" rows="7" class="form-control" placeholder="Message">{{ old('message') }}</textarea>
+                <div class="invalid-feedback"></div>
               </div>
               <div class="form-group">
                 <input type="submit" value="Send Message" class="btn btn-primary py-3 px-5">
@@ -138,7 +140,6 @@
         </div>
       </div>
     </section>
-	
 
     <footer class="ftco-footer ftco-bg-dark ftco-section">
       <div class="container">
@@ -162,7 +163,7 @@
                 <li><a href="#" class="py-2 d-block">Services</a></li>
                 <li><a href="#" class="py-2 d-block">Term and Conditions</a></li>
                 <li><a href="#" class="py-2 d-block">Best Price Guarantee</a></li>
-                <li><a href="#" class="py-2 d-block">Privacy &amp; Cookies Policy</a></li>
+                <li><a href="#" class="py-2 d-block">Privacy & Cookies Policy</a></li>
               </ul>
             </div>
           </div>
@@ -183,9 +184,9 @@
             	<h2 class="ftco-heading-2">Have a Questions?</h2>
             	<div class="block-23 mb-3">
 	              <ul>
-	                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
-	                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
-	                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+	                <li><span class="icon icon-map-marker"></span><span class="text">Lapu-Lapu City, Cebu, Philippines</span></li>
+	                <li><a href="tel://+639955142653"><span class="icon icon-phone"></span><span class="text">+63 995 5142 653</span></a></li>
+	                <li><a href="mailto:johnlloydjustiniane13@gmail.com"><span class="icon icon-envelope"></span><span class="text">johnlloydjustiniane13@gmail.com</span></a></li>
 	              </ul>
 	            </div>
             </div>
@@ -193,25 +194,14 @@
         </div>
         <div class="row">
           <div class="col-md-12 text-center">
-
-            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-  Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+            <p>Copyright ©<script>document.write(new Date().getFullYear());</script> All rights reserved</p>
           </div>
         </div>
       </div>
     </footer>
 
-  <!-- loader -->
-  <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
-
-  <script>
-      window.chatbaseConfig = {
-        chatbotId: "4RSSrtK8VY3M7j0m4Tiye", // Replace with your actual Chatbase chatbot ID
-      };
-  </script>
-
-  <script src="https://www.chatbase.co/embed.min.js" defer></script>
+    <!-- loader -->
+    <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
     <script src="{{ asset('user-template/js/jquery.min.js') }}"></script>
     <script src="{{ asset('user-template/js/jquery-migrate-3.0.1.min.js') }}"></script>
@@ -227,9 +217,8 @@
     <script src="{{ asset('user-template/js/bootstrap-datepicker.js') }}"></script>
     <script src="{{ asset('user-template/js/jquery.timepicker.min.js') }}"></script>
     <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-    <script src="{{ asset('user-template/js/google-map.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <script src="{{ asset('user-template/js/main.js') }}"></script>
-    
+    <script src="{{ asset('user-template/js/contact.js') }}"></script>
   </body>
 </html>

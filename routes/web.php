@@ -30,7 +30,9 @@ Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index'])->name(
 
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/services', [ServicesController::class, 'index'])->name('services');
+
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
+Route::post('/contact/send', [ContactController::class, 'sendMessage'])->name('contact.send');
 
 // House routes
 Route::get('/houses', [HouseController::class, 'index'])->name('houses');
