@@ -68,63 +68,15 @@
 <!-- Include jQuery and Toastr.js -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="{{ asset('user-template/js/login.js') }}"></script>
 
-<script>
-    toastr.options = {
-        "closeButton": true,
-        "progressBar": true,
-        "positionClass": "toast-top-right",
-        "timeOut": "5000"
-    };
 
-    @if(Session::has('success'))
-        toastr.success("{{ Session::get('success') }}");
-    @endif
-
-    @if(Session::has('error'))
-        toastr.error("{{ Session::get('error') }}");
-    @endif
-
-    @if($errors->any())
-        @foreach($errors->all() as $error)
-            toastr.error("{{ $error }}");
-        @endforeach
-    @endif
-
-    function validateGmail(input) {
-        const email = input.value;
-        const gmailRegex = /^[a-zA-Z][a-zA-Z0-9.]*@gmail\.com$/;
-        const errorElement = input.name === 'email' && input.closest('.login') 
-            ? document.getElementById('email-error') 
-            : document.getElementById('register-email-error');
-
-        if (!email) {
-            errorElement.textContent = 'Email is required.';
-        } else if (!gmailRegex.test(email)) {
-            errorElement.textContent = 'Email must be a valid Gmail address containing only letters, numbers, and dots (e.g., example@gmail.com).';
-        } else {
-            errorElement.textContent = '';
-        }
+<script id="auth-data" type="application/json">
+    {
+        "success": @json(Session::get('success')),
+        "error": @json(Session::get('error')),
+        "errors": @json($errors->all())
     }
-
-    function validateName(input) {
-        const name = input.value;
-        const nameRegex = /^[a-zA-Z\s]+$/;
-        const errorElement = document.getElementById('name-error');
-
-        if (!name) {
-            errorElement.textContent = 'Name is required.';
-        } else if (!nameRegex.test(name)) {
-            errorElement.textContent = 'Name must contain only letters and spaces.';
-        } else {
-            errorElement.textContent = '';
-        }
-    }
-
-    // Add event listener for name validation
-    document.querySelector('input[name="name"]').addEventListener('input', function() {
-        validateName(this);
-    });
 </script>
 
 

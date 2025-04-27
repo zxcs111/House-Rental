@@ -24,7 +24,6 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/icomoon.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/welcome.css') }}">
-    
   </head>
   <body>
     
@@ -101,7 +100,7 @@
       <div class="container">
         <div class="row no-gutters slider-text justify-content-start align-items-center justify-content-center">
           <div class="col-lg-8 ftco-animate">
-          	<div class="text w-100 text-center mb-md-5 pb-md-5">
+            <div class="text w-100 text-center mb-md-5 pb-md-5">
               <h1 class="mb-4">Fast & Easy Way To Rent A Home</h1>
               <p style="font-size: 18px;">A charming neighborhood surrounds our rental home, providing a peaceful atmosphere and essential amenities. It is a tranquil haven, where comfort meets convenience.</p>
               <a href="https://vimeo.com/45830194" class="icon-wrap popup-vimeo d-flex align-items-center mt-4 justify-content-center">
@@ -477,6 +476,14 @@
     <!-- loader -->
     <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
+    <!-- Pass session data via JSON script tag -->
+    <script id="welcome-data" type="application/json">
+    {
+        "success": @json(Session::get('success')),
+        "error": @json(Session::get('error'))
+    }
+    </script>
+
     <!-- Chatbase Chatbot Script -->
     <script>
       window.chatbaseConfig = {
@@ -502,23 +509,7 @@
     <script src="{{ asset('user-template/js/main.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-
-    <script>
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "5000"
-        };
-
-        @if(Session::has('success'))
-            toastr.success("{{ Session::get('success') }}");
-        @endif
-
-        @if(Session::has('error'))
-            toastr.error("{{ Session::get('error') }}");
-        @endif
-    </script>
+    <script src="{{ asset('user-template/js/welcome.js') }}"></script>
     
   </body>
 </html>

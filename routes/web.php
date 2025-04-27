@@ -40,8 +40,6 @@ Route::get('/messages/unread-count', [MessageController::class, 'unreadCount'])-
 Route::post('/properties/{property}/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
 
 
-
-
 // Payment routes (authenticated only)
 Route::middleware(['auth'])->group(function () {
     Route::get('/property/{id}/payment', [PaymentController::class, 'showPaymentForm'])->name('payment.form');
