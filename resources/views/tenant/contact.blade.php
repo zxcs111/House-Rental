@@ -70,7 +70,7 @@
         </div>
     </nav>
     
-    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('{{ asset('user-template/images/contact-landing.jpg') }}');" data-stellar-background-ratio="0.5">
+    <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('user-template/images/contact-landing.jpg');" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
       <div class="container">
         <div class="row no-gutters slider-text js-fullheight align-items-end justify-content-start">
@@ -117,12 +117,12 @@
             <form action="{{ route('contact.send') }}" method="POST" class="bg-light p-5 contact-form" id="contact-form">
               @csrf
               <div class="form-group">
-                <input type="text" class="form-control" name="name" id="name" placeholder="Your Name" value="{{ old('name', Auth::check() ? Auth::user()->name : '') }}" readonly>
+                <input type="text" class="form-control" name="name" id="name" placeholder="Your Name" value="{{ old('name', Auth::check() ? Auth::user()->name : '') }}">
                 <div class="invalid-feedback"></div>
               </div>
               @if(Auth::check())
                 <div class="form-group">
-                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" value="{{ Auth::user()->email }}" readonly>
+                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" value="{{ Auth::user()->email }}">
                   <div class="invalid-feedback"></div>
                 </div>
               @else
@@ -210,6 +210,15 @@
         </div>
       </div>
     </footer>
+
+    <script>
+      window.chatbaseConfig = {
+        chatbotId: "4RSSrtK8VY3M7j0m4Tiye", // Replace with your actual Chatbase chatbot ID
+      };
+
+    </script>
+    
+    <script src="https://www.chatbase.co/embed.min.js" defer></script>
 
     <!-- loader -->
     <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
