@@ -117,13 +117,20 @@
             <form action="{{ route('contact.send') }}" method="POST" class="bg-light p-5 contact-form" id="contact-form">
               @csrf
               <div class="form-group">
-                <input type="text" class="form-control" name="name" id="name" placeholder="Your Name" value="{{ old('name') }}">
+                <input type="text" class="form-control" name="name" id="name" placeholder="Your Name" value="{{ old('name', Auth::check() ? Auth::user()->name : '') }}" readonly>
                 <div class="invalid-feedback"></div>
               </div>
-              <div class="form-group">
-                <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" value="{{ old('email') }}">
-                <div class="invalid-feedback"></div>
-              </div>
+              @if(Auth::check())
+                <div class="form-group">
+                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" value="{{ Auth::user()->email }}" readonly>
+                  <div class="invalid-feedback"></div>
+                </div>
+              @else
+                <div class="form-group">
+                  <input type="email" class="form-control" name="email" id="email" placeholder="Your Email" value="{{ old('email') }}">
+                  <div class="invalid-feedback"></div>
+                </div>
+              @endif
               <div class="form-group">
                 <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" value="{{ old('subject') }}">
                 <div class="invalid-feedback"></div>
@@ -133,7 +140,11 @@
                 <div class="invalid-feedback"></div>
               </div>
               <div class="form-group">
-                <input type="submit" value="Send Message" class="btn btn-primary py-3 px-5">
+                @if(Auth::check())
+                  <input type="submit" value="Send Message" class="btn btn-primary py-3 px-5">
+                @else
+                  <a href="{{ route('login') }}" class="btn btn-primary py-3 px-5">Login to Message</a>
+                @endif
               </div>
             </form>
           </div>
