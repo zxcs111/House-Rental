@@ -181,3 +181,11 @@ select:focus {
         font-size: 10px;
     }
 }
+
+
+.error-message {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}

@@ -50,3 +50,9 @@
     background: #fff;
     border-radius: 0 0 5px 5px;
   }
+
+  .toast-success {
+    background-color: #28a745 !important; /* Green background */
+    color: #fff !important; /* White text for contrast */
+    opacity: 1 !important; /* Ensure full visibility */
+}
