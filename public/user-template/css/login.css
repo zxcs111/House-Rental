@@ -189,3 +189,8 @@ select:focus {
     margin-top: 5px;
     display: block;
 }
+
+.form p {
+    color: #fff;
+    margin-bottom: 1.5rem;
+}
