@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
@@ -31,6 +33,12 @@ class LoginController extends Controller
             'password.required' => 'Password is required.',
             'password.min' => 'Password must be at least 6 characters.',
         ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user && !$user->email_verified_at) {
+            return back()->withInput($request->only('email', 'remember'))->withErrors(['email' => 'Please verify your email before logging in.']);
+        }
 
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password, 'role' => ['landlord', 'tenant']], $request->remember)) {
             return redirect()->route('home')->with('success', 'Login successful!');
@@ -78,19 +86,58 @@ class LoginController extends Controller
         }
 
         try {
+            $verificationCode = rand(1000, 999999); // 4 to 6-digit code
+
             $user = User::create([
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => $request->role,
+                'email_verification_code' => $verificationCode,
             ]);
 
-            Auth::attempt(['email' => $request->email, 'password' => $request->password]);
+            // Send verification email
+            Mail::raw("Your verification code is: $verificationCode", function ($message) use ($request) {
+                $message->to($request->email)
+                        ->subject('Stay Haven Email Verification')
+                        ->from(config('mail.from.address'), config('mail.from.name'));
+            });
 
-            return redirect()->route('home')->with('success', 'Registration successful! Welcome to Stay Haven.');
+            return redirect()->route('verify.email.form', ['email' => $request->email])
+                             ->with('success', 'A verification code has been sent to your email.');
         } catch (\Exception $e) {
             return back()->withInput()->withErrors(['general' => 'Registration failed due to an unexpected error. Please try again.']);
         }
+    }
+
+    public function showVerifyEmailForm(Request $request)
+    {
+        return view('auth.verify-email', ['email' => $request->query('email')]);
+    }
+
+    public function verifyEmail(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:users,email',
+            'code' => 'required|numeric|digits_between:4,6',
+        ]);
+
+        $user = User::where('email', $request->email)
+                    ->where('email_verification_code', $request->code)
+                    ->first();
+
+        if (!$user) {
+            return back()->withErrors(['code' => 'Invalid verification code.']);
+        }
+
+        $user->update([
+            'email_verified_at' => now(),
+            'email_verification_code' => null,
+        ]);
+
+        Auth::login($user);
+
+        return redirect()->route('home')->with('success', 'Email verified successfully! Welcome to Stay Haven.');
     }
 
     public function logout(Request $request)

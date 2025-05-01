@@ -30,21 +30,23 @@ class User extends Authenticatable
         'email',
         'password',
         'profile_picture',
-        'first_name',      
-        'last_name',      
-        'phone_number',   
-        'address', 
-        'role', 
+        'first_name',
+        'last_name',
+        'phone_number',
+        'address',
+        'role',
         'amount',
         'tenant_id',
         'landlord_id',
-        'property_id',  // Include this if payments are related to a specific property
-        'created_at',   // Or any other date fields you have
+        'property_id',
+        'email_verification_code',
+        'email_verified_at',
     ];
 
     protected $hidden = [
         'password',
         'remember_token',
+        'email_verification_code',
     ];
 
     protected function casts(): array
@@ -76,10 +78,10 @@ class User extends Authenticatable
         return $this->hasManyThrough(
             Property::class,
             Payment::class,
-            'tenant_id',    // Foreign key on payments table
-            'id',           // Foreign key on properties table
-            'id',           // Local key on users table
-            'property_id'   // Local key on payments table
+            'tenant_id',    
+            'id',           
+            'id',           
+            'property_id'   
         )->distinct();
     }
 
