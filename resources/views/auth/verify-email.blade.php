@@ -10,12 +10,11 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/login.css') }}">
 </head>
 <body>
-    <!-- Back to Home Button -->
+
     <a href="{{ route('home') }}" class="back-to-home">
         <i class="fas fa-arrow-left"></i> Back to Home
     </a>
 
-    <!-- Verification Section -->
     <section class="ftco-section">
         <div class="container">
             <div class="login form">
@@ -32,24 +31,14 @@
         </div>
     </section>
 
-    <!-- Include jQuery and Toastr.js -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="{{ asset('user-template/js/verifyemail.js') }}"></script>
+    
     <script>
-        toastr.options = {
-            "closeButton": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "timeOut": "5000"
-        };
-
-        @if (session('success'))
-            toastr.success("{{ session('success') }}");
-        @endif
-
-        @if (session('error'))
-            toastr.error("{{ session('error') }}");
-        @endif
+        window.successMessage = "{{ session('success') }}";
+        window.errorMessage = "{{ session('error') }}";
     </script>
+    
 </body>
 </html>
