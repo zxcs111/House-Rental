@@ -402,7 +402,7 @@
                 </div>
                 <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#faqAccordion">
                   <div class="card-body">
-                    You can reach Stay Haven’s support team via the "Contact Us" page on our website, by emailing arjheezyb@gmail.com, or by calling +2 392 3929 210. We also offer a messaging feature for logged-in users to communicate directly with landlords or our support staff for quick assistance.
+                    You can reach Stay Haven’s support team via the "Contact Us" page on our website, by emailing johnlloydjustiniane13@gmail.com, or by calling +63 995 5142 653. We also offer a messaging feature for logged-in users to communicate directly with landlords or our support staff for quick assistance.
                   </div>
                 </div>
               </div>
@@ -455,10 +455,10 @@
               <h2 class="ftco-heading-2">Have a Questions?</h2>
               <div class="block-23 mb-3">
                 <ul>
-                  <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
-                  <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
-                  <li><a href="#"><span class="icon icon-envelope"></span><span class="text">arjheezyb@gmail.com</span></a></li>
-                </ul>
+                  <li><span class="icon icon-map-marker"></span><span class="text">Lapu-Lapu City, Cebu, Philippines</span></li>
+                  <li><a href="#"><span class="icon icon-phone"></span><span class="text">+63 995 5142 653</span></a></li>
+                  <li><a href="#"><span class="icon icon-envelope"></span><span class="text">stayhaven@gmail.com</span></a></li>
+                </ul> 
               </div>
             </div>
           </div>

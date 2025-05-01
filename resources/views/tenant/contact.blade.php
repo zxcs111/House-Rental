@@ -192,20 +192,22 @@
           </div>
           <div class="col-md">
             <div class="ftco-footer-widget mb-4">
-            	<h2 class="ftco-heading-2">Have a Questions?</h2>
-            	<div class="block-23 mb-3">
-	              <ul>
-	                <li><span class="icon icon-map-marker"></span><span class="text">Lapu-Lapu City, Cebu, Philippines</span></li>
-	                <li><a href="tel://+639955142653"><span class="icon icon-phone"></span><span class="text">+63 995 5142 653</span></a></li>
-	                <li><a href="mailto:johnlloydjustiniane13@gmail.com"><span class="icon icon-envelope"></span><span class="text">johnlloydjustiniane13@gmail.com</span></a></li>
-	              </ul>
-	            </div>
+              <h2 class="ftco-heading-2">Have a Questions?</h2>
+              <div class="block-23 mb-3">
+                <ul>
+                  <li><span class="icon icon-map-marker"></span><span class="text">Lapu-Lapu City, Cebu, Philippines</span></li>
+                  <li><a href="#"><span class="icon icon-phone"></span><span class="text">+63 995 5142 653</span></a></li>
+                  <li><a href="#"><span class="icon icon-envelope"></span><span class="text">stayhaven@gmail.com</span></a></li>
+                </ul> 
+              </div>
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-md-12 text-center">
-            <p>Copyright ©<script>document.write(new Date().getFullYear());</script> All rights reserved</p>
+            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+  Copyright ©<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+  <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
           </div>
         </div>
       </div>
