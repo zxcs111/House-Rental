@@ -20,6 +20,7 @@ use App\Http\Controllers\Landlord\CancellationController;
 use App\Http\Controllers\Landlord\FinancialReportingController;
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\TotalUserController;
@@ -131,7 +132,6 @@ Route::get('/payments/{payment}/receipt', [PaymentController::class, 'receipt'])
 Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.submit');
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::get('/properties', [AdminController::class, 'properties'])->name('admin.properties');
@@ -139,6 +139,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/property/{id}/reject', [AdminController::class, 'rejectProperty'])->name('admin.property.reject');
 });
 
+Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
+Route::post('/admin/profile-update', [DashboardController::class, 'updateProfile'])->name('admin.profile.update');
 
 Route::get('/admin/properties', [PropertyController::class, 'property'])->name('admin.properties');
 

@@ -46,14 +46,5 @@ class AdminController extends Controller
         $request->session()->regenerateToken();
         return redirect('/admin/login')->with('success', 'Admin logged out successfully!');
     }
-
-    public function dashboard()
-    {
-        if (!Auth::guard('admin')->check()) {
-            return redirect()->route('admin.login')->with('error', 'You must log in as an admin to access the dashboard.');
-        }
-
-        return view('admin.dashboard');
-    }
     
 }
