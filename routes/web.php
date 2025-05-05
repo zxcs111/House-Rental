@@ -20,6 +20,10 @@ use App\Http\Controllers\Landlord\CancellationController;
 use App\Http\Controllers\Landlord\FinancialReportingController;
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\PropertyController;
+use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\Admin\TotalUserController;
+use App\Http\Controllers\Admin\ReportsController;
 
 
 Broadcast::routes(['middleware' => ['auth']]);
@@ -62,18 +66,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
     Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::delete('/tenant/payments/{id}/hide', [ProfileController::class, 'hidePayment'])->name('tenant.payment.hide');
-});
-
-// Admin routes
-Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
-Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.submit');
-Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
-Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/properties', [AdminController::class, 'properties'])->name('admin.properties');
-    Route::post('/property/{id}/approve', [AdminController::class, 'approveProperty'])->name('admin.property.approve');
-    Route::post('/property/{id}/reject', [AdminController::class, 'rejectProperty'])->name('admin.property.reject');
 });
 
 // Property listing routes (authenticated only)
@@ -134,3 +126,29 @@ Route::group(['prefix' => 'landlord', 'middleware' => ['auth']], function() {
 Route::get('/payments/{payment}/receipt', [PaymentController::class, 'receipt'])
     ->middleware('auth')
     ->name('payments.receipt');
+
+// Admin routes
+Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
+Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.submit');
+Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
+Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
+    Route::get('/properties', [AdminController::class, 'properties'])->name('admin.properties');
+    Route::post('/property/{id}/approve', [AdminController::class, 'approveProperty'])->name('admin.property.approve');
+    Route::post('/property/{id}/reject', [AdminController::class, 'rejectProperty'])->name('admin.property.reject');
+});
+
+
+Route::get('/admin/properties', [PropertyController::class, 'property'])->name('admin.properties');
+
+Route::get('/admin/bookings', [BookingController::class, 'booking'])->name('admin.bookings');
+
+Route::get('/admin/total-users', [TotalUserController::class, 'totaluser'])->name('admin.total-users');
+Route::get('/admin/total-users/{id}', [TotalUserController::class, 'show'])->name('admin.user-detail');
+Route::get('/admin/total-users/create', [TotalUserController::class, 'create'])->name('admin.create-user');
+Route::post('/admin/total-users/store', [TotalUserController::class, 'store'])->name('admin.store-user');
+
+Route::get('/admin/reports', [ReportsController::class, 'reports'])->name('admin.reports');
+Route::get('/admin/reports/{id}', [ReportsController::class, 'show'])->name('admin.report-detail');
+Route::get('/admin/reports/create', [ReportsController::class, 'create'])->name('admin.create-report');
