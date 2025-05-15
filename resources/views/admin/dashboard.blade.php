@@ -22,7 +22,7 @@
     </div>
     <div class="content">
         <div class="header">
-            <h1>Dashboard</h1>
+            <h1>Welcome, Admin {{ $name }} to the Dashboard</h1>
             <div class="header-right">
                 <div class="notifications">
                     <div class="notification-trigger">
@@ -71,12 +71,16 @@
                             <div class="name">{{ Auth::guard('admin')->user()->name }}</div>
                         </div>
                         <div class="profile-buttons">
-                            <button id="edit-profile-btn">Edit Profile</button>
+                            <a href="#" id="edit-profile-btn" class="dropdown-action">
+                                <i class="fas fa-user-edit"></i> Edit Profile
+                            </a>
+                            <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" class="dropdown-form">
+                                @csrf
+                                <button type="submit" class="dropdown-action logout">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </button>
+                            </form>
                         </div>
-                        <form action="{{ route('admin.logout') }}" method="POST">
-                            @csrf
-                            <button type="submit" class="logout">Logout</button>
-                        </form>
                     </div>
                 </div>
             </div>

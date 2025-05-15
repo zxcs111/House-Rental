@@ -186,6 +186,8 @@ class DashboardController extends Controller
                 ->take(5)
                 ->get();
 
+            $name = Auth::guard('admin')->user()->name;
+
             return view('admin.dashboard', compact(
                 'pendingProperties',
                 'recentRentedProperties',
@@ -197,7 +199,8 @@ class DashboardController extends Controller
                 'rentedPerMonth',
                 'rentedPerWeek',
                 'propertyTypes',
-                'availablePropertiesByType'
+                'availablePropertiesByType',
+                'name'
             ));
         } catch (Exception $e) {
             Log::error('Dashboard data fetch failed', ['error' => $e->getMessage()]);
@@ -254,7 +257,8 @@ class DashboardController extends Controller
                 'rentedPerMonth',
                 'rentedPerWeek',
                 'propertyTypes',
-                'availablePropertiesByType'
+                'availablePropertiesByType',
+                'name'
             ))->with('error', 'Failed to load dashboard data. Please try again.');
         }
     }
