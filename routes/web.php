@@ -143,6 +143,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::post('/profile-update', [DashboardController::class, 'updateProfile'])->name('profile.update');
     Route::post('/properties/{id}/approve', [DashboardController::class, 'approveProperty'])->name('properties.approve');
+    Route::post('/notifications/mark-as-read', [DashboardController::class, 'markNotificationsAsRead'])->name('notifications.markAsRead');
 
     Route::get('/properties', [PropertyController::class, 'property'])->name('properties');
 

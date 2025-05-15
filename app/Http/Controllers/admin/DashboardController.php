@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Property;
 use App\Models\User;
 use App\Models\Visit;
+use App\Models\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -22,7 +23,7 @@ class DashboardController extends Controller
         try {
             // Log the visit
             Visit::create([
-                'user_id' => Auth::check() ? Auth::id() : null,
+                'user_id' => Auth::guard('admin')->check() ? Auth::guard('admin')->id() : null,
                 'page_url' => $request->fullUrl(),
                 'ip_address' => $request->ip(),
                 'visited_at' => now(),
@@ -94,7 +95,21 @@ class DashboardController extends Controller
                 'new_visits_this_year' => $newVisitsThisYear,
             ];
 
-            return view('admin.dashboard', compact('pendingProperties', 'listingsData', 'rentedData', 'usersData', 'visitsData'));
+            // Fetch unread notifications for the current admin
+            $notifications = Notification::where('admin_id', Auth::guard('admin')->id())
+                ->whereNull('read_at')
+                ->latest()
+                ->take(5) // Limit to 5 for dropdown
+                ->get();
+
+            return view('admin.dashboard', compact(
+                'pendingProperties',
+                'listingsData',
+                'rentedData',
+                'usersData',
+                'visitsData',
+                'notifications'
+            ));
         } catch (Exception $e) {
             Log::error('Dashboard data fetch failed', ['error' => $e->getMessage()]);
             $pendingProperties = collect([]);
@@ -118,8 +133,16 @@ class DashboardController extends Controller
                 'percentage_change' => 0,
                 'new_visits_this_year' => 0,
             ];
-            return view('admin.dashboard', compact('pendingProperties', 'listingsData', 'rentedData', 'usersData', 'visitsData'))
-                ->with('error', 'Failed to load dashboard data. Please try again.');
+            $notifications = collect([]);
+
+            return view('admin.dashboard', compact(
+                'pendingProperties',
+                'listingsData',
+                'rentedData',
+                'usersData',
+                'visitsData',
+                'notifications'
+            ))->with('error', 'Failed to load dashboard data. Please try again.');
         }
     }
 
@@ -146,14 +169,11 @@ class DashboardController extends Controller
             if ($request->hasFile('profile_picture')) {
                 $file = $request->file('profile_picture');
                 $filename = 'profile_' . $admin->id . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $path = $file->storeAs('public/profiles', $filename);
+                $file->storeAs('public/profiles', $filename);
                 $data['profile_picture'] = $filename;
-                $imageUrl = asset('storage/profiles/' . $filename);
                 Log::info('Profile picture uploaded', [
                     'admin_id' => $admin->id,
                     'filename' => $filename,
-                    'path' => $path,
-                    'image_url' => $imageUrl,
                 ]);
             }
 
@@ -176,10 +196,34 @@ class DashboardController extends Controller
 
             $property->update(['status' => Property::STATUS_AVAILABLE]);
 
+            // Create a notification for the approval
+            Notification::create([
+                'admin_id' => Auth::guard('admin')->id(),
+                'type' => 'property_approved',
+                'data' => [
+                    'property_title' => $property->title,
+                ],
+                'read_at' => null,
+            ]);
+
             return redirect()->route('admin.dashboard')->with('success', 'Property approved successfully.');
         } catch (Exception $e) {
             Log::error('Property approval failed', ['error' => $e->getMessage(), 'property_id' => $id]);
             return redirect()->route('admin.dashboard')->with('error', 'Failed to approve property. Please try again.');
+        }
+    }
+
+    public function markNotificationsAsRead(Request $request)
+    {
+        try {
+            Notification::where('admin_id', Auth::guard('admin')->id())
+                ->whereNull('read_at')
+                ->update(['read_at' => now()]);
+
+            return redirect()->route('admin.dashboard')->with('success', 'All notifications marked as read.');
+        } catch (Exception $e) {
+            Log::error('Failed to mark notifications as read', ['error' => $e->getMessage(), 'admin_id' => Auth::guard('admin')->id()]);
+            return redirect()->route('admin.dashboard')->with('error', 'Failed to mark notifications as read. Please try again.');
         }
     }
 }
