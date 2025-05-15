@@ -7,7 +7,7 @@ use App\Models\Property;
 use App\Models\User;
 use App\Models\Visit;
 use App\Models\Notification;
-use App\Models\Payment; // Add this import
+use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -38,6 +38,17 @@ class DashboardController extends Controller
                 ->take(3)
                 ->get();
 
+            // Fetch recent rented properties with their latest payment
+            $recentRentedProperties = Property::with(['payments' => function ($query) {
+                $query->where('status', 'completed')
+                      ->orderBy('start_date', 'desc')
+                      ->take(1);
+            }])
+                ->where('status', Property::STATUS_RENTED)
+                ->latest()
+                ->take(3)
+                ->get();
+
             // Fetch total available and rented properties
             $totalAvailableListings = Property::where('status', Property::STATUS_AVAILABLE)->count();
             $totalRentedProperties = Property::where('status', Property::STATUS_RENTED)->count();
@@ -45,7 +56,7 @@ class DashboardController extends Controller
             // Fetch total users
             $totalUsers = User::count();
 
-            // Calculate years for comparisons
+            // Calculate years for comparisons 
             $currentYear = now()->year;
             $lastYear = $currentYear - 1;
 
@@ -91,7 +102,7 @@ class DashboardController extends Controller
             // Calculate rented properties per week for May 2025 using Payment model
             $rentedPerWeek = [];
             $mayStart = Carbon::create($currentYear, 5, 1);
-            $today = now(); // May 15, 2025, 08:16 PM PST
+            $today = now(); // May 15, 2025, 08:52 PM PST
             $weeks = [];
             $currentWeekStart = $mayStart->startOfWeek(Carbon::MONDAY);
 
@@ -148,6 +159,26 @@ class DashboardController extends Controller
                 'new_visits_this_year' => $newVisitsThisYear,
             ];
 
+            // Calculate property types distribution
+            $propertyTypes = [
+                'Apartment' => Property::where('status', Property::STATUS_AVAILABLE)->where('property_type', 'Apartment')->count(),
+                'House' => Property::where('status', Property::STATUS_AVAILABLE)->where('property_type', 'House')->count(),
+                'Condo' => Property::where('status', Property::STATUS_AVAILABLE)->where('property_type', 'Condo')->count(),
+                'Townhouse' => Property::where('status', Property::STATUS_AVAILABLE)->where('property_type', 'Townhouse')->count(),
+                'Duplex' => Property::where('status', Property::STATUS_AVAILABLE)->where('property_type', 'Duplex')->count(),
+                'Studio' => Property::where('status', Property::STATUS_AVAILABLE)->where('property_type', 'Studio')->count(),
+            ];
+
+            // Fetch available properties by type
+            $availablePropertiesByType = [
+                'Apartment' => Property::where('status', Property::STATUS_AVAILABLE)->where('property_type', 'Apartment')->get(),
+                'House' => Property::where('status', Property::STATUS_AVAILABLE)->where('property_type', 'House')->get(),
+                'Condo' => Property::where('status', Property::STATUS_AVAILABLE)->where('property_type', 'Condo')->get(),
+                'Townhouse' => Property::where('status', Property::STATUS_AVAILABLE)->where('property_type', 'Townhouse')->get(),
+                'Duplex' => Property::where('status', Property::STATUS_AVAILABLE)->where('property_type', 'Duplex')->get(),
+                'Studio' => Property::where('status', Property::STATUS_AVAILABLE)->where('property_type', 'Studio')->get(),
+            ];
+
             // Fetch unread notifications for the current admin
             $notifications = Notification::where('admin_id', Auth::guard('admin')->id())
                 ->whereNull('read_at')
@@ -157,17 +188,21 @@ class DashboardController extends Controller
 
             return view('admin.dashboard', compact(
                 'pendingProperties',
+                'recentRentedProperties',
                 'listingsData',
                 'rentedData',
                 'usersData',
                 'visitsData',
                 'notifications',
                 'rentedPerMonth',
-                'rentedPerWeek'
+                'rentedPerWeek',
+                'propertyTypes',
+                'availablePropertiesByType'
             ));
         } catch (Exception $e) {
             Log::error('Dashboard data fetch failed', ['error' => $e->getMessage()]);
             $pendingProperties = collect([]);
+            $recentRentedProperties = collect([]);
             $listingsData = [
                 'total' => 0,
                 'percentage_change' => 0,
@@ -189,18 +224,37 @@ class DashboardController extends Controller
                 'new_visits_this_year' => 0,
             ];
             $notifications = collect([]);
-            $rentedPerMonth = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0]; 
+            $rentedPerMonth = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
             $rentedPerWeek = [0, 0, 0];
+            $propertyTypes = [
+                'Apartment' => 0,
+                'House' => 0,
+                'Condo' => 0,
+                'Townhouse' => 0,
+                'Duplex' => 0,
+                'Studio' => 0,
+            ];
+            $availablePropertiesByType = [
+                'Apartment' => collect([]),
+                'House' => collect([]),
+                'Condo' => collect([]),
+                'Townhouse' => collect([]),
+                'Duplex' => collect([]),
+                'Studio' => collect([]),
+            ];
 
             return view('admin.dashboard', compact(
                 'pendingProperties',
+                'recentRentedProperties',
                 'listingsData',
                 'rentedData',
                 'usersData',
                 'visitsData',
                 'notifications',
                 'rentedPerMonth',
-                'rentedPerWeek'
+                'rentedPerWeek',
+                'propertyTypes',
+                'availablePropertiesByType'
             ))->with('error', 'Failed to load dashboard data. Please try again.');
         }
     }

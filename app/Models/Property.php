@@ -118,4 +118,12 @@ class Property extends Model
     {
         return $this->hasMany(Review::class);
     }
+
+    public function getLatestPaymentAttribute()
+    {
+        return $this->payments()
+            ->where('status', 'completed')
+            ->orderBy('start_date', 'desc')
+            ->first();
+    }
 }

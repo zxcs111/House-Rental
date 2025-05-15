@@ -7,714 +7,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, sans-serif;
-}
+    <link rel="stylesheet" href="{{ asset('user-template/css/dashboard.css') }}">
 
-body {
-    background-color: #f5f7fa;
-    overflow-x: hidden;
-}
-
-.sidebar {
-    width: 250px;
-    height: 100vh;
-    background-color: #fff;
-    position: fixed;
-    padding: 20px;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-    z-index: 1000;
-    transition: transform 0.3s ease;
-}
-
-.sidebar .logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #007bff;
-    margin-bottom: 30px;
-    display: block;
-    white-space: nowrap;
-}
-
-.sidebar a {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    text-decoration: none;
-    color: #6c757d;
-    margin-bottom: 10px;
-    font-size: 14px;
-    white-space: nowrap;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-}
-
-.sidebar a:hover {
-    background-color: #f0f0f0;
-}
-
-.sidebar a.active {
-    background-color: #007bff;
-    color: #fff;
-}
-
-.sidebar a i {
-    margin-right: 10px;
-    width: 20px;
-    text-align: center;
-}
-
-.content {
-    margin-left: 250px;
-    padding: 20px;
-    transition: margin-left 0.3s ease;
-}
-
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.header h1 {
-    font-size: 24px;
-    color: #343a40;
-}
-
-.header .header-right {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.header .notifications {
-    position: relative;
-    cursor: pointer;
-}
-
-.header .notifications .notification-trigger {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.header .notifications .notification-trigger i {
-    font-size: 20px;
-    color: #343a40;
-    transition: color 0.2s;
-}
-
-.header .notifications .notification-trigger:hover i {
-    color: #007bff;
-}
-
-.header .notifications .badge {
-    position: absolute;
-    top: -5px;
-    right: -10px;
-    background-color: #dc3545;
-    color: white;
-    border-radius: 50%;
-    padding: 2px 6px;
-    font-size: 12px;
-}
-
-.header .notifications .notification-dropdown {
-    display: none;
-    position: absolute;
-    top: 40px;
-    right: 0;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 1;
-    width: 300px;
-    padding: 10px 0; /* Adjusted padding for a tighter look */
-    border-radius: 8px;
-    max-height: 400px; /* Add a max height to prevent overflow */
-    overflow-y: auto; /* Enable scrolling if there are too many notifications */
-}
-
-.header .notifications.active .notification-dropdown {
-    display: block;
-}
-
-.header .notifications .notification-dropdown .notification-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 16px;
-    font-weight: 600;
-    color: #343a40;
-    padding: 10px 15px; /* Add padding for better spacing */
-    border-bottom: 1px solid #e9ecef; /* Softer border color */
-}
-
-.header .notifications .notification-dropdown .notification-header .mark-all-read {
-    font-size: 12px;
-    color: #007bff;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 5px 10px;
-    border-radius: 4px;
-    transition: background-color 0.2s, color 0.2s;
-}
-
-.header .notifications .notification-dropdown .notification-header .mark-all-read:hover {
-    background-color: #f0f0f0;
-    color: #0056b3;
-}
-
-.header .notifications .notification-dropdown .notification-item {
-    display: flex;
-    align-items: center;
-    padding: 10px 15px; /* Better padding for each item */
-    border-bottom: 1px solid #e9ecef;
-    font-size: 14px;
-    color: #343a40;
-    transition: background-color 0.2s;
-}
-
-.header .notifications .notification-dropdown .notification-item:hover {
-    background-color: #f8f9fa;
-}
-
-.header .notifications .notification-dropdown .notification-item:last-child {
-    border-bottom: none;
-}
-
-.header .notifications .notification-dropdown .notification-item .notification-icon {
-    font-size: 16px;
-    color: #28a745; /* Green color for the check-circle icon */
-    margin-right: 10px;
-}
-
-.header .notifications .notification-dropdown .notification-item .notification-content {
-    flex: 1; /* Allow content to take remaining space */
-}
-
-.header .notifications .notification-dropdown .notification-item .message {
-    font-size: 14px;
-    font-weight: 500;
-    color: #343a40;
-    line-height: 1.4; /* Better readability */
-}
-
-.header .notifications .notification-dropdown .notification-item .time {
-    font-size: 12px;
-    color: #6c757d;
-    margin-top: 2px; /* Small spacing between message and time */
-}
-
-.header .notifications .notification-dropdown .no-notifications {
-    padding: 15px;
-    text-align: center;
-    font-size: 14px;
-    color: #6c757d;
-}
-
-.header .user {
-    position: relative;
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-}
-
-.header .user .user-trigger {
-    display: flex;
-    align-items: center;
-    padding: 5px;
-    border-radius: 20px;
-    transition: background-color 0.2s;
-}
-
-.header .user .user-trigger:hover {
-    background-color: #f0f0f0;
-}
-
-.header .user .small-img {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.header .user .name {
-    font-size: 14px;
-    color: #343a40;
-    font-weight: 500;
-}
-
-.header .user .dropdown {
-    display: none;
-    position: absolute;
-    top: 40px;
-    right: 0;
-    background-color: #fff;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    z-index: 1;
-    width: 250px;
-    padding: 15px;
-    border-radius: 8px;
-}
-
-.header .user.active .dropdown {
-    display: block;
-}
-
-.header .user .dropdown .profile-header {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.header .user .dropdown .profile-header img {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.header .user .dropdown .profile-header .name {
-    font-size: 16px;
-    font-weight: bold;
-    color: #343a40;
-}
-
-.header .user .dropdown .profile-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.header .user .dropdown .profile-buttons button {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-    text-align: center;
-}
-
-.header .user .dropdown .profile-buttons button:hover {
-    background-color: #0056b3;
-}
-
-.header .user .dropdown form {
-    margin: 0;
-}
-
-.header .user .dropdown button.logout {
-    padding: 10px;
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-    text-align: center;
-    width: 100%;
-}
-
-.header .user .dropdown button.logout:hover {
-    background-color: #c82333;
-}
-
-.stats {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.card {
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    text-align: left;
-    border-radius: 8px;
-}
-
-.card h3 {
-    font-size: 14px;
-    color: #6c757d;
-    margin-bottom: 10px;
-}
-
-.card p {
-    font-size: 24px;
-    font-weight: bold;
-    color: #343a40;
-    margin: 0;
-}
-
-.card .change {
-    font-size: 14px;
-    margin-top: 5px;
-}
-
-.card .change.positive {
-    color: #28a745;
-}
-
-.card .info {
-    font-size: 12px;
-    color: #6c757d;
-    margin-top: 5px;
-}
-
-.charts {
-    display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
-}
-
-.chart-container {
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    flex: 1;
-    border-radius: 8px;
-}
-
-.chart-container h3 {
-    font-size: 16px;
-    color: #343a40;
-    margin-bottom: 10px;
-}
-
-.chart-container .tabs {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.chart-container .tabs button {
-    padding: 5px 15px;
-    border: 1px solid #007bff;
-    background-color: #fff;
-    color: #007bff;
-    cursor: pointer;
-    font-size: 12px;
-    border-radius: 4px;
-    transition: background-color 0.2s;
-}
-
-.chart-container .tabs button:hover {
-    background-color: #f0f0f0;
-}
-
-.chart-container .tabs button.active {
-    background-color: #007bff;
-    color: #fff;
-}
-
-.chart-container .revenue {
-    font-size: 24px;
-    font-weight: bold;
-    color: #343a40;
-    margin-bottom: 20px;
-}
-
-.right-column {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    flex: 1;
-}
-
-.pending-properties {
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    border-radius: 8px;
-}
-
-.pending-properties h3 {
-    font-size: 16px;
-    color: #343a40;
-    margin-bottom: 15px;
-}
-
-.pending-properties .property {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 0;
-    border-bottom: 1px solid #e9ecef;
-}
-
-.pending-properties .property:last-child {
-    border-bottom: none;
-}
-
-.pending-properties .property span {
-    font-size: 14px;
-    color: #343a40;
-}
-
-.pending-properties .property button {
-    padding: 5px 10px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    cursor: pointer;
-    font-size: 12px;
-    transition: background-color 0.2s;
-}
-
-.pending-properties .property button:hover {
-    background-color: #218838;
-}
-
-.bottom-section {
-    display: flex;
-    gap: 20px;
-}
-
-.recent-orders,
-.analytics-report {
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    flex: 1;
-    border-radius: 8px;
-}
-
-.recent-orders h3,
-.analytics-report h3 {
-    font-size: 16px;
-    color: #343a40;
-    margin-bottom: 15px;
-}
-
-.recent-orders .booking {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #e9ecef;
-    font-size: 14px;
-    color: #343a40;
-}
-
-.recent-orders .booking:last-child {
-    border-bottom: none;
-}
-
-.analytics-report p {
-    font-size: 14px;
-    color: #6c757d;
-}
-
-.menu-toggle {
-    display: none;
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    width: 40px;
-    height: 40px;
-    cursor: pointer;
-    z-index: 1100;
-}
-
-.menu-toggle i {
-    font-size: 20px;
-}
-
-/* Modal Styles */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-    z-index: 2000;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal.active {
-    display: flex;
-}
-
-.modal-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 500px;
-    position: relative;
-}
-
-.modal-content h2 {
-    font-size: 20px;
-    color: #343a40;
-    margin-bottom: 20px;
-}
-
-.modal-content .close {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    font-size: 24px;
-    color: #6c757d;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.modal-content .close:hover {
-    color: #343a40;
-}
-
-.modal-content form label {
-    display: block;
-    font-size: 14px;
-    color: #343a40;
-    margin-bottom: 5px;
-    font-weight: 500;
-}
-
-.modal-content form input[type="text"],
-.modal-content form input[type="email"],
-.modal-content form input[type="password"],
-.modal-content form input[type="file"] {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 15px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.modal-content form input[type="file"] {
-    padding: 3px;
-}
-
-.modal-content form .profile-picture-preview {
-    margin-bottom: 15px;
-    text-align: center;
-}
-
-.modal-content form .profile-picture-preview img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #e9ecef;
-}
-
-.modal-content form button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.2s;
-}
-
-.modal-content form button:hover {
-    background-color: #0056b3;
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    .charts {
-        flex-direction: column;
-    }
-    .right-column {
-        flex-direction: column;
-    }
-    .bottom-section {
-        flex-direction: column;
-    }
-}
-
-@media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-250px);
-    }
-    .sidebar.open {
-        transform: translateX(0);
-    }
-    .content {
-        margin-left: 0;
-    }
-    .menu-toggle {
-        display: block;
-    }
-    .stats {
-        grid-template-columns: 1fr;
-    }
-    .header h1 {
-        font-size: 20px;
-    }
-    .header .user .dropdown {
-        width: 200px;
-    }
-    .header .notifications .notification-dropdown {
-        width: 250px;
-    }
-}
-
-@media (max-width: 480px) {
-    .header .user .small-img {
-        width: 25px;
-        height: 25px;
-    }
-    .header .user .name {
-        font-size: 12px;
-    }
-    .header .user .dropdown {
-        width: 180px;
-    }
-    .header .user .dropdown .profile-header img {
-        width: 40px;
-        height: 40px;
-    }
-    .header .user .dropdown .profile-buttons button {
-        font-size: 12px;
-        padding: 8px;
-    }
-    .header .notifications .notification-dropdown {
-        width: 200px;
-    }
-    .modal-content {
-        width: 95%;
-    }
-    .modal-content .profile-picture-preview img {
-        width: 80px;
-        height: 80px;
-    }
-    .card .change.negative {
-        color: #dc3545; /* Red color for negative change */
-    }
-}
-    </style>
 </head>
 <body>
     <button class="menu-toggle"><i class="fas fa-bars"></i></button>
@@ -736,35 +30,35 @@ body {
                         <span class="badge">{{ $notifications->count() }}</span>
                     </div>
                     <div class="notification-dropdown">
-    <div class="notification-header">
-        Notifications
-        @if($notifications->isNotEmpty())
-            <form action="{{ route('admin.notifications.markAsRead') }}" method="POST" style="display: inline;">
-                @csrf
-                <button type="submit" class="mark-all-read">Mark All as Read</button>
-            </form>
-        @endif
-    </div>
-    @if($notifications->isEmpty())
-        <div class="no-notifications">No new notifications</div>
-    @else
-        @foreach($notifications as $notification)
-            <div class="notification-item">
-                <i class="fas fa-check-circle notification-icon"></i>
-                <div class="notification-content">
-                    <div class="message">
-                        @if($notification->type === 'property_approved')
-                            Property "{{ $notification->data['property_title'] }}" approved
+                        <div class="notification-header">
+                            Notifications
+                            @if($notifications->isNotEmpty())
+                                <form action="{{ route('admin.notifications.markAsRead') }}" method="POST" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="mark-all-read">Mark All as Read</button>
+                                </form>
+                            @endif
+                        </div>
+                        @if($notifications->isEmpty())
+                            <div class="no-notifications">No new notifications</div>
                         @else
-                            {{ $notification->type }}
+                            @foreach($notifications as $notification)
+                                <div class="notification-item">
+                                    <i class="fas fa-check-circle notification-icon"></i>
+                                    <div class="notification-content">
+                                        <div class="message">
+                                            @if($notification->type === 'property_approved')
+                                                Property "{{ $notification->data['property_title'] }}" approved
+                                            @else
+                                                {{ $notification->type }}
+                                            @endif
+                                        </div>
+                                        <div class="time">{{ $notification->created_at->diffForHumans() }}</div>
+                                    </div>
+                                </div>
+                            @endforeach
                         @endif
                     </div>
-                    <div class="time">{{ $notification->created_at->diffForHumans() }}</div>
-                </div>
-            </div>
-        @endforeach
-    @endif
-</div>
                 </div>
                 <div class="user">
                     <div class="user-trigger">
@@ -832,9 +126,14 @@ body {
             </div>
             <div class="right-column">
                 <div class="chart-container">
-                    <h3>Revenue This Week</h3>
-                    <div class="revenue">$2,258</div>
-                    <canvas id="revenueChart"></canvas>
+                    <h3>Types of Available Properties</h3>
+                    <canvas id="propertyTypesChart" style="max-height: 300px;"></canvas>
+                    <!-- List of available properties by type -->
+                    <div class="available-properties-list">
+                        @foreach(['Apartment', 'House', 'Condo', 'Townhouse', 'Duplex', 'Studio'] as $type)
+                        
+                        @endforeach
+                    </div>
                 </div>
                 <div class="pending-properties">
                     <h3>Pending Properties</h3>
@@ -856,19 +155,17 @@ body {
         </div>
         <div class="bottom-section">
             <div class="recent-orders">
-                <h3>Recent Bookings</h3>
-                <div class="booking">
-                    <span>#001 - Beachfront Villa</span>
-                    <span>2025-05-01</span>
-                </div>
-                <div class="booking">
-                    <span>#002 - Mountain Cabin</span>
-                    <span>2025-05-02</span>
-                </div>
-                <div class="booking">
-                    <span>#003 - City Apartment</span>
-                    <span>2025-05-03</span>
-                </div>
+                <h3>Rented Properties</h3>
+                @if($recentRentedProperties->isEmpty())
+                    <p class="text-center text-muted">No rented properties at the moment.</p>
+                @else
+                    @foreach($recentRentedProperties as $property)
+                        <div class="booking">
+                            <span> {{ $property->title }} - {{ $property->price }} - {{ $property->property_type }}</span>
+                            <span>{{ $property->latest_payment ? $property->latest_payment->start_date->format('Y-m-d') : 'N/A' }}</span>
+                        </div>
+                    @endforeach
+                @endif
             </div>
             <div class="analytics-report">
                 <h3>Analytics Report</h3>
@@ -903,6 +200,7 @@ body {
     // Pass PHP data to JavaScript
     const rentedPerMonth = @json($rentedPerMonth);
     const rentedPerWeek = @json($rentedPerWeek);
+    const propertyTypes = @json($propertyTypes);
 
     // Toggle sidebar on mobile
     const sidebar = document.querySelector('.sidebar');
@@ -986,95 +284,133 @@ body {
 
     // Rented Trends Line Chart with tab switching
     const rentedCtx = document.getElementById('rentedChart').getContext('2d');
-    let chart = new Chart(rentedCtx, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-            datasets: [
-                {
-                    label: 'Rented Properties',
-                    data: [
+    if (rentedCtx) {
+        let chart = new Chart(rentedCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                datasets: [
+                    {
+                        label: 'Rented Properties',
+                        data: [
+                            rentedPerMonth[1] || 0,
+                            rentedPerMonth[2] || 0,
+                            rentedPerMonth[3] || 0,
+                            rentedPerMonth[4] || 0,
+                            rentedPerMonth[5] || 0
+                        ],
+                        borderColor: '#007bff',
+                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: Math.max(...Object.values(rentedPerMonth).filter(v => v > 0), 10) + 5,
+                        ticks: { stepSize: 5 }
+                    }
+                },
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+
+        // Tab switching logic
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const tab = this.getAttribute('data-tab');
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+
+                if (tab === 'month') {
+                    chart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+                    chart.data.datasets[0].data = [
                         rentedPerMonth[1] || 0,
                         rentedPerMonth[2] || 0,
                         rentedPerMonth[3] || 0,
                         rentedPerMonth[4] || 0,
                         rentedPerMonth[5] || 0
-                    ],
-                    borderColor: '#007bff',
-                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                    fill: true,
-                    tension: 0.4
+                    ];
+                    chart.options.scales.y.max = Math.max(...Object.values(rentedPerMonth).filter(v => v > 0), 10) + 5;
+                } else if (tab === 'week') {
+                    chart.data.labels = ['May 1-4', 'May 5-11', 'May 12-18'];
+                    chart.data.datasets[0].data = rentedPerWeek;
+                    chart.options.scales.y.max = Math.max(...rentedPerWeek.filter(v => v > 0), 5) + 5;
                 }
-            ]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: Math.max(...Object.values(rentedPerMonth).filter(v => v > 0), 10) + 5,
-                    ticks: { stepSize: 5 }
-                }
-            },
-            plugins: {
-                legend: { position: 'bottom' }
-            }
-        }
-    });
-
-    // Tab switching logic
-    document.querySelectorAll('.tab-button').forEach(button => {
-        button.addEventListener('click', function() {
-            const tab = this.getAttribute('data-tab');
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            this.classList.add('active');
-
-            if (tab === 'month') {
-                chart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
-                chart.data.datasets[0].data = [
-                    rentedPerMonth[1] || 0,
-                    rentedPerMonth[2] || 0,
-                    rentedPerMonth[3] || 0,
-                    rentedPerMonth[4] || 0,
-                    rentedPerMonth[5] || 0
-                ];
-                chart.options.scales.y.max = Math.max(...Object.values(rentedPerMonth).filter(v => v > 0), 10) + 5;
-            } else if (tab === 'week') {
-                chart.data.labels = ['May 1-4', 'May 5-11', 'May 12-18'];
-                chart.data.datasets[0].data = rentedPerWeek;
-                chart.options.scales.y.max = Math.max(...rentedPerWeek.filter(v => v > 0), 5) + 5;
-            }
-            chart.update();
+                chart.update();
+            });
         });
-    });
+    } else {
+        console.error('Rented Chart canvas not found');
+    }
 
-    // Revenue Bar Chart (Static data for May 12-18, 2025)
-    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-    new Chart(revenueCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-            datasets: [{
-                label: 'Revenue',
-                data: [300, 320, 330, 350, 340, 310, 308], // Total = $2,258
-                backgroundColor: '#17a2b8',
-                borderRadius: 0
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: { 
-                    beginAtZero: true, 
-                    display: false,
-                    max: 400,
-                    ticks: { stepSize: 100 }
+    // Types of Properties Pie Chart
+    document.addEventListener('DOMContentLoaded', function() {
+        const propertyTypesCtx = document.getElementById('propertyTypesChart')?.getContext('2d');
+        if (propertyTypesCtx) {
+            // Filter out property types with zero count to avoid empty chart segments
+            const filteredPropertyTypes = Object.fromEntries(
+                Object.entries(propertyTypes).filter(([_, value]) => value > 0)
+            );
+            const labels = Object.keys(filteredPropertyTypes).length > 0 ? Object.keys(filteredPropertyTypes) : ['No Data'];
+            const data = Object.keys(filteredPropertyTypes).length > 0 ? Object.values(filteredPropertyTypes) : [1];
+
+            new Chart(propertyTypesCtx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: labels.map((label) => {
+                            const colors = {
+                                'Apartment': '#FF6384', // Red-Pink
+                                'House': '#36A2EB',     // Blue
+                                'Condo': '#FFCE56',     // Yellow
+                                'Townhouse': '#4BC0C0', // Cyan
+                                'Duplex': '#9966FF',    // Purple
+                                'Studio': '#FF9F40',    // Orange
+                                'No Data': '#D3D3D3'    // Grey for placeholder
+                            };
+                            return colors[label] || '#D3D3D3'; // Fallback color
+                        }),
+                        borderWidth: 1,
+                        borderColor: '#fff'
+                    }]
                 },
-                x: { grid: { display: false } }
-            },
-            plugins: {
-                legend: { display: false }
-            }
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15
+                            }
+                        },
+                        tooltip: {
+                            enabled: Object.keys(filteredPropertyTypes).length > 0,
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                    return `${label}: ${value} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            console.log('Property Types Chart initialized successfully');
+        } else {
+            console.error('Property Types Chart canvas not found');
         }
     });
 </script>
