@@ -146,6 +146,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/notifications/mark-as-read', [DashboardController::class, 'markNotificationsAsRead'])->name('notifications.markAsRead');
 
     Route::get('/properties', [PropertyController::class, 'property'])->name('properties');
+    
 
     Route::get('/bookings', [BookingController::class, 'booking'])->name('bookings');
 

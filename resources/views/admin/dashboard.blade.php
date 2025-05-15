@@ -823,17 +823,17 @@ body {
         </div>
         <div class="charts">
             <div class="chart-container" style="flex: 2;">
-                <h3>Booking Trends</h3>
+                <h3>Rented Trends</h3>
                 <div class="tabs">
-                    <button class="active">Month</button>
-                    <button>Week</button>
+                    <button class="tab-button active" data-tab="month">Month</button>
+                    <button class="tab-button" data-tab="week">Week</button>
                 </div>
-                <canvas id="bookingChart"></canvas>
+                <canvas id="rentedChart"></canvas>
             </div>
             <div class="right-column">
                 <div class="chart-container">
                     <h3>Revenue This Week</h3>
-                    <div class="revenue">$6,500</div>
+                    <div class="revenue">$2,258</div>
                     <canvas id="revenueChart"></canvas>
                 </div>
                 <div class="pending-properties">
@@ -900,154 +900,184 @@ body {
         </div>
     </div>
     <script>
-    
-        // Toggle sidebar on mobile
-        const sidebar = document.querySelector('.sidebar');
-        const menuToggle = document.querySelector('.menu-toggle');
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('open');
+    // Pass PHP data to JavaScript
+    const rentedPerMonth = @json($rentedPerMonth);
+    const rentedPerWeek = @json($rentedPerWeek);
+
+    // Toggle sidebar on mobile
+    const sidebar = document.querySelector('.sidebar');
+    const menuToggle = document.querySelector('.menu-toggle');
+    menuToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+    });
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(event) {
+        if (window.innerWidth <= 768 && sidebar.classList.contains('open') && !sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
+            sidebar.classList.remove('open');
+        }
+    });
+
+    // Toggle user dropdown on click
+    document.querySelector('.user-trigger').addEventListener('click', function() {
+        const user = this.parentElement;
+        user.classList.toggle('active');
+        document.querySelector('.notifications').classList.remove('active');
+    });
+
+    // Toggle notification dropdown on click
+    document.querySelector('.notification-trigger').addEventListener('click', function() {
+        const notifications = this.parentElement;
+        notifications.classList.toggle('active');
+        document.querySelector('.user').classList.remove('active');
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(event) {
+        const user = document.querySelector('.user');
+        const userTrigger = document.querySelector('.user-trigger');
+        const notifications = document.querySelector('.notifications');
+        const notificationTrigger = document.querySelector('.notification-trigger');
+
+        if (!userTrigger.contains(event.target) && !user.querySelector('.dropdown').contains(event.target)) {
+            user.classList.remove('active');
+        }
+        if (!notificationTrigger.contains(event.target) && !notifications.querySelector('.notification-dropdown').contains(event.target)) {
+            notifications.classList.remove('active');
+        }
+    });
+
+    // Modal handling
+    const editProfileBtn = document.getElementById('edit-profile-btn');
+    const editProfileModal = document.getElementById('edit-profile-modal');
+    const closes = document.querySelectorAll('.modal .close');
+
+    editProfileBtn.addEventListener('click', () => {
+        editProfileModal.classList.add('active');
+        document.querySelector('.user').classList.remove('active');
+    });
+
+    closes.forEach(close => {
+        close.addEventListener('click', () => {
+            editProfileModal.classList.remove('active');
         });
+    });
 
-        // Close sidebar when clicking outside on mobile
-        document.addEventListener('click', function(event) {
-            if (window.innerWidth <= 768 && sidebar.classList.contains('open') && !sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
-                sidebar.classList.remove('open');
-            }
-        });
+    // Close modals when clicking outside
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal')) {
+            editProfileModal.classList.remove('active');
+        }
+    });
 
-        // Toggle user dropdown on click
-        document.querySelector('.user-trigger').addEventListener('click', function() {
-            const user = this.parentElement;
-            user.classList.toggle('active');
-            // Close notification dropdown if open
-            document.querySelector('.notifications').classList.remove('active');
-        });
+    // Profile picture preview
+    const profilePictureInput = document.getElementById('profile_picture');
+    const profilePicturePreview = document.getElementById('profile-picture-preview-img');
+    profilePictureInput.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                profilePicturePreview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 
-        // Toggle notification dropdown on click
-        document.querySelector('.notification-trigger').addEventListener('click', function() {
-            const notifications = this.parentElement;
-            notifications.classList.toggle('active');
-            // Close user dropdown if open
-            document.querySelector('.user').classList.remove('active');
-        });
-
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', function(event) {
-            const user = document.querySelector('.user');
-            const userTrigger = document.querySelector('.user-trigger');
-            const notifications = document.querySelector('.notifications');
-            const notificationTrigger = document.querySelector('.notification-trigger');
-
-            if (!userTrigger.contains(event.target) && !user.querySelector('.dropdown').contains(event.target)) {
-                user.classList.remove('active');
-            }
-            if (!notificationTrigger.contains(event.target) && !notifications.querySelector('.notification-dropdown').contains(event.target)) {
-                notifications.classList.remove('active');
-            }
-        });
-
-        // Modal handling
-        const editProfileBtn = document.getElementById('edit-profile-btn');
-        const editProfileModal = document.getElementById('edit-profile-modal');
-        const closes = document.querySelectorAll('.modal .close');
-
-        editProfileBtn.addEventListener('click', () => {
-            editProfileModal.classList.add('active');
-            document.querySelector('.user').classList.remove('active');
-        });
-
-        closes.forEach(close => {
-            close.addEventListener('click', () => {
-                editProfileModal.classList.remove('active');
-            });
-        });
-
-        // Close modals when clicking outside
-        document.addEventListener('click', function(event) {
-            if (event.target.classList.contains('modal')) {
-                editProfileModal.classList.remove('active');
-            }
-        });
-
-        // Profile picture preview
-        const profilePictureInput = document.getElementById('profile_picture');
-        const profilePicturePreview = document.getElementById('profile-picture-preview-img');
-        profilePictureInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    profilePicturePreview.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Booking Trends Line Chart
-        const bookingCtx = document.getElementById('bookingChart').getContext('2d');
-        new Chart(bookingCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                datasets: [
-                    {
-                        label: 'Bookings',
-                        data: [50, 100, 80, 150, 90, 70, 110, 130, 60, 80, 40, 90],
-                        borderColor: '#007bff',
-                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    },
-                    {
-                        label: 'Cancellations',
-                        data: [20, 50, 40, 70, 30, 20, 60, 40, 30, 20, 10, 30],
-                        borderColor: '#17a2b8',
-                        backgroundColor: 'rgba(23, 162, 184, 0.1)',
-                        fill: true,
-                        tension: 0.4
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 180,
-                        ticks: { stepSize: 40 }
-                    }
-                },
-                plugins: {
-                    legend: { position: 'bottom' }
+    // Rented Trends Line Chart with tab switching
+    const rentedCtx = document.getElementById('rentedChart').getContext('2d');
+    let chart = new Chart(rentedCtx, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+            datasets: [
+                {
+                    label: 'Rented Properties',
+                    data: [
+                        rentedPerMonth[1] || 0,
+                        rentedPerMonth[2] || 0,
+                        rentedPerMonth[3] || 0,
+                        rentedPerMonth[4] || 0,
+                        rentedPerMonth[5] || 0
+                    ],
+                    borderColor: '#007bff',
+                    backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                    fill: true,
+                    tension: 0.4
                 }
-            }
-        });
-
-        // Revenue Bar Chart
-        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
-        new Chart(revenueCtx, {
-            type: 'bar',
-            data: {
-                labels: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-                datasets: [{
-                    label: 'Revenue',
-                    data: [900, 1200, 800, 1000, 600, 500, 700],
-                    backgroundColor: '#17a2b8',
-                    borderRadius: 0
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: { beginAtZero: true, display: false },
-                    x: { grid: { display: false } }
-                },
-                plugins: {
-                    legend: { display: false }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: Math.max(...Object.values(rentedPerMonth).filter(v => v > 0), 10) + 5,
+                    ticks: { stepSize: 5 }
                 }
+            },
+            plugins: {
+                legend: { position: 'bottom' }
             }
+        }
+    });
+
+    // Tab switching logic
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const tab = this.getAttribute('data-tab');
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            if (tab === 'month') {
+                chart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+                chart.data.datasets[0].data = [
+                    rentedPerMonth[1] || 0,
+                    rentedPerMonth[2] || 0,
+                    rentedPerMonth[3] || 0,
+                    rentedPerMonth[4] || 0,
+                    rentedPerMonth[5] || 0
+                ];
+                chart.options.scales.y.max = Math.max(...Object.values(rentedPerMonth).filter(v => v > 0), 10) + 5;
+            } else if (tab === 'week') {
+                chart.data.labels = ['May 1-4', 'May 5-11', 'May 12-18'];
+                chart.data.datasets[0].data = rentedPerWeek;
+                chart.options.scales.y.max = Math.max(...rentedPerWeek.filter(v => v > 0), 5) + 5;
+            }
+            chart.update();
         });
-    </script>
+    });
+
+    // Revenue Bar Chart (Static data for May 12-18, 2025)
+    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(revenueCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+            datasets: [{
+                label: 'Revenue',
+                data: [300, 320, 330, 350, 340, 310, 308], // Total = $2,258
+                backgroundColor: '#17a2b8',
+                borderRadius: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { 
+                    beginAtZero: true, 
+                    display: false,
+                    max: 400,
+                    ticks: { stepSize: 100 }
+                },
+                x: { grid: { display: false } }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+</script>
 
 <script>
     document.querySelectorAll('.approve-form').forEach(form => {

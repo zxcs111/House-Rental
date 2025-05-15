@@ -10,9 +10,8 @@ use App\Models\Property;
 
 class PropertyController extends Controller
 {
-    public function property()
+    public function property(Request $request)
     {
-
         if (!Auth::guard('admin')->check()) {
             return redirect()->route('admin.login')->with('error', 'You must log in as an admin to access the dashboard.');
         }
