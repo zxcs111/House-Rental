@@ -62,12 +62,12 @@
                 </div>
                 <div class="user">
                     <div class="user-trigger">
-                        <img class="small-img" src="{{ Auth::guard('admin')->user()->profile_picture ? asset('storage/profiles/' . Auth::guard('admin')->user()->profile_picture) . '?t=' . time() : 'https://via.placeholder.com/30' }}" alt="User">
+                        <img class="small-img" src="{{ Auth::guard('admin')->user()->profile_picture_url }}" alt="User">
                         <span class="name">{{ Auth::guard('admin')->user()->name }}</span>
                     </div>
                     <div class="dropdown">
                         <div class="profile-header">
-                            <img src="{{ Auth::guard('admin')->user()->profile_picture ? asset('storage/profiles/' . Auth::guard('admin')->user()->profile_picture) . '?t=' . time() : 'https://via.placeholder.com/50' }}" alt="Profile">
+                            <img src="{{ Auth::guard('admin')->user()->profile_picture_url }}" alt="Profile">
                             <div class="name">{{ Auth::guard('admin')->user()->name }}</div>
                         </div>
                         <div class="profile-buttons">
@@ -182,7 +182,7 @@
                     @csrf
                     <label for="profile_picture">Profile Picture</label>
                     <div class="profile-picture-preview">
-                        <img id="profile-picture-preview-img" src="{{ Auth::guard('admin')->user()->profile_picture ? asset('storage/profiles/' . Auth::guard('admin')->user()->profile_picture) . '?t=' . time() : 'https://via.placeholder.com/100' }}" alt="Profile Preview">
+                        <img id="profile-picture-preview-img" src="{{ Auth::guard('admin')->user()->profile_picture_url }}" alt="Profile Preview">
                     </div>
                     <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
                     <label for="name">Name</label>

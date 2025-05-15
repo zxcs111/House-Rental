@@ -260,44 +260,77 @@ class DashboardController extends Controller
     }
 
     public function updateProfile(Request $request)
-    {
-        try {
-            $admin = Auth::guard('admin')->user();
-            $validated = $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|email|max:255|unique:admins,email,' . $admin->id,
-                'password' => 'nullable|string|min:8',
-                'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            ]);
+{
+    try {
+        $admin = Auth::guard('admin')->user();
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:admins,email,' . $admin->id,
+            'password' => 'nullable|string|min:8',
+            'profile_picture' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+        ]);
 
-            $data = [
-                'name' => $validated['name'],
-                'email' => $validated['email'],
-            ];
+        $data = [
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+        ];
 
-            if ($request->has('password') && $validated['password']) {
-                $data['password'] = bcrypt($validated['password']);
-            }
-
-            if ($request->hasFile('profile_picture')) {
-                $file = $request->file('profile_picture');
-                $filename = 'profile_' . $admin->id . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $file->storeAs('public/profiles', $filename);
-                $data['profile_picture'] = $filename;
-                Log::info('Profile picture uploaded', [
-                    'admin_id' => $admin->id,
-                    'filename' => $filename,
-                ]);
-            }
-
-            $admin->update($data);
-
-            return redirect()->route('admin.dashboard')->with('success', 'Profile updated successfully.');
-        } catch (Exception $e) {
-            Log::error('Profile update failed', ['error' => $e->getMessage(), 'admin_id' => Auth::guard('admin')->user()->id]);
-            return redirect()->route('admin.dashboard')->with('error', 'Failed to update profile. Please try again.');
+        if ($request->has('password') && $validated['password']) {
+            $data['password'] = bcrypt($validated['password']);
         }
+
+        if ($request->hasFile('profile_picture')) {
+            $file = $request->file('profile_picture');
+            $filename = 'profile_' . $admin->id . '_' . time() . '.' . $file->getClientOriginalExtension();
+            $directory = storage_path('app/public/profile');
+
+            // Ensure directory exists
+            if (!file_exists($directory)) {
+                if (mkdir($directory, 0775, true)) {
+                    Log::info('Created directory', ['directory' => $directory]);
+                } else {
+                    Log::error('Failed to create directory', ['directory' => $directory]);
+                    return redirect()->route('admin.dashboard')->with('error', 'Failed to create storage directory for profile picture.');
+                }
+            }
+
+            // Move the file to the directory
+            $fullPath = $directory . '/' . $filename;
+            if ($file->move($directory, $filename)) {
+                if (file_exists($fullPath)) {
+                    Log::info('Profile picture saved successfully', [
+                        'path' => $fullPath,
+                        'filename' => $filename,
+                        'timestamp' => time()
+                    ]);
+                    $data['profile_picture'] = $filename;
+                } else {
+                    Log::error('File exists check failed after move', [
+                        'path' => $fullPath,
+                        'filename' => $filename
+                    ]);
+                    return redirect()->route('admin.dashboard')->with('error', 'Failed to verify saved profile picture.');
+                }
+            } else {
+                Log::error('Failed to move profile picture', [
+                    'filename' => $filename,
+                    'directory' => $directory
+                ]);
+                return redirect()->route('admin.dashboard')->with('error', 'Failed to save profile picture to storage.');
+            }
+        }
+
+        $admin->update($data);
+
+        return redirect()->route('admin.dashboard')->with('success', 'Profile updated successfully.');
+    } catch (Exception $e) {
+        Log::error('Profile update failed', [
+            'error' => $e->getMessage(),
+            'admin_id' => Auth::guard('admin')->user()->id
+        ]);
+        return redirect()->route('admin.dashboard')->with('error', 'Failed to update profile: ' . $e->getMessage());
     }
+}
 
     public function approveProperty(Request $request, $id)
     {
