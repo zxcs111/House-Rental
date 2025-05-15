@@ -139,18 +139,21 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     Route::post('/property/{id}/reject', [AdminController::class, 'rejectProperty'])->name('admin.property.reject');
 });
 
-Route::get('/admin/dashboard', [DashboardController::class, 'dashboard'])->name('admin.dashboard');
-Route::post('/admin/profile-update', [DashboardController::class, 'updateProfile'])->name('admin.profile.update');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+    Route::post('/profile-update', [DashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::post('/properties/{id}/approve', [DashboardController::class, 'approveProperty'])->name('properties.approve');
 
-Route::get('/admin/properties', [PropertyController::class, 'property'])->name('admin.properties');
+    Route::get('/properties', [PropertyController::class, 'property'])->name('properties');
 
-Route::get('/admin/bookings', [BookingController::class, 'booking'])->name('admin.bookings');
+    Route::get('/bookings', [BookingController::class, 'booking'])->name('bookings');
 
-Route::get('/admin/total-users', [TotalUserController::class, 'totaluser'])->name('admin.total-users');
-Route::get('/admin/total-users/{id}', [TotalUserController::class, 'show'])->name('admin.user-detail');
-Route::get('/admin/total-users/create', [TotalUserController::class, 'create'])->name('admin.create-user');
-Route::post('/admin/total-users/store', [TotalUserController::class, 'store'])->name('admin.store-user');
+    Route::get('/total-users', [TotalUserController::class, 'totaluser'])->name('total-users');
+    Route::get('/total-users/{id}', [TotalUserController::class, 'show'])->name('user-detail');
+    Route::get('/total-users/create', [TotalUserController::class, 'create'])->name('create-user');
+    Route::post('/total-users/store', [TotalUserController::class, 'store'])->name('store-user');
 
-Route::get('/admin/reports', [ReportsController::class, 'reports'])->name('admin.reports');
-Route::get('/admin/reports/{id}', [ReportsController::class, 'show'])->name('admin.report-detail');
-Route::get('/admin/reports/create', [ReportsController::class, 'create'])->name('admin.create-report');
+    Route::get('/reports', [ReportsController::class, 'reports'])->name('reports');
+    Route::get('/reports/{id}', [ReportsController::class, 'show'])->name('report-detail');
+    Route::get('/reports/create', [ReportsController::class, 'create'])->name('create-report');
+});

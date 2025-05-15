@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stay Haven Admin Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         * {
@@ -365,7 +366,6 @@
             border: none;
             cursor: pointer;
             font-size: 12px;
-            border-radius: 4px;
             transition: background-color 0.2s;
         }
         .pending-properties .property button:hover {
@@ -575,6 +575,12 @@
                 width: 80px;
                 height: 80px;
             }
+
+            .card .change.negative {
+                color: #dc3545; /* Red color for negative change */
+            }
+
+          
         }
     </style>
 </head>
@@ -636,28 +642,36 @@
         </div>
         <div class="stats">
             <div class="card">
-                <h3>Total Listings</h3>
-                <p>1,234</p>
-                <div class="change positive">↑ 5.2%</div>
-                <div class="info">You added 50 new listings this year</div>
+                <h3>Available Properties</h3>
+                <p>{{ isset($listingsData) ? number_format($listingsData['total']) : '0' }}</p>
+                <div class="change {{ isset($listingsData) && $listingsData['percentage_change'] >= 0 ? 'positive' : 'negative' }}">
+                    {{ isset($listingsData) && $listingsData['percentage_change'] >= 0 ? '↑' : '↓' }} {{ isset($listingsData) ? abs($listingsData['percentage_change']) : '0' }}%
+                </div>
+                <div class="info">You approved {{ isset($listingsData) ? $listingsData['new_listings_this_year'] : '0' }} new listings this year</div>
             </div>
             <div class="card">
-                <h3>Total Bookings</h3>
-                <p>789</p>
-                <div class="change positive">↑ 3.8%</div>
-                <div class="info">You processed 30 extra bookings this year</div>
+                <h3>Total Rented Properties</h3>
+                <p>{{ isset($rentedData) ? number_format($rentedData['total']) : '0' }}</p>
+                <div class="change {{ isset($rentedData) && $rentedData['percentage_change'] >= 0 ? 'positive' : 'negative' }}">
+                    {{ isset($rentedData) && $rentedData['percentage_change'] >= 0 ? '↑' : '↓' }} {{ isset($rentedData) ? abs($rentedData['percentage_change']) : '0' }}%
+                </div>
+                <div class="info">{{ isset($rentedData) ? $rentedData['new_rented_this_year'] : '0' }} new rented properties this year</div>
             </div>
             <div class="card">
                 <h3>Total Users</h3>
-                <p>2,345</p>
-                <div class="change positive">↑ 6.1%</div>
-                <div class="info">You gained 100 new users this year</div>
+                <p>{{ isset($usersData) ? number_format($usersData['total']) : '0' }}</p>
+                <div class="change {{ isset($usersData) && $usersData['percentage_change'] >= 0 ? 'positive' : 'negative' }}">
+                    {{ isset($usersData) && $usersData['percentage_change'] >= 0 ? '↑' : '↓' }} {{ isset($usersData) ? abs($usersData['percentage_change']) : '0' }}%
+                </div>
+                <div class="info">You gained {{ isset($usersData) ? $usersData['new_users_this_year'] : '0' }} new users this year</div>
             </div>
             <div class="card">
-                <h3>Total Revenue</h3>
-                <p>$45,678</p>
-                <div class="change positive">↑ 4.5%</div>
-                <div class="info">You earned $2,000 extra this year</div>
+                <h3>Total Visits</h3>
+                <p>{{ isset($visitsData) ? number_format($visitsData['total']) : '0' }}</p>
+                <div class="change {{ isset($visitsData) && $visitsData['percentage_change'] >= 0 ? 'positive' : 'negative' }}">
+                    {{ isset($visitsData) && $visitsData['percentage_change'] >= 0 ? '↑' : '↓' }} {{ isset($visitsData) ? abs($visitsData['percentage_change']) : '0' }}%
+                </div>
+                <div class="info">You recorded {{ isset($visitsData) ? $visitsData['new_visits_this_year'] : '0' }} new visits this year</div>
             </div>
         </div>
         <div class="charts">
@@ -677,18 +691,19 @@
                 </div>
                 <div class="pending-properties">
                     <h3>Pending Properties</h3>
-                    <div class="property">
-                        <span>Beachfront Villa - Landlord A</span>
-                        <button>Approve</button>
-                    </div>
-                    <div class="property">
-                        <span>Mountain Cabin - Landlord B</span>
-                        <button>Approve</button>
-                    </div>
-                    <div class="property">
-                        <span>City Apartment - Landlord C</span>
-                        <button>Approve</button>
-                    </div>
+                    @if($pendingProperties->isEmpty())
+                        <p class="text-center text-muted">No pending properties at the moment.</p>
+                    @else
+                        @foreach($pendingProperties as $property)
+                            <div class="property">
+                                <span>{{ $property->title }} - {{ $property->landlord->name ?? 'Unknown Landlord' }}</span>
+                                <form action="{{ route('admin.properties.approve', $property->id) }}" method="POST" class="approve-form" style="display: inline;">
+                                    @csrf
+                                    <button type="submit" class="approve-btn">Approve</button>
+                                </form>
+                            </div>
+                        @endforeach
+                    @endif
                 </div>
             </div>
         </div>
@@ -738,12 +753,7 @@
         </div>
     </div>
     <script>
-        // Debug profile picture URLs
-        const userTriggerImg = document.querySelector('.user-trigger .small-img');
-        const dropdownImg = document.querySelector('.dropdown .profile-header img');
-        console.log('User Trigger Image URL:', userTriggerImg.src);
-        console.log('Dropdown Image URL:', dropdownImg.src);
-
+    
         // Toggle sidebar on mobile
         const sidebar = document.querySelector('.sidebar');
         const menuToggle = document.querySelector('.menu-toggle');
@@ -891,5 +901,27 @@
             }
         });
     </script>
+
+<script>
+    document.querySelectorAll('.approve-form').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to approve this property?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#28a745',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: 'Yes, approve it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
 </body>
 </html>
