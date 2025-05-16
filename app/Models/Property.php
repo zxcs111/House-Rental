@@ -40,6 +40,7 @@ class Property extends Model
     const STATUS_AVAILABLE = 'available';
     const STATUS_RENTED = 'rented';
     const STATUS_MAINTENANCE = 'maintenance';
+    const STATUS_DISAPPROVED = 'disapproved';
 
     public static function getStatuses()
     {
@@ -48,6 +49,7 @@ class Property extends Model
             self::STATUS_AVAILABLE => 'Available',
             self::STATUS_RENTED => 'Rented',
             self::STATUS_MAINTENANCE => 'Under Maintenance',
+            self::STATUS_DISAPPROVED => 'Disapproved',
         ];
     }
 

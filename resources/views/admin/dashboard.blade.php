@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stay Haven Admin Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('user-template/css/dashboard.css') }}">
-
 </head>
 <body>
     <button class="menu-toggle"><i class="fas fa-bars"></i></button>
@@ -132,10 +130,9 @@
                 <div class="chart-container">
                     <h3>Types of Available Properties</h3>
                     <canvas id="propertyTypesChart" style="max-height: 300px;"></canvas>
-                    <!-- List of available properties by type -->
                     <div class="available-properties-list">
                         @foreach(['Apartment', 'House', 'Condo', 'Townhouse', 'Duplex', 'Studio'] as $type)
-                        
+                            <!-- Property type list remains unchanged -->
                         @endforeach
                     </div>
                 </div>
@@ -147,10 +144,9 @@
                         @foreach($pendingProperties as $property)
                             <div class="property">
                                 <span>{{ $property->title }} - {{ $property->landlord->name ?? 'Unknown Landlord' }}</span>
-                                <form action="{{ route('admin.properties.approve', $property->id) }}" method="POST" class="approve-form" style="display: inline;">
-                                    @csrf
-                                    <button type="submit" class="approve-btn">Approve</button>
-                                </form>
+                                <a href="{{ route('admin.properties') }}" class="approve-btn">
+                                    <i class="fas fa-home"></i> Go to Properties
+                                </a>
                             </div>
                         @endforeach
                     @endif
@@ -165,7 +161,7 @@
                 @else
                     @foreach($recentRentedProperties as $property)
                         <div class="booking">
-                            <span> {{ $property->title }} - {{ $property->price }} - {{ $property->property_type }}</span>
+                            <span>{{ $property->title }} - {{ $property->price }} - {{ $property->property_type }}</span>
                             <span>{{ $property->latest_payment ? $property->latest_payment->start_date->format('Y-m-d') : 'N/A' }}</span>
                         </div>
                     @endforeach
@@ -181,7 +177,6 @@
             <div class="modal-content">
                 <span class="close">×</span>
                 <h2>Edit Profile</h2>
-                <!-- Note: Ensure the route in routes/web.php is set to POST: Route::post('/admin/profile-update', [DashboardController::class, 'updateProfile'])->name('admin.profile.update'); -->
                 <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <label for="profile_picture">Profile Picture</label>
@@ -201,244 +196,221 @@
         </div>
     </div>
     <script>
-    // Pass PHP data to JavaScript
-    const rentedPerMonth = @json($rentedPerMonth);
-    const rentedPerWeek = @json($rentedPerWeek);
-    const propertyTypes = @json($propertyTypes);
+        // Pass PHP data to JavaScript
+        const rentedPerMonth = @json($rentedPerMonth);
+        const rentedPerWeek = @json($rentedPerWeek);
+        const propertyTypes = @json($propertyTypes);
 
-    // Toggle sidebar on mobile
-    const sidebar = document.querySelector('.sidebar');
-    const menuToggle = document.querySelector('.menu-toggle');
-    menuToggle.addEventListener('click', () => {
-        sidebar.classList.toggle('open');
-    });
-
-    // Close sidebar when clicking outside on mobile
-    document.addEventListener('click', function(event) {
-        if (window.innerWidth <= 768 && sidebar.classList.contains('open') && !sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
-            sidebar.classList.remove('open');
-        }
-    });
-
-    // Toggle user dropdown on click
-    document.querySelector('.user-trigger').addEventListener('click', function() {
-        const user = this.parentElement;
-        user.classList.toggle('active');
-        document.querySelector('.notifications').classList.remove('active');
-    });
-
-    // Toggle notification dropdown on click
-    document.querySelector('.notification-trigger').addEventListener('click', function() {
-        const notifications = this.parentElement;
-        notifications.classList.toggle('active');
-        document.querySelector('.user').classList.remove('active');
-    });
-
-    // Close dropdowns when clicking outside
-    document.addEventListener('click', function(event) {
-        const user = document.querySelector('.user');
-        const userTrigger = document.querySelector('.user-trigger');
-        const notifications = document.querySelector('.notifications');
-        const notificationTrigger = document.querySelector('.notification-trigger');
-
-        if (!userTrigger.contains(event.target) && !user.querySelector('.dropdown').contains(event.target)) {
-            user.classList.remove('active');
-        }
-        if (!notificationTrigger.contains(event.target) && !notifications.querySelector('.notification-dropdown').contains(event.target)) {
-            notifications.classList.remove('active');
-        }
-    });
-
-    // Modal handling
-    const editProfileBtn = document.getElementById('edit-profile-btn');
-    const editProfileModal = document.getElementById('edit-profile-modal');
-    const closes = document.querySelectorAll('.modal .close');
-
-    editProfileBtn.addEventListener('click', () => {
-        editProfileModal.classList.add('active');
-        document.querySelector('.user').classList.remove('active');
-    });
-
-    closes.forEach(close => {
-        close.addEventListener('click', () => {
-            editProfileModal.classList.remove('active');
+        // Toggle sidebar on mobile
+        const sidebar = document.querySelector('.sidebar');
+        const menuToggle = document.querySelector('.menu-toggle');
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
         });
-    });
 
-    // Close modals when clicking outside
-    document.addEventListener('click', function(event) {
-        if (event.target.classList.contains('modal')) {
-            editProfileModal.classList.remove('active');
-        }
-    });
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768 && sidebar.classList.contains('open') && !sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
+                sidebar.classList.remove('open');
+            }
+        });
 
-    // Profile picture preview
-    const profilePictureInput = document.getElementById('profile_picture');
-    const profilePicturePreview = document.getElementById('profile-picture-preview-img');
-    profilePictureInput.addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                profilePicturePreview.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    });
+        // Toggle user dropdown on click
+        document.querySelector('.user-trigger').addEventListener('click', function() {
+            const user = this.parentElement;
+            user.classList.toggle('active');
+            document.querySelector('.notifications').classList.remove('active');
+        });
 
-    // Rented Trends Line Chart with tab switching
-    const rentedCtx = document.getElementById('rentedChart').getContext('2d');
-    if (rentedCtx) {
-        let chart = new Chart(rentedCtx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
-                datasets: [
-                    {
-                        label: 'Rented Properties',
-                        data: [
+        // Toggle notification dropdown on click
+        document.querySelector('.notification-trigger').addEventListener('click', function() {
+            const notifications = this.parentElement;
+            notifications.classList.toggle('active');
+            document.querySelector('.user').classList.remove('active');
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            const user = document.querySelector('.user');
+            const userTrigger = document.querySelector('.user-trigger');
+            const notifications = document.querySelector('.notifications');
+            const notificationTrigger = document.querySelector('.notification-trigger');
+
+            if (!userTrigger.contains(event.target) && !user.querySelector('.dropdown').contains(event.target)) {
+                user.classList.remove('active');
+            }
+            if (!notificationTrigger.contains(event.target) && !notifications.querySelector('.notification-dropdown').contains(event.target)) {
+                notifications.classList.remove('active');
+            }
+        });
+
+        // Modal handling
+        const editProfileBtn = document.getElementById('edit-profile-btn');
+        const editProfileModal = document.getElementById('edit-profile-modal');
+        const closes = document.querySelectorAll('.modal .close');
+
+        editProfileBtn.addEventListener('click', () => {
+            editProfileModal.classList.add('active');
+            document.querySelector('.user').classList.remove('active');
+        });
+
+        closes.forEach(close => {
+            close.addEventListener('click', () => {
+                editProfileModal.classList.remove('active');
+            });
+        });
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(event) {
+            if (event.target.classList.contains('modal')) {
+                editProfileModal.classList.remove('active');
+            }
+        });
+
+        // Profile picture preview
+        const profilePictureInput = document.getElementById('profile_picture');
+        const profilePicturePreview = document.getElementById('profile-picture-preview-img');
+        profilePictureInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profilePicturePreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Rented Trends Line Chart with tab switching
+        const rentedCtx = document.getElementById('rentedChart').getContext('2d');
+        if (rentedCtx) {
+            let chart = new Chart(rentedCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+                    datasets: [
+                        {
+                            label: 'Rented Properties',
+                            data: [
+                                rentedPerMonth[1] || 0,
+                                rentedPerMonth[2] || 0,
+                                rentedPerMonth[3] || 0,
+                                rentedPerMonth[4] || 0,
+                                rentedPerMonth[5] || 0
+                            ],
+                            borderColor: '#007bff',
+                            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: Math.max(...Object.values(rentedPerMonth).filter(v => v > 0), 10) + 5,
+                            ticks: { stepSize: 5 }
+                        }
+                    },
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Tab switching logic
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.addEventListener('click', function() {
+                    const tab = this.getAttribute('data-tab');
+                    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+
+                    if (tab === 'month') {
+                        chart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
+                        chart.data.datasets[0].data = [
                             rentedPerMonth[1] || 0,
                             rentedPerMonth[2] || 0,
                             rentedPerMonth[3] || 0,
                             rentedPerMonth[4] || 0,
                             rentedPerMonth[5] || 0
-                        ],
-                        borderColor: '#007bff',
-                        backgroundColor: 'rgba(0, 123, 255, 0.1)',
-                        fill: true,
-                        tension: 0.4
+                        ];
+                        chart.options.scales.y.max = Math.max(...Object.values(rentedPerMonth).filter(v => v > 0), 10) + 5;
+                    } else if (tab === 'week') {
+                        chart.data.labels = ['May 1-4', 'May 5-11', 'May 12-18'];
+                        chart.data.datasets[0].data = rentedPerWeek;
+                        chart.options.scales.y.max = Math.max(...rentedPerWeek.filter(v => v > 0), 5) + 5;
                     }
-                ]
-            },
-            options: {
-                responsive: true,
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: Math.max(...Object.values(rentedPerMonth).filter(v => v > 0), 10) + 5,
-                        ticks: { stepSize: 5 }
-                    }
-                },
-                plugins: {
-                    legend: { position: 'bottom' }
-                }
-            }
-        });
-
-        // Tab switching logic
-        document.querySelectorAll('.tab-button').forEach(button => {
-            button.addEventListener('click', function() {
-                const tab = this.getAttribute('data-tab');
-                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-
-                if (tab === 'month') {
-                    chart.data.labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May'];
-                    chart.data.datasets[0].data = [
-                        rentedPerMonth[1] || 0,
-                        rentedPerMonth[2] || 0,
-                        rentedPerMonth[3] || 0,
-                        rentedPerMonth[4] || 0,
-                        rentedPerMonth[5] || 0
-                    ];
-                    chart.options.scales.y.max = Math.max(...Object.values(rentedPerMonth).filter(v => v > 0), 10) + 5;
-                } else if (tab === 'week') {
-                    chart.data.labels = ['May 1-4', 'May 5-11', 'May 12-18'];
-                    chart.data.datasets[0].data = rentedPerWeek;
-                    chart.options.scales.y.max = Math.max(...rentedPerWeek.filter(v => v > 0), 5) + 5;
-                }
-                chart.update();
+                    chart.update();
+                });
             });
-        });
-    } else {
-        console.error('Rented Chart canvas not found');
-    }
+        } else {
+            console.error('Rented Chart canvas not found');
+        }
 
-    // Types of Properties Pie Chart
-    document.addEventListener('DOMContentLoaded', function() {
-        const propertyTypesCtx = document.getElementById('propertyTypesChart')?.getContext('2d');
-        if (propertyTypesCtx) {
-            // Filter out property types with zero count to avoid empty chart segments
-            const filteredPropertyTypes = Object.fromEntries(
-                Object.entries(propertyTypes).filter(([_, value]) => value > 0)
-            );
-            const labels = Object.keys(filteredPropertyTypes).length > 0 ? Object.keys(filteredPropertyTypes) : ['No Data'];
-            const data = Object.keys(filteredPropertyTypes).length > 0 ? Object.values(filteredPropertyTypes) : [1];
+        // Types of Properties Pie Chart
+        document.addEventListener('DOMContentLoaded', function() {
+            const propertyTypesCtx = document.getElementById('propertyTypesChart')?.getContext('2d');
+            if (propertyTypesCtx) {
+                const filteredPropertyTypes = Object.fromEntries(
+                    Object.entries(propertyTypes).filter(([_, value]) => value > 0)
+                );
+                const labels = Object.keys(filteredPropertyTypes).length > 0 ? Object.keys(filteredPropertyTypes) : ['No Data'];
+                const data = Object.keys(filteredPropertyTypes).length > 0 ? Object.values(filteredPropertyTypes) : [1];
 
-            new Chart(propertyTypesCtx, {
-                type: 'pie',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        data: data,
-                        backgroundColor: labels.map((label) => {
-                            const colors = {
-                                'Apartment': '#FF6384', // Red-Pink
-                                'House': '#36A2EB',     // Blue
-                                'Condo': '#FFCE56',     // Yellow
-                                'Townhouse': '#4BC0C0', // Cyan
-                                'Duplex': '#9966FF',    // Purple
-                                'Studio': '#FF9F40',    // Orange
-                                'No Data': '#D3D3D3'    // Grey for placeholder
-                            };
-                            return colors[label] || '#D3D3D3'; // Fallback color
-                        }),
-                        borderWidth: 1,
-                        borderColor: '#fff'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 15
-                            }
-                        },
-                        tooltip: {
-                            enabled: Object.keys(filteredPropertyTypes).length > 0,
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                    return `${label}: ${value} (${percentage}%)`;
+                new Chart(propertyTypesCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: labels.map((label) => {
+                                const colors = {
+                                    'Apartment': '#FF6384',
+                                    'House': '#36A2EB',
+                                    'Condo': '#FFCE56',
+                                    'Townhouse': '#4BC0C0',
+                                    'Duplex': '#9966FF',
+                                    'Studio': '#FF9F40',
+                                    'No Data': '#D3D3D3'
+                                };
+                                return colors[label] || '#D3D3D3';
+                            }),
+                            borderWidth: 1,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15
+                                }
+                            },
+                            tooltip: {
+                                enabled: Object.keys(filteredPropertyTypes).length > 0,
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.raw || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                        return `${label}: ${value} (${percentage}%)`;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            });
-            console.log('Property Types Chart initialized successfully');
-        } else {
-            console.error('Property Types Chart canvas not found');
-        }
-    });
-</script>
-
-<script>
-    document.querySelectorAll('.approve-form').forEach(form => {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'Do you want to approve this property?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#28a745',
-                cancelButtonColor: '#dc3545',
-                confirmButtonText: 'Yes, approve it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
-            });
+                });
+                console.log('Property Types Chart initialized successfully');
+            } else {
+                console.error('Property Types Chart canvas not found');
+            }
         });
-    });
-</script>
+    </script>
 </body>
 </html>

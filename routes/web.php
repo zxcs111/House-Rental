@@ -142,12 +142,13 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::post('/profile-update', [DashboardController::class, 'updateProfile'])->name('profile.update');
-    Route::post('/properties/{id}/approve', [DashboardController::class, 'approveProperty'])->name('properties.approve');
     Route::post('/notifications/mark-as-read', [DashboardController::class, 'markNotificationsAsRead'])->name('notifications.markAsRead');
 
-    Route::get('/properties', [PropertyController::class, 'property'])->name('properties');
+        Route::get('/properties', [PropertyController::class, 'property'])->name('properties');
+    Route::post('/properties/{property}/approve', [PropertyController::class, 'approve'])->name('properties.approve');
+    Route::post('/properties/{property}/disapprove', [PropertyController::class, 'disapprove'])->name('properties.disapprove');
+    Route::get('/properties/{property}/details', [PropertyController::class, 'details'])->name('properties.details');
     
-
     Route::get('/bookings', [BookingController::class, 'booking'])->name('bookings');
 
     Route::get('/total-users', [TotalUserController::class, 'totaluser'])->name('total-users');
