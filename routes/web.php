@@ -1,15 +1,15 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
+
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ProfileController;
+
 use App\Http\Controllers\HouseController;
 use App\Http\Controllers\PaymentController;
-
 use App\Http\Controllers\ReviewController;
-
-use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\MessageController;
-use Illuminate\Support\Facades\Broadcast;
 
 use App\Http\Controllers\tenant\AboutController;
 use App\Http\Controllers\tenant\ServicesController;
@@ -22,7 +22,6 @@ use App\Http\Controllers\Landlord\FinancialReportingController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PropertyController;
-use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\TotalUserController;
 use App\Http\Controllers\Admin\ReportsController;
 
@@ -112,7 +111,6 @@ Route::group(['middleware' => 'auth'], function() {
         ->name('messages.mark-conversation-read');
         
 });
-
 
 // Financial Reporting Routes
 Route::group(['prefix' => 'landlord', 'middleware' => ['auth']], function() {
