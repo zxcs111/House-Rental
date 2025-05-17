@@ -9,6 +9,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\DB; // Added this import to resolve the "Undefined type 'DB'" error
 
 class LoginController extends Controller
 {
@@ -146,5 +149,106 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('home')->with('success', 'Logged out successfully!');
+    }
+
+    public function showForgotPasswordForm()
+    {
+        return view('auth.password');
+    }
+
+    public function sendResetLinkEmail(Request $request)
+    {
+        $request->validate([
+            'email' => [
+                'required',
+                'email',
+                'regex:/^[a-zA-Z][a-zA-Z0-9.]*@gmail\.com$/',
+                'exists:users,email'
+            ],
+        ], [
+            'email.required' => 'Email is required.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.regex' => 'Email must be a valid Gmail address containing only letters, numbers, and dots (e.g., example@gmail.com).',
+            'email.exists' => 'This email address is not registered.',
+        ]);
+
+        // Generate a password reset token
+        $token = Str::random(60);
+
+        // Store the token in the password_resets table
+        DB::table('password_resets')->updateOrInsert(
+            ['email' => $request->email],
+            [
+                'email' => $request->email,
+                'token' => Hash::make($token),
+                'created_at' => now()
+            ]
+        );
+
+        // Send the password reset link
+        $resetLink = route('password.reset.form', ['token' => $token, 'email' => $request->email]);
+        Mail::raw("Click the link to reset your password: $resetLink", function ($message) use ($request) {
+            $message->to($request->email)
+                    ->subject('Stay Haven Password Reset')
+                    ->from(config('mail.from.address'), config('mail.from.name'));
+        });
+
+        return back()->with('success', 'A password reset link has been sent to your email.');
+    }
+
+    public function showResetPasswordForm(Request $request, $token)
+    {
+        return view('auth.reset-password', [
+            'token' => $token,
+            'email' => $request->query('email')
+        ]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'email' => [
+                'required',
+                'email',
+                'regex:/^[a-zA-Z][a-zA-Z0-9.]*@gmail\.com$/',
+                'exists:users,email'
+            ],
+            'password' => 'required|string|min:8|confirmed',
+            'token' => 'required'
+        ], [
+            'email.required' => 'Email is required.',
+            'email.email' => 'Please enter a valid email address.',
+            'email.regex' => 'Email must be a valid Gmail address containing only letters, numbers, and dots (e.g., example@gmail.com).',
+            'email.exists' => 'This email address is not registered.',
+            'password.required' => 'Password is required.',
+            'password.string' => 'Password must be a string.',
+            'password.min' => 'Password must be at least 8 characters.',
+            'password.confirmed' => 'Passwords do not match.',
+            'token.required' => 'Invalid reset token.',
+        ]);
+
+        $reset = DB::table('password_resets')
+                    ->where('email', $request->email)
+                    ->first();
+
+        if (!$reset || !Hash::check($request->token, $reset->token)) {
+            return back()->withErrors(['email' => 'Invalid or expired reset token.']);
+        }
+
+        $user = User::where('email', $request->email)->first();
+        $user->update([
+            'password' => Hash::make($request->password)
+        ]);
+
+        // Delete the reset token
+        DB::table('password_resets')->where('email', $request->email)->delete();
+
+        // Trigger the password reset event
+        event(new PasswordReset($user));
+
+        // Log the user in
+        Auth::login($user);
+
+        return redirect()->route('home')->with('success', 'Password reset successfully! Welcome back.');
     }
 }

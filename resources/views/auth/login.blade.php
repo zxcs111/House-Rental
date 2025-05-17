@@ -27,7 +27,7 @@
                 <input type="email" name="email" placeholder="Enter your Gmail address" value="{{ old('email') }}" required oninput="validateGmail(this)">
                 <span id="email-error" class="error-message"></span>
                 <input type="password" name="password" placeholder="Enter your password" required>
-                <a href="#">Forgot password?</a>
+                <a href="{{ route('password.request') }}">Forgot password?</a>
                 <input type="submit" class="button" value="Login">
             </form>
             <div class="signup">
@@ -70,7 +70,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="{{ asset('user-template/js/login.js') }}"></script>
 
-
 <script id="auth-data" type="application/json">
     {
         "success": @json(Session::get('success')),
@@ -78,7 +77,5 @@
         "errors": @json($errors->all())
     }
 </script>
-
-
 </body>
 </html>

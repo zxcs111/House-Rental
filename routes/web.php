@@ -29,7 +29,6 @@ use App\Http\Controllers\Admin\ReportsController;
 Broadcast::routes(['middleware' => ['auth']]);
 
 
-// Home route
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'index'])->name('home');
 
 Route::get('/about', [AboutController::class, 'index'])->name('about');
@@ -38,7 +37,6 @@ Route::get('/services', [ServicesController::class, 'index'])->name('services');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact/send', [ContactController::class, 'sendMessage'])->name('contact.send');
 
-// House routes
 Route::get('/houses', [HouseController::class, 'index'])->name('houses');
 Route::get('/houses/{id}', [HouseController::class, 'show'])->name('house-detail');
 Route::get('/messages/unread-count', [MessageController::class, 'unreadCount'])->name('messages.unread-count');
@@ -46,14 +44,12 @@ Route::get('/messages/unread-count', [MessageController::class, 'unreadCount'])-
 Route::post('/properties/{property}/reviews', [ReviewController::class, 'store'])->name('reviews.store')->middleware('auth');
 
 
-// Payment routes (authenticated only)
 Route::middleware(['auth'])->group(function () {
     Route::get('/property/{id}/payment', [PaymentController::class, 'showPaymentForm'])->name('payment.form');
     Route::post('/property/{id}/payment', [PaymentController::class, 'processPayment'])->name('payment.process');
     Route::get('/payment/success/{id}', [PaymentController::class, 'paymentSuccess'])->name('payment.success');
 });
 
-// Authentication routes
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/register', [LoginController::class, 'register'])->name('register');
@@ -61,14 +57,18 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 Route::get('/verify-email', [LoginController::class, 'showVerifyEmailForm'])->name('verify.email.form');
 Route::post('/verify-email', [LoginController::class, 'verifyEmail'])->name('verify.email');
 
-// Profile routes (authenticated only)
+Route::get('/password/reset', [LoginController::class, 'showForgotPasswordForm'])->name('password.request');
+Route::post('/password/email', [LoginController::class, 'sendResetLinkEmail'])->name('password.email');
+Route::get('/password/reset/{token}', [LoginController::class, 'showResetPasswordForm'])->name('password.reset.form');
+Route::post('/password/reset', [LoginController::class, 'resetPassword'])->name('password.reset');
+
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
     Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::delete('/tenant/payments/{id}/hide', [ProfileController::class, 'hidePayment'])->name('tenant.payment.hide');
 });
 
-// Property listing routes (authenticated only)
 Route::middleware('auth')->group(function () {
     Route::get('/property/listing', [PropertyListingController::class, 'index'])->name('property.listing');
     Route::post('/property/store', [PropertyListingController::class, 'store'])->name('property.store');
@@ -77,12 +77,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/property/delete/{id}', [PropertyListingController::class, 'destroy'])->name('property.delete');
 });
 
-// Cancel payment/rent request
 Route::post('/payments/{payment}/cancel', [PaymentController::class, 'requestCancellation'])
     ->name('payment.cancel')
     ->middleware('auth');
 
-// Landlord routes
 Route::middleware('auth')->group(function () {
     Route::get('/cancellation-requests', [CancellationController::class, 'cancellationRequests'])
         ->name('landlord.cancellation-requests');
@@ -105,14 +103,12 @@ Route::group(['middleware' => 'auth'], function() {
 
     Route::get('/messages/new/{user}', [MessageController::class, 'getNewMessages'])->name('messages.new');
 
-    // Mark as read routes
     Route::post('/messages/mark-as-read', [MessageController::class, 'markAsRead'])->name('messages.mark-as-read');
     Route::post('/messages/mark-conversation-read/{user}', [MessageController::class, 'markConversationAsRead'])
         ->name('messages.mark-conversation-read');
         
 });
 
-// Financial Reporting Routes
 Route::group(['prefix' => 'landlord', 'middleware' => ['auth']], function() {
     Route::get('/financial-reporting', [FinancialReportingController::class, 'index'])
         ->name('landlord.financial-reporting');
