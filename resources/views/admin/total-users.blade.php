@@ -16,7 +16,6 @@
         <div class="logo">Stay Haven</div>
         <a href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
         <a href="{{ route('admin.properties') }}"><i class="fas fa-home"></i><span>Properties</span></a>
-        <a href="{{ route('admin.bookings') }}"><i class="fas fa-calendar-check"></i><span>Booked Property</span></a>
         <a href="{{ route('admin.total-users') }}"class="active"><i class="fas fa-users"></i><span>Users</span></a>
         <a href="{{ route('admin.reports') }}"><i class="fas fa-file-alt"></i><span>Reports</span></a>
     </div>

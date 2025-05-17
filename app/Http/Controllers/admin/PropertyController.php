@@ -81,8 +81,7 @@ class PropertyController extends Controller
             ], 400);
         }
 
-        $property->update(['status' => Property::STATUS_PENDING]); // Or delete if disapproval means rejection
-        // Alternatively: $property->delete();
+        $property->update(['status' => Property::STATUS_DISAPPROVED]);
 
         // Create notification for the landlord
         Notification::create([
@@ -101,5 +100,38 @@ class PropertyController extends Controller
         ]);
     }
 
+    public function details(Property $property)
+    {
+        if (!Auth::guard('admin')->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access.'
+            ], 401);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $property->id,
+                'title' => $property->title,
+                'description' => $property->description,
+                'landlord' => $property->landlord ? ['name' => $property->landlord->name] : null,
+                'price' => $property->price,
+                'city' => $property->city,
+                'state' => $property->state,
+                'zip_code' => $property->zip_code,
+                'status' => $property->status,
+                'status_label' => Property::getStatuses()[$property->status],
+                'property_type' => $property->property_type,
+                'bedrooms' => $property->bedrooms,
+                'bathrooms' => $property->bathrooms,
+                'square_feet' => $property->square_feet,
+                'available_from' => $property->available_from ? $property->available_from->format('Y-m-d') : null,
+                'amenities' => $property->amenities,
+                'main_image_url' => $property->main_image_url,
+                'gallery_images_urls' => $property->gallery_images_urls,
+            ]
+        ]);
+    }
 
 }

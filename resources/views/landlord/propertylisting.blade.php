@@ -28,6 +28,14 @@
     <!-- Additional CSS for the property listing -->
     <style>
     
+    .badge-disapproved {
+    background-color: #dc3545; /* Red background for disapproved */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.9em;
+}
+
   </style>
   </head>
   <body>
@@ -179,18 +187,22 @@
                                                 <span class="badge badge-rented">Rented</span>
                                             @elseif($property->status === 'maintenance')
                                                 <span class="badge badge-maintenance">Under Maintenance</span>
+                                            @elseif($property->status === 'disapproved')
+                                                <span class="badge badge-disapproved">Disapproved</span>
                                             @endif
                                         </td>
                                         <td>
                                             <div class="btn-group" role="group">
-                                                <button class="btn btn-sm btn-primary edit-property mr-2" 
-                                                        data-toggle="modal" 
-                                                        data-target="#createPropertyModal"
-                                                        data-edit="true"
-                                                        data-id="{{ $property->id }}"
-                                                        title="Edit">
-                                                    <i class="fas fa-edit"></i>
-                                                </button>
+                                                @if($property->status !== 'disapproved')
+                                                    <button class="btn btn-sm btn-primary edit-property mr-2" 
+                                                            data-toggle="modal" 
+                                                            data-target="#createPropertyModal"
+                                                            data-edit="true"
+                                                            data-id="{{ $property->id }}"
+                                                            title="Edit">
+                                                        <i class="fas fa-edit"></i>
+                                                    </button>
+                                                @endif
                                                 @if($property->status !== 'rented' && $property->status !== 'maintenance')
                                                     <button class="btn btn-sm btn-danger delete-property" 
                                                             data-id="{{ $property->id }}"
