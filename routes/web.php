@@ -150,7 +150,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/transactions', [TransactionController::class, 'transactions'])->name('transactions');
 
+
     Route::get('/reports', [ReportsController::class, 'reports'])->name('reports');
     Route::get('/reports/{id}', [ReportsController::class, 'show'])->name('report-detail');
     Route::get('/reports/create', [ReportsController::class, 'create'])->name('create-report');
+
 });
