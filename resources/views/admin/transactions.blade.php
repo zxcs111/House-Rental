@@ -155,7 +155,6 @@
         </div>
     </div>
 
-    <!-- Rest of your HTML (modal, scripts) remains unchanged -->
     <!-- Edit Profile Modal -->
     <div id="edit-profile-modal" class="modal">
         <div class="modal-content">

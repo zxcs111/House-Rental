@@ -86,69 +86,35 @@
                 </div>
             </div>
         </div>
+    </div>
 
-        <!-- Analytics Chart Section -->
-        <div class="analytics-section">
-            <h2>User Registration Analytics</h2>
-            <canvas id="userRegistrationsChart" width="400" height="200"></canvas>
+    <div id="edit-profile-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2>Edit Profile</h2>
+            <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <label for="profile_picture">Profile Picture</label>
+                <div class="profile-picture-preview">
+                    <img id="profile-picture-preview-img" src="{{ Auth::guard('admin')->user()->profile_picture_url }}" alt="Profile Preview">
+                </div>
+                <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" value="{{ Auth::guard('admin')->user()->name }}" required>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" value="{{ Auth::guard('admin')->user()->email }}" required>
+                <label for="password">New Password (optional)</label>
+                <input type="password" id="password" name="password">
+                <button type="submit">Save Changes</button>
+            </form>
         </div>
     </div>
 
     <!-- Include Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const ctx = document.getElementById('userRegistrationsChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: @json($chartLabels), // e.g., ['2024-01', '2024-02', ...]
-                datasets: [{
-                    label: 'User Registrations',
-                    data: @json($chartData), // e.g., [10, 15, ...]
-                    backgroundColor: '#4e73df', // Blue for bars
-                    borderColor: '#4e73df',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        title: {
-                            display: true,
-                            text: 'Number of Users',
-                            color: '#333'
-                        },
-                        ticks: {
-                            color: '#333'
-                        },
-                        grid: {
-                            color: '#e0e0e0'
-                        }
-                    },
-                    x: {
-                        title: {
- display: true,
-                            text: 'Month',
-                            color: '#333'
-                        },
-                        ticks: {
-                            color: '#333'
-                        },
-                        grid: {
-                            color: '#e0e0e0'
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        labels: {
-                            color: '#333'
-                        }
-                    }
-                }
-            }
-        });
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ asset('user-template/js/dashboard.js') }}"></script>
+
+   
 </body>
 </html>
