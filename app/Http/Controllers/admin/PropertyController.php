@@ -33,7 +33,7 @@ class PropertyController extends Controller
                 });
             }
 
-            $properties = $query->paginate(8);
+            $properties = $query->paginate(10);
 
             $notifications = Notification::where('admin_id', Auth::guard('admin')->id())
                 ->whereNull('read_at')

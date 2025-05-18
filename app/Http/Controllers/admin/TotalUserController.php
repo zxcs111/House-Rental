@@ -27,7 +27,7 @@ class TotalUserController extends Controller
                   ->orWhere('email', 'like', "%{$search}%");
         }
 
-        $users = $query->latest()->paginate(15);
+        $users = $query->latest()->paginate(12);
         $name = Auth::guard('admin')->user()->name;
         $notifications = Notification::where('admin_id', Auth::guard('admin')->id())
                                     ->whereNull('read_at')

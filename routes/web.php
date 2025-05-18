@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PropertyController;
 use App\Http\Controllers\Admin\TotalUserController;
 use App\Http\Controllers\Admin\ReportsController;
+use App\Http\Controllers\Admin\TransactionController;
 
 
 Broadcast::routes(['middleware' => ['auth']]);
@@ -122,7 +123,6 @@ Route::get('/payments/{payment}/receipt', [PaymentController::class, 'receipt'])
     ->middleware('auth')
     ->name('payments.receipt');
 
-// Admin routes
 Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.submit');
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
@@ -134,6 +134,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 });
 
 Route::prefix('admin')->name('admin.')->group(function () {
+    
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::post('/profile-update', [DashboardController::class, 'updateProfile'])->name('profile.update');
     Route::post('/notifications/mark-as-read', [DashboardController::class, 'markNotificationsAsRead'])->name('notifications.markAsRead');
@@ -146,6 +147,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/total-users/{id}', [TotalUserController::class, 'show'])->name('user-detail');
     Route::get('/total-users/create', [TotalUserController::class, 'create'])->name('create-user');
     Route::post('/total-users/store', [TotalUserController::class, 'store'])->name('store-user');
+
+    Route::get('/transactions', [TransactionController::class, 'transactions'])->name('transactions');
 
     Route::get('/reports', [ReportsController::class, 'reports'])->name('reports');
     Route::get('/reports/{id}', [ReportsController::class, 'show'])->name('report-detail');

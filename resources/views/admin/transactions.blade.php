@@ -3,27 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Properties</title>
+    <title>Stay Haven - Admin Transactions</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('user-template/css/dashboard.css') }}">
-    <link rel="stylesheet" href="{{ asset('user-template/css/properties.css') }}">
+    <link rel="stylesheet" href="{{ asset('user-template/css/transactions.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
 </head>
 <body>
     <button class="menu-toggle"><i class="fas fa-bars"></i></button>
     <div class="sidebar">
         <div class="logo">Stay Haven</div>
         <a href="{{ route('admin.dashboard') }}"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a>
-        <a href="{{ route('admin.properties') }}" class="active"><i class="fas fa-home"></i><span>Properties</span></a>
+        <a href="{{ route('admin.properties') }}"><i class="fas fa-home"></i><span>Properties</span></a>
         <a href="{{ route('admin.total-users') }}"><i class="fas fa-users"></i><span>Users</span></a>
-        <a href="{{ route('admin.transactions') }}"><i class="fas fa-money-bill-wave"></i><span>Transactions</span></a>
+        <a href="{{ route('admin.transactions') }}" class="active"><i class="fas fa-money-bill-wave"></i><span>Transactions</span></a>
         <a href="{{ route('admin.reports') }}"><i class="fas fa-file-alt"></i><span>Reports</span></a>
     </div>
 
     <div class="content">
         <div class="header">
-            <h1>Welcome, Admin {{ $name }} to the Properties Page</h1>
+            <h1>Welcome, Admin {{ $name }} to the Transactions Page</h1>
             <div class="header-right">
                 <div class="notifications">
                     <div class="notification-trigger">
@@ -88,61 +90,47 @@
                 </div>
             </div>
         </div>
-
+        <!-- Header and other sections remain unchanged -->
         <div class="main-content">
             <div class="search-container">
-                <form action="{{ route('admin.properties') }}" method="GET">
-                    <input type="text" name="search" placeholder="Search by title, property type, or landlord name..." value="{{ $search ?? '' }}">
+                <form action="{{ route('admin.transactions') }}" method="GET">
+                    <input type="text" name="search" placeholder="Search by transaction ID, tenant, or landlord..." value="{{ request()->query('search') ?? '' }}">
                     <button type="submit"><i class="fas fa-search"></i> Search</button>
                 </form>
             </div>
             <div class="table-container">
-                <table class="properties-table">
+                <table class="transactions-table">
                     <thead>
                         <tr>
-                            <th>Image</th>
-                            <th>Property Name</th>
-                            <th>Owner</th>
-                            <th>Price</th>
-                            <th>Location</th>
+                            <th>Transaction ID</th>
+                            <th>Tenant</th>
+                            <th>Landlord</th>
+                            <th>Amount</th>
+                            <th>Payment Method</th>
                             <th>Status</th>
+                            <th>Start Date</th>
+                            <th>Cancellation Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($properties as $property)
+                        @forelse($transactions as $transaction)
                             <tr>
+                                <td>{{ $transaction->transaction_id }}</td>
+                                <td>{{ $transaction->tenant ? $transaction->tenant->name : 'N/A' }}</td>
+                                <td>{{ $transaction->landlord ? $transaction->landlord->name : 'N/A' }}</td>
+                                <td>${{ number_format($transaction->amount, 2) }}</td>
+                                <td>{{ $transaction->payment_method }}</td>
                                 <td>
-                                    <img src="{{ $property->main_image_url }}" alt="{{ $property->title }}" class="property-image">
-                                </td>
-                                <td>{{ $property->title }}</td>
-                                <td>{{ $property->landlord->name ?? 'N/A' }}</td>
-                                <td>${{ number_format($property->price, 2) }}</td>
-                                <td>{{ $property->city }}, {{ $property->state }} {{ $property->zip_code }}</td>
-                                <td>
-                                    <span class="status status-{{ $property->status }}">
-                                        {{ App\Models\Property::getStatuses()[$property->status] }}
+                                    <span class="status status-{{ strtolower($transaction->status) }}">
+                                        {{ $transaction->status }}
                                     </span>
-                                    @if($property->isPending())
-                                        <div class="action-buttons">
-                                            <form action="{{ route('admin.properties.approve', $property->id) }}" method="POST" class="action-form" data-action="approve">
-                                                @csrf
-                                                <button type="submit" class="approve-btn">
-                                                    <i class="fas fa-check-circle"></i> Approve
-                                                </button>
-                                            </form>
-                                            <form action="{{ route('admin.properties.disapprove', $property->id) }}" method="POST" class="action-form" data-action="disapprove">
-                                                @csrf
-                                                <button type="submit" class="disapprove-btn">
-                                                    <i class="fas fa-times-circle"></i> Disapprove
-                                                </button>
-                                            </form>
-                                        </div>
-                                    @endif
                                 </td>
+                                <td>{{ $transaction->start_date->format('Y-m-d') }}</td>
+                                <td>{{ $transaction->cancellation_status ?? 'N/A' }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" style="text-align: center;">No properties found</td>
+                                <td colspan="8" style="text-align: center;">No transactions found</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -152,14 +140,14 @@
 
         <div class="pagination-container">
             <div class="pagination">
-                @if($properties->onFirstPage())
+                @if($transactions->onFirstPage())
                     <span class="disabled"><i class="fas fa-arrow-left arrow"></i></span>
                 @else
-                    <a href="{{ $properties->previousPageUrl() }}"><i class="fas fa-arrow-left arrow"></i></a>
+                    <a href="{{ $transactions->previousPageUrl() }}"><i class="fas fa-arrow-left arrow"></i></a>
                 @endif
 
-                @if($properties->hasMorePages())
-                    <a href="{{ $properties->nextPageUrl() }}"><i class="fas fa-arrow-right arrow"></i></a>
+                @if($transactions->hasMorePages())
+                    <a href="{{ $transactions->nextPageUrl() }}"><i class="fas fa-arrow-right arrow"></i></a>
                 @else
                     <span class="disabled"><i class="fas fa-arrow-right arrow"></i></span>
                 @endif
@@ -167,6 +155,7 @@
         </div>
     </div>
 
+    <!-- Rest of your HTML (modal, scripts) remains unchanged -->
     <!-- Edit Profile Modal -->
     <div id="edit-profile-modal" class="modal">
         <div class="modal-content">
@@ -193,6 +182,16 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{{ asset('user-template/js/properties.js') }}"></script>
-    
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#transactionsTable').DataTable({
+                "paging": false,
+                "searching": false,
+                "info": false
+            });
+        });
+    </script>
 </body>
 </html>

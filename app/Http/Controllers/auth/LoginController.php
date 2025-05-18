@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
-use Illuminate\Support\Facades\DB; // Added this import to resolve the "Undefined type 'DB'" error
+use Illuminate\Support\Facades\DB; 
 
 class LoginController extends Controller
 {
@@ -89,7 +89,7 @@ class LoginController extends Controller
         }
 
         try {
-            $verificationCode = rand(1000, 999999); // 4 to 6-digit code
+            $verificationCode = rand(1000, 999999); 
 
             $user = User::create([
                 'name' => $request->name,
@@ -172,10 +172,8 @@ class LoginController extends Controller
             'email.exists' => 'This email address is not registered.',
         ]);
 
-        // Generate a password reset token
         $token = Str::random(60);
 
-        // Store the token in the password_resets table
         DB::table('password_resets')->updateOrInsert(
             ['email' => $request->email],
             [
@@ -185,7 +183,6 @@ class LoginController extends Controller
             ]
         );
 
-        // Send the password reset link
         $resetLink = route('password.reset.form', ['token' => $token, 'email' => $request->email]);
         Mail::raw("Click the link to reset your password: $resetLink", function ($message) use ($request) {
             $message->to($request->email)
@@ -240,13 +237,10 @@ class LoginController extends Controller
             'password' => Hash::make($request->password)
         ]);
 
-        // Delete the reset token
         DB::table('password_resets')->where('email', $request->email)->delete();
 
-        // Trigger the password reset event
         event(new PasswordReset($user));
 
-        // Log the user in
         Auth::login($user);
 
         return redirect()->route('home')->with('success', 'Password reset successfully! Welcome back.');

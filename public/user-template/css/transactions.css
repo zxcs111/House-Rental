@@ -1,4 +1,5 @@
-.table-container {
+/* Table Container and Styles */
+    .table-container {
         width: 100%;
         overflow-x: auto;
         margin: 20px 0;
@@ -27,25 +28,25 @@
         background: #9ca3af;
     }
 
-    /* Properties Table Styles (Applied from Transactions) */
-    .properties-table {
+    /* Transactions Table Styles */
+    .transactions-table {
         width: 100%;
-        min-width: 900px;
+        min-width: 1000px;
         border-collapse: separate;
         border-spacing: 0;
         background: #ffffff;
         font-family: 'Poppins', sans-serif;
     }
 
-    .properties-table th,
-    .properties-table td {
+    .transactions-table th,
+    .transactions-table td {
         padding: 16px 20px;
         text-align: left;
         border-bottom: 1px solid #e5e7eb;
         vertical-align: middle;
     }
 
-    .properties-table th {
+    .transactions-table th {
         background: #f3f4f6;
         font-weight: 600;
         color: #1f2937;
@@ -55,42 +56,18 @@
         z-index: 1;
     }
 
-    .properties-table tr {
+    .transactions-table tr {
         transition: background-color 0.2s ease;
     }
 
-    .properties-table tr:hover {
+    .transactions-table tr:hover {
         background: #f9fafb;
     }
 
-    .properties-table tr:nth-child(even) {
+    .transactions-table tr:nth-child(even) {
         background: #f9fafb;
     }
 
-    .properties-table td {
-        color: #374151;
-        font-size: 14px;
-    }
-
-    .properties-table td:first-child,
-    .properties-table th:first-child {
-        padding-left: 24px;
-    }
-
-    .properties-table td:last-child,
-    .properties-table th:last-child {
-        padding-right: 24px;
-    }
-
-    /* Property Image */
-    .property-image {
-        width: 80px;
-        height: 60px;
-        object-fit: cover;
-        border-radius: 4px;
-    }
-
-    /* Status Styles */
     .status {
         padding: 6px 12px;
         border-radius: 16px;
@@ -102,61 +79,76 @@
         min-width: 80px;
     }
 
+    .status-completed {
+        background: #10b981;
+    }
+
     .status-pending {
-        background: #ffa500;
+        background: #f59e0b;
     }
 
-    .status-available {
-        background: #28a745;
+    .status-cancelled {
+        background: #ef4444;
     }
 
-    .status-rented {
-        background: #dc3545;
+    .transactions-table td {
+        color: #374151;
+        font-size: 14px;
     }
 
-    .status-maintenance {
-        background: #6c757d;
+    .transactions-table td:first-child,
+    .transactions-table th:first-child {
+        padding-left: 24px;
     }
 
-    .status-disapproved {
-        background: #6c757d;
+    .transactions-table td:last-child,
+    .transactions-table th:last-child {
+        padding-right: 24px;
     }
 
-    /* Action Buttons */
-    .action-buttons {
-        margin-top: 10px;
-        display: flex;
-        gap: 10px;
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+        .transactions-table th,
+        .transactions-table td {
+            padding: 12px 16px;
+            font-size: 12px;
+        }
+
+        .transactions-table th {
+            font-size: 11px;
+        }
+
+        .status {
+            padding: 4px 10px;
+            min-width: 70px;
+        }
+
+        .table-container {
+            margin: 15px 0;
+            padding-bottom: 10px;
+        }
     }
 
-    .approve-btn,
-    .disapprove-btn {
-        padding: 6px 12px;
-        border: none;
-        cursor: pointer;
-        font-size: 12px;
-        color: #fff;
-        transition: background 0.2s;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        border-radius: 4px;
-    }
+    @media (max-width: 480px) {
+        .transactions-table th,
+        .transactions-table td {
+            padding: 10px 12px;
+            font-size: 11px;
+        }
 
-    .approve-btn {
-        background: #28a745;
-    }
+        .transactions-table th {
+            font-size: 10px;
+        }
 
-    .approve-btn:hover {
-        background: #218838;
-    }
+        .status {
+            padding: 3px 8px;
+            min-width: 60px;
+            font-size: 11px;
+        }
 
-    .disapprove-btn {
-        background: #dc3545;
-    }
-
-    .disapprove-btn:hover {
-        background: #c82333;
+        .search-container input[type="text"] {
+            width: 150px;
+        }
     }
 
     /* Search Container */
@@ -427,58 +419,6 @@
 
     /* Responsive Adjustments */
     @media (max-width: 768px) {
-        .properties-table th,
-        .properties-table td {
-            padding: 12px 16px;
-            font-size: 12px;
-        }
-
-        .properties-table th {
-            font-size: 11px;
-        }
-
-        .status {
-            padding: 4px 10px;
-            min-width: 70px;
-        }
-
-        .property-image {
-            width: 60px;
-            height: 45px;
-        }
-
-        .action-buttons {
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .approve-btn,
-        .disapprove-btn {
-            width: 100%;
-            text-align: center;
-            justify-content: center;
-        }
-
-        .search-container input[type="text"] {
-            width: 200px;
-        }
-
-        .pagination-container {
-            justify-content: center;
-            padding: 15px;
-        }
-
-        .pagination a,
-        .pagination span {
-            padding: 6px 10px;
-            font-size: 12px;
-        }
-
-        .table-container {
-            margin: 15px 0;
-            padding-bottom: 10px;
-        }
-
         .user .dropdown {
             right: -10px;
             min-width: 200px;
@@ -491,41 +431,6 @@
     }
 
     @media (max-width: 480px) {
-        .properties-table th,
-        .properties-table td {
-            padding: 10px 12px;
-            font-size: 11px;
-        }
-
-        .properties-table th {
-            font-size: 10px;
-        }
-
-        .status {
-            padding: 3px 8px;
-            min-width: 60px;
-            font-size: 11px;
-        }
-
-        .property-image {
-            width: 50px;
-            height: 40px;
-        }
-
-        .search-container input[type="text"] {
-            width: 150px;
-        }
-
-        .pagination a,
-        .pagination span {
-            padding: 5px 8px;
-            font-size: 12px;
-        }
-
-        .table-container {
-            margin: 10px 0;
-        }
-
         .user .dropdown {
             right: -20px;
             min-width: 180px;
