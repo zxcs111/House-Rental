@@ -33,7 +33,6 @@
             --danger-color: #e74a3b;
         }
         /* Hero Section */
-        
         .hero-wrap .overlay {
             position: absolute;
             top: 0;
@@ -65,7 +64,7 @@
         }
         /* Main Content */
         .main-content {
-            padding: 50px 0; /* Increased padding */
+            padding: 50px 0;
         }
         .page-header {
             margin-bottom: 30px;
@@ -77,14 +76,14 @@
         /* Card Styles */
         .card {
             border: none;
-            border-radius: 15px; /* Rounded corners */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .card:hover {
-            transform: translateY(-5px); /* Slight lift effect */
-            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
         }
         .card-body {
             padding: 25px;
@@ -92,17 +91,17 @@
         .card-title {
             font-size: 1rem;
             font-weight: 500;
-            color: #fff; /* White text for contrast */
+            color: #fff;
         }
         .card-value {
             font-size: 1.8rem;
             font-weight: 600;
-            color: #fff; /* White text for contrast */
+            color: #fff;
             margin: 10px 0;
         }
         .card-text {
             font-size: 0.9rem;
-            color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
+            color: rgba(255, 255, 255, 0.8);
         }
         .card-primary {
             background: linear-gradient(135deg, var(--primary-color), #3e5fbc);
@@ -113,15 +112,29 @@
         .card-info {
             background: linear-gradient(135deg, var(--info-color), #2d9baf);
         }
+        .property-list {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            max-height: 60px;
+            overflow-y: auto;
+            margin-top: 10px;
+        }
+        .property-list ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .property-list li {
+            margin-bottom: 5px;
+        }
         /* Table Styles */
         .card1 {
             border: none;
-            border-radius: 15px; /* Rounded corners */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-
         .table {
             width: 100%;
             border-collapse: separate;
@@ -140,121 +153,106 @@
             border-bottom: 1px solid #dee2e6;
         }
         .table tbody tr:nth-child(even) {
-            background-color: #f9f9f9; /* Alternating row colors */
+            background-color: #f9f9f9;
         }
         .table tbody tr:hover {
-            background-color: #f1f1f1; /* Hover effect */
+            background-color: #f1f1f1;
         }
-
         /* Custom Search Bar Styles */
         .form {
-        --timing: 0.3s;
-        --width-of-input: 200px;
-        --height-of-input: 30px; /* Matches btn-sm height */
-        --border-height: 2px;
-        --input-bg: #fff;
-        --border-color: #4e73df; /* Primary color */
-        --border-radius: 30px;
-        --after-border-radius: 4px;
-        position: relative;
-        width: var(--width-of-input);
-        height: var(--height-of-input);
-        display: flex;
-        align-items: center;
-        padding-inline: 0.8em;
-        border-radius: var(--border-radius);
-        transition: border-radius 0.5s ease;
-        background: var(--input-bg,#fff);
-        border: 1px solid #ced4da; /* Match Bootstrap's form-control border */
-        margin-right: 0.75rem;
+            --timing: 0.3s;
+            --width-of-input: 200px;
+            --height-of-input: 30px;
+            --border-height: 2px;
+            --input-bg: #fff;
+            --border-color: #4e73df;
+            --border-radius: 30px;
+            --after-border-radius: 4px;
+            position: relative;
+            width: var(--width-of-input);
+            height: var(--height-of-input);
+            display: flex;
+            align-items: center;
+            padding-inline: 0.8em;
+            border-radius: var(--border-radius);
+            transition: border-radius 0.5s ease;
+            background: var(--input-bg,#fff);
+            border: 1px solid #ced4da;
+            margin-right: 0.75rem;
         }
-
         .form button {
-        border: none;
-        background: none;
-        color: #8b8ba7;
-        padding: 0;
-        margin-right: 0.5rem;
+            border: none;
+            background: none;
+            color: #8b8ba7;
+            padding: 0;
+            margin-right: 0.5rem;
         }
-
         .input {
-        font-size: 0.875rem; /* Match btn-sm */
-        background-color: transparent;
-        width: 100%;
-        height: 100%;
-        padding-inline: 0.5em;
-        padding-block: 0.5em;
-        border: none;
-        color: #495057; /* Match Bootstrap's text color */
+            font-size: 0.875rem;
+            background-color: transparent;
+            width: 100%;
+            height: 100%;
+            padding-inline: 0.5em;
+            padding-block: 0.5em;
+            border: none;
+            color: #495057;
         }
-
         .form:before {
-        content: "";
-        position: absolute;
-        background: var(--border-color);
-        transform: scaleX(0);
-        transform-origin: center;
-        width: 100%;
-        height: var(--border-height);
-        left: 0;
-        bottom: 0;
-        border-radius: 1px;
-        transition: transform var(--timing) ease;
+            content: "";
+            position: absolute;
+            background: var(--border-color);
+            transform: scaleX(0);
+            transform-origin: center;
+            width: 100%;
+            height: var(--border-height);
+            left: 0;
+            bottom: 0;
+            border-radius: 1px;
+            transition: transform var(--timing) ease;
         }
-
         .form:focus-within {
-        border-radius: var(--after-border-radius);
-        outline: none;
-        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25); /* Bootstrap focus shadow */
+            border-radius: var(--after-border-radius);
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
         }
-
         .input:focus {
-        outline: none;
+            outline: none;
         }
-
         .form:focus-within:before {
-        transform: scale(1);
+            transform: scale(1);
         }
-
         .reset {
-        border: none;
-        background: none;
-        opacity: 0;
-        visibility: hidden;
-        padding: 0;
-        margin-left: 0.5rem;
+            border: none;
+            background: none;
+            opacity: 0;
+            visibility: hidden;
+            padding: 0;
+            margin-left: 0.5rem;
         }
-
         .input:not(:placeholder-shown) ~ .reset {
-        opacity: 1;
-        visibility: visible;
+            opacity: 1;
+            visibility: visible;
         }
-
         .form svg {
-        width: 14px;
-        height: 14px;
+            width: 14px;
+            height: 14px;
         }
-
-        /* Make sure the dropdown matches in height */
         .btn-sm {
-        height: 30px;
-        line-height: 1;
-        padding-top: 0.25rem;
-        padding-bottom: 0.25rem;
+            height: 30px;
+            line-height: 1;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
         }
-
-        /* Align both elements vertically */
         .d-flex.align-items-center {
-        align-items: center;
+            align-items: center;
         }
-        /* Badge Styles */
         .badge {
-            display: inline-block; /* Prevent badge from affecting alignment */
+            display: inline-block;
             font-weight: 500;
             padding: 5px 10px;
             font-size: 0.9rem;
             border-radius: 20px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .badge-success {
             background-color: var(--success-color);
@@ -268,72 +266,73 @@
             background-color: var(--danger-color);
             color: #fff;
         }
-        /* Action Buttons */
         .btn-group .btn {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
         .btn-group .btn:hover {
-            transform: scale(1.05); /* Slight zoom effect */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Enhanced shadow */
+            transform: scale(1.05);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
-
-        /* Align table columns */
         .table td:nth-child(1) {
-            text-align: left; /* Date */
-            padding-left: 12px; /* Ensure consistent padding */
+            text-align: left;
+            padding-left: 12px;
         }
         .table td:nth-child(2) {
-            text-align: left; /* Property */
+            text-align: left;
             padding-left: 12px;
         }
         .table td:nth-child(3) {
-            text-align: right; /* Amount */
+            text-align: right;
             padding-right: 12px;
         }
         .table td:nth-child(4) {
-            text-align: left; /* Tenant */
-            padding-left: 12px; /* Explicit padding to align with other text columns */
+            text-align: left;
+            padding-left: 12px;
         }
         .table td:nth-child(5) {
-            text-align: left; /* Rental Period */
+            text-align: left;
             padding-left: 12px;
         }
         .table td:nth-child(6) {
-            text-align: center; /* Status */
+            text-align: left;
+            padding-left: 12px;
         }
         .table td:nth-child(7) {
-            text-align: center; /* Actions */
+            text-align: center;
         }
-
-        /* Align headers to match the content */
+        .table td:nth-child(8) {
+            text-align: center;
+        }
         .table th:nth-child(1) {
-            text-align: left; /* Date */
+            text-align: left;
             padding-left: 12px;
         }
         .table th:nth-child(2) {
-            text-align: left; /* Property */
+            text-align: left;
             padding-left: 12px;
         }
         .table th:nth-child(3) {
-            text-align: right; /* Amount */
+            text-align: right;
             padding-right: 12px;
         }
         .table th:nth-child(4) {
-            text-align: left; /* Tenant */
-            padding-left: 12px; /* Ensure header aligns with data */
+            text-align: left;
+            padding-left: 12px;
         }
         .table th:nth-child(5) {
-            text-align: left; /* Rental Period */
+            text-align: left;
             padding-left: 12px;
         }
         .table th:nth-child(6) {
-            text-align: center; /* Status */
+            text-align: left;
+            padding-left: 12px;
         }
         .table th:nth-child(7) {
-            text-align: center; /* Actions */
+            text-align: center;
         }
-
-        /* Responsive Adjustments */
+        .table th:nth-child(8) {
+            text-align: center;
+        }
         @media (max-width: 768px) {
             .card-value {
                 font-size: 1.5rem;
@@ -345,7 +344,6 @@
                 margin: 5px 0;
             }
         }
-
     </style>
 </head>
 <body>
@@ -360,14 +358,12 @@
               <ul class="navbar-nav ml-auto">
                   @auth
                       @if(Auth::user()->role === 'tenant')
-                          <!-- Tenant Menu Items -->
                           <li class="nav-item active"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                           <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
                           <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
                           <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
                           <li class="nav-item"><a href="{{ route('contact') }}" class="nav-link">Contact</a></li>
                       @elseif(Auth::user()->role === 'landlord')
-                          <!-- Landlord Menu Items -->
                           <li class="nav-item"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                           <li class="nav-item"><a href="{{ route('houses') }}" class="nav-link">Houses</a></li>
                           <li class="nav-item"><a href="{{ route('property.listing') }}" class="nav-link">Property Listing</a></li>
@@ -385,7 +381,6 @@
                               </a>
                           </li>
                       @endif
-                      <!-- Profile Dropdown (Common for both roles) -->
                       <li class="nav-item dropdown">
                           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                               @if(Auth::user()->profile_picture)
@@ -407,7 +402,6 @@
                           </div>
                       </li>
                   @else
-                      <!-- Default Menu Items (for non-logged in users) -->
                       <li class="nav-item active"><a href="{{ route('home') }}" class="nav-link">Home</a></li>
                       <li class="nav-item"><a href="{{ route('about') }}" class="nav-link">About</a></li>
                       <li class="nav-item"><a href="{{ route('services') }}" class="nav-link">Services</a></li>
@@ -418,7 +412,7 @@
               </ul>
           </div>
       </div>
-  </nav>
+    </nav>
     <!-- Hero Section -->
     <section class="hero-wrap hero-wrap-2 js-fullheight" style="background-image: url('{{ asset('user-template/images/about-landing.jpg') }}'); height: 300px;" data-stellar-background-ratio="0.5">
         <div class="overlay"></div>
@@ -439,7 +433,7 @@
     <!-- Main Content -->
     <section class="main-content">
         <div class="container">
-        <div class="row justify-content-center mb-5 pb-2">
+            <div class="row justify-content-center mb-5 pb-2">
                 <div class="col-md-12 heading-section text-center ftco-animate">
                     <span class="subheading">Financial Report</span>
                     <h2 class="mb-4">Manage Rented History Transaction</h2>
@@ -479,24 +473,22 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h5 class="card-title">Annual Sales</h5>
-                                    <h2 class="card-value">${{ number_format($annualSales, 2) }}</h2>
-                                    <p class="card-text">This year's rental income</p>
+                                    <h5 class="card-title">Total Rented Properties</h5>
+                                    <h2 class="card-value">{{ $totalRentedProperties }}</h2>
+                                    <p class="card-text">Properties currently rented</p>
                                 </div>
-                                <i class="fas fa-dollar-sign fa-3x text-white"></i>
+                                <i class="fas fa-home fa-3x text-white"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-           <!-- Transactions Table -->
-           <div class="card1">
+            <!-- Transactions Table -->
+            <div class="card1">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h4 class="mb-0">Rental History</h4>
                         <div class="d-flex align-items-center">
-                            <!-- Search Bar -->
                             <form id="searchForm" class="form mr-3" action="{{ route('landlord.financial-reporting') }}" method="GET" style="--width-of-input: 200px; --height-of-input: 30px; --border-color: #4e73df;">
                                 <button type="submit">
                                     <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
@@ -510,8 +502,6 @@
                                     </svg>
                                 </button>
                             </form>
-                            
-                            <!-- Filter Button -->
                             <div class="dropdown">
                                 <button class="btn btn-outline-primary btn-sm dropdown-toggle" type="button" id="filterDropdown" data-toggle="dropdown" 
                                         style="border-radius: 30px; border-color: #ced4da; height: 30px; line-height: 1;">
@@ -532,72 +522,70 @@
                         </div>
                     </div>
                     <div class="table-responsive">
-                    <table class="table" id="transactionsTable">
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Property</th>
-                        <th>Amount</th>
-                        <th>Tenant</th>
-                        <th>Rental Period</th>
-                        <th>Next Payment</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($transactions as $transaction)
-                    <tr data-status="{{ $transaction->status === 'completed' ? 'rented' : $transaction->status }}">
-                        <td>{{ $transaction->created_at->format('M d, Y') }}</td>
-                        <td>{{ $transaction->property->title ?? 'N/A' }}</td>
-                        <td>${{ number_format($transaction->amount, 2) }}</td>
-                        <td>{{ $transaction->tenant->name ?? 'N/A' }}</td>
-                        <td>
-                            {{ $transaction->start_date->format('M d, Y') }}
-                        </td>
-                        <td>
-                            @if($transaction->status === 'completed' || $transaction->status === 'rented')
-                                @php
-                                    $nextPaymentDate = \Carbon\Carbon::parse($transaction->start_date)->addMonth();
-                                    $nextPaymentText = $nextPaymentDate->format('M d, Y');
-                                @endphp
-                                {{ $nextPaymentText }}
-                            @else
-                                N/A
-                            @endif
-                        </td>
-                        <td>
-                            <span class="badge rounded-pill 
-                                @if($transaction->status === 'completed' || $transaction->status === 'rented') badge-success
-                                @elseif($transaction->status === 'pending') badge-warning
-                                @else badge-danger @endif">
-                                {{ $transaction->status === 'completed' ? 'Rented' : ucfirst($transaction->status) }}
-                            </span>
-                        </td>
-                        <td>
-                            <div class="btn-group" role="group">
-                                @if($transaction->status === 'completed' || $transaction->status === 'rented')
-                                <button class="btn btn-sm btn-primary edit-property mr-2 view-receipt" 
-                                    data-transaction-id="{{ $transaction->id }}" 
-                                    data-toggle="tooltip" 
-                                    data-placement="top" 
-                                    title="View Receipt">
-                                    <i class="fas fa-receipt"></i>
-                                </button>
-                                @endif
-                                <button class="btn btn-sm btn-danger delete-transaction" 
-                                    data-transaction-id="{{ $transaction->id }}" 
-                                    data-toggle="tooltip" 
-                                    data-placement="top" 
-                                    title="Hide Transaction">
-                                    <i class="fas fa-eye-slash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                        <table class="table" id="transactionsTable">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Property</th>
+                                    <th>Amount</th>
+                                    <th>Tenant</th>
+                                    <th>Rental Period</th>
+                                    <th>Next Payment</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($transactions as $transaction)
+                                <tr data-status="{{ $transaction->status === 'completed' ? 'rented' : $transaction->status }}">
+                                    <td>{{ $transaction->created_at->format('M d, Y') }}</td>
+                                    <td>{{ $transaction->property->title ?? 'N/A' }}</td>
+                                    <td>${{ number_format($transaction->amount, 2) }}</td>
+                                    <td>{{ $transaction->tenant->name ?? 'N/A' }}</td>
+                                    <td>{{ $transaction->start_date->format('M d, Y') }}</td>
+                                    <td>
+                                        @if($transaction->status === 'completed' || $transaction->status === 'rented')
+                                            @php
+                                                $nextPaymentDate = \Carbon\Carbon::parse($transaction->start_date)->addMonth();
+                                                $nextPaymentText = $nextPaymentDate->format('M d, Y');
+                                            @endphp
+                                            {{ $nextPaymentText }}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <span class="badge rounded-pill 
+                                            @if($transaction->status === 'completed' || $transaction->status === 'rented') badge-success
+                                            @elseif($transaction->status === 'pending') badge-warning
+                                            @else badge-danger @endif">
+                                            {{ $transaction->status === 'completed' ? 'Rented' : ucfirst($transaction->status) }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            @if($transaction->status === 'completed' || $transaction->status === 'rented')
+                                            <button class="btn btn-sm btn-primary edit-property mr-2 view-receipt" 
+                                                data-transaction-id="{{ $transaction->id }}" 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="View Receipt">
+                                                <i class="fas fa-receipt"></i>
+                                            </button>
+                                            @endif
+                                            <button class="btn btn-sm btn-danger delete-transaction" 
+                                                data-transaction-id="{{ $transaction->id }}" 
+                                                data-toggle="tooltip" 
+                                                data-placement="top" 
+                                                title="Hide Transaction">
+                                                <i class="fas fa-eye-slash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                     <div class="d-flex justify-content-between align-items-center mt-4">
                         <div class="text-muted">
@@ -607,19 +595,16 @@
                             @endif
                         </div>
                         <div>
-                            <!-- Adjusted Pagination Controls -->
                             <nav aria-label="Page navigation">
-                                <ul class="pagination pagination-sm"> <!-- Added pagination-sm for smaller size -->
-                                    <!-- Previous Button -->
+                                <ul class="pagination pagination-sm">
                                     <li class="page-item {{ $transactions->onFirstPage() ? 'disabled' : '' }}">
                                         <a class="page-link" href="{{ $transactions->previousPageUrl() }}" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo;</span> <!-- Smaller arrow -->
+                                            <span aria-hidden="true">«</span>
                                         </a>
                                     </li>
-                                    <!-- Next Button -->
                                     <li class="page-item {{ $transactions->hasMorePages() ? '' : 'disabled' }}">
                                         <a class="page-link" href="{{ $transactions->nextPageUrl() }}" aria-label="Next">
-                                            <span aria-hidden="true">&raquo;</span> <!-- Smaller arrow -->
+                                            <span aria-hidden="true">»</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -637,7 +622,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title">Payment Receipt</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body" id="tenantDetails">
@@ -656,7 +641,7 @@
                 <div class="modal-header">
                     <h5 class="modal-title">Payment Receipt</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true">×</span>
                     </button>
                 </div>
                 <div class="modal-body" id="receiptContent">
@@ -673,73 +658,72 @@
     </div>
     <!-- Footer -->
     <footer class="ftco-footer ftco-bg-dark ftco-section">
-      <div class="container">
-        <div class="row mb-5">
-          <div class="col-md">
-            <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2"><a href="#" class="logo">Stay<span> Haven</span></a></h2>
-              <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
-              <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
-                <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
-                <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
-                <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md">
-            <div class="ftco-footer-widget mb-4 ml-md-5">
-              <h2 class="ftco-heading-2">Information</h2>
-              <ul class="list-unstyled">
-                <li><a href="#" class="py-2 d-block">About</a></li>
-                <li><a href="#" class="py-2 d-block">Services</a></li>
-                <li><a href="#" class="py-2 d-block">Term and Conditions</a></li>
-                <li><a href="#" class="py-2 d-block">Best Price Guarantee</a></li>
-                <li><a href="#" class="py-2 d-block">Privacy &amp; Cookies Policy</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md">
-             <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">Customer Support</h2>
-              <ul class="list-unstyled">
-                <li><a href="#" class="py-2 d-block">FAQ</a></li>
-                <li><a href="#" class="py-2 d-block">Payment Option</a></li>
-                <li><a href="#" class="py-2 d-block">Booking Tips</a></li>
-                <li><a href="#" class="py-2 d-block">How it works</a></li>
-                <li><a href="#" class="py-2 d-block">Contact Us</a></li>
-              </ul>
-            </div>
-          </div>
-          <div class="col-md">
-            <div class="ftco-footer-widget mb-4">
-                <h2 class="ftco-heading-2">Have a Questions?</h2>
-                <div class="block-23 mb-3">
-                  <ul>
-                    <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
-                    <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
-                    <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
-                  </ul>
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2"><a href="#" class="logo">Stay<span> Haven</span></a></h2>
+                        <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
+                        <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
+                            <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-facebook"></span></a></li>
+                            <li class="ftco-animate"><a href="#"><span class="icon-instagram"></span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4 ml-md-5">
+                        <h2 class="ftco-heading-2">Information</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="py-2 d-block">About</a></li>
+                            <li><a href="#" class="py-2 d-block">Services</a></li>
+                            <li><a href="#" class="py-2 d-block">Term and Conditions</a></li>
+                            <li><a href="#" class="py-2 d-block">Best Price Guarantee</a></li>
+                            <li><a href="#" class="py-2 d-block">Privacy & Cookies Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Customer Support</h2>
+                        <ul class="list-unstyled">
+                            <li><a href="#" class="py-2 d-block">FAQ</a></li>
+                            <li><a href="#" class="py-2 d-block">Payment Option</a></li>
+                            <li><a href="#" class="py-2 d-block">Booking Tips</a></li>
+                            <li><a href="#" class="py-2 d-block">How it works</a></li>
+                            <li><a href="#" class="py-2 d-block">Contact Us</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md">
+                    <div class="ftco-footer-widget mb-4">
+                        <h2 class="ftco-heading-2">Have a Questions?</h2>
+                        <div class="block-23 mb-3">
+                            <ul>
+                                <li><span class="icon icon-map-marker"></span><span class="text">203 Fake St. Mountain View, San Francisco, California, USA</span></li>
+                                <li><a href="#"><span class="icon icon-phone"></span><span class="text">+2 392 3929 210</span></a></li>
+                                <li><a href="#"><span class="icon icon-envelope"></span><span class="text">info@yourdomain.com</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
-          </div>
+            <div class="row">
+                <div class="col-md-12 text-center"></div>
+            </div>
         </div>
-        <div class="row">
-          <div class="col-md-12 text-center">
-        </div>
-      </div>
     </footer>
 
     <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
     <script>
       window.chatbaseConfig = {
-        chatbotId: "4RSSrtK8VY3M7j0m4Tiye", // Replace with your actual Chatbase chatbot ID
+        chatbotId: "4RSSrtK8VY3M7j0m4Tiye",
       };
     </script>
 
     <script src="https://www.chatbase.co/embed.min.js" defer></script>   
 
-    <!-- Scripts -->
     <script src="{{ asset('user-template/js/jquery.min.js') }}"></script>
     <script src="{{ asset('user-template/js/jquery-migrate-3.0.1.min.js') }}"></script>
     <script src="{{ asset('user-template/js/popper.min.js') }}"></script>
@@ -756,9 +740,5 @@
     <script src="{{ asset('user-template/js/scrollax.min.js') }}"></script>
     <script src="{{ asset('user-template/js/main.js') }}"></script>
     <script src="{{ asset('user-template/js/financial-report.js') }}"></script>
-
-    <script>
-    
-</script>
 </body>
 </html>

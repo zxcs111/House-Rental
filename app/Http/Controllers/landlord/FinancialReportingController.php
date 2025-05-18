@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use App\Models\User;
+use App\Models\Property;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -37,12 +38,16 @@ class FinancialReportingController extends Controller
             ->where('hidden_by_landlord', false)
             ->sum('amount');
 
-        // Calculate annual sales excluding hidden and cancelled transactions
-        $annualSales = $landlord->receivedPayments()
-            ->whereYear('created_at', Carbon::now()->year)
-            ->where('status', '!=', 'cancelled')
-            ->where('hidden_by_landlord', false)
-            ->sum('amount');
+        // Calculate total rented properties (distinct properties with active or completed payments)
+        $rentedProperties = Property::where('user_id', $landlord->id)
+            ->whereHas('payments', function ($query) use ($landlord) {
+                $query->where('landlord_id', $landlord->id)
+                      ->where('status', '!=', 'cancelled')
+                      ->where('hidden_by_landlord', false);
+            })
+            ->get(['id', 'title']);
+
+        $totalRentedProperties = $rentedProperties->count();
 
         // Fetch transactions excluding hidden ones, with search filtering
         $query = $landlord->receivedPayments()
@@ -66,10 +71,12 @@ class FinancialReportingController extends Controller
         return view('landlord.financial-reporting', [
             'totalSales' => $totalSales,
             'monthlySales' => $monthlySales,
-            'annualSales' => $annualSales,
+            'totalRentedProperties' => $totalRentedProperties,
+            'rentedProperties' => $rentedProperties,
+            'totalrented' => $totalRented = User::where('role', 'tenant')->count(),
             'transactions' => $transactions,
             'landlord' => $landlord,
-            'searchTerm' => $searchTerm // Pass the search term to the view
+            'searchTerm' => $searchTerm
         ]);
     }
 

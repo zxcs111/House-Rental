@@ -109,37 +109,32 @@
           <div class="col-md-12 text-center">
             <form id="filterForm" method="GET" action="{{ route('houses') }}" class="d-flex align-items-center justify-content-center">
               <div class="form">
-                <button type="button">
-                  <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
-                    <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9" stroke="#8b8ba7" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"></path>
-                  </svg>
-                </button>
-                <input class="input" id="searchInput" name="search" placeholder="Search by type, city, or title..." type="text" value="{{ request('search') }}">
-                @if(request('search'))
-                  <button class="reset" type="button">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="none" viewBox="0 0 24 24" stroke="#8b8ba7">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg>
+                  <button type="button">
+                      <svg width="17" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="search">
+                          <path d="M7.667 12.667A5.333 5.333 0 107.667 2a5.333 5.333 0 000 10.667zM14.334 14l-2.9-2.9" stroke="#8b8ba7" stroke-width="1.333" stroke-linecap="round" stroke-linejoin="round"></path>
+                      </svg>
                   </button>
-                @endif
+                  <input class="input" id="searchInput" name="search" placeholder="Search by type, city, or title..." type="text" value="{{ request('search') }}">
+                  @if(request('search'))
+                      <button class="reset" type="button">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="17" height="16" fill="none" viewBox="0 0 24 24" stroke="#8b8ba7">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                          </svg>
+                      </button>
+                  @endif
               </div>
               <div class="form-group ml-2">
-                <select class="propertydropdown" id="propertyTypeDropdown" name="property_type">
-                  <option value="">Select Type</option>
-                  <option value="Apartment" {{ request('property_type') == 'Apartment' ? 'selected' : '' }}>Apartment</option>
-                  <option value="House" {{ request('property_type') == 'House' ? 'selected' : '' }}>House</option>
-                  <option value="Condo" {{ request('property_type') == 'Condo' ? 'selected' : '' }}>Condo</option>
-                  <option value="Townhouse" {{ request('property_type') == 'Townhouse' ? 'selected' : '' }}>Townhouse</option>
-                  <option value="Duplex" {{ request('property_type') == 'Duplex' ? 'selected' : '' }}>Duplex</option>
-                  <option value="Studio" {{ request('property_type') == 'Studio' ? 'selected' : '' }}>Studio</option>
-                </select>
+                  <select class="propertydropdown" id="propertyTypeDropdown" name="property_type">
+                      <option value="">Select Type</option>
+                      <option value="Apartment" {{ request('property_type') == 'Apartment' ? 'selected' : '' }}>Apartment</option>
+                      <option value="House" {{ request('property_type') == 'House' ? 'selected' : '' }}>House</option>
+                      <option value="Condo" {{ request('property_type') == 'Condo' ? 'selected' : '' }}>Condo</option>
+                      <option value="Townhouse" {{ request('property_type') == 'Townhouse' ? 'selected' : '' }}>Townhouse</option>
+                      <option value="Duplex" {{ request('property_type') == 'Duplex' ? 'selected' : '' }}>Duplex</option>
+                      <option value="Studio" {{ request('property_type') == 'Studio' ? 'selected' : '' }}>Studio</option>
+                  </select>
               </div>
             </form>
-            <div class="col-12 text-center py-5 empty-state" style="display: none;">
-              <i class="fas fa-home fa-4x text-muted mb-4"></i>
-              <h4>No properties match your search criteria</h4>
-              <p class="text-muted">Try adjusting your filters or search term.</p>
-            </div>
           </div>
         </div>
 

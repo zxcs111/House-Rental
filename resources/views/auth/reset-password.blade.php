@@ -23,7 +23,7 @@
                 <form method="POST" action="{{ route('password.reset') }}">
                     @csrf
                     <input type="hidden" name="token" value="{{ $token }}">
-                    <input type="email" name="email" placeholder="Enter your Gmail address" value="{{ old('email') }}" required oninput="validateGmail(this)">
+                    <input type="email" name="email" placeholder="Enter your email address" value="{{ old('email') }}" required oninput="validateGmail(this)">
                     <span id="email-error" class="error-message">{{ $errors->first('email') }}</span>
                     <input type="password" name="password" placeholder="Enter new password" required>
                     <span id="password-error" class="error-message">{{ $errors->first('password') }}</span>

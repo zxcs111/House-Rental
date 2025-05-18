@@ -22,7 +22,7 @@
                 <header>Forgot Password</header>
                 <form method="POST" action="{{ route('password.email') }}">
                     @csrf
-                    <input type="email" name="email" placeholder="Enter your Gmail address" value="{{ old('email') }}" required oninput="validateGmail(this)">
+                    <input type="email" name="email" placeholder="Enter your email address" value="{{ old('email') }}" required oninput="validateGmail(this)">
                     <span id="email-error" class="error-message">{{ $errors->first('email') }}</span>
                     <input type="submit" class="button" value="Send Reset Link">
                 </form>

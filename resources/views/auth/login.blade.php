@@ -24,7 +24,7 @@
             <header>Login</header>
             <form method="POST" action="{{ route('login') }}">
                 @csrf
-                <input type="email" name="email" placeholder="Enter your Gmail address" value="{{ old('email') }}" required oninput="validateGmail(this)">
+                <input type="email" name="email" placeholder="Enter your email address" value="{{ old('email') }}" required oninput="validateGmail(this)">
                 <span id="email-error" class="error-message"></span>
                 <input type="password" name="password" placeholder="Enter your password" required>
                 <a href="{{ route('password.request') }}">Forgot password?</a>
@@ -42,7 +42,7 @@
                 @csrf
                 <input type="text" name="name" placeholder="Enter your name" value="{{ old('name') }}" required oninput="validateName(this)">
                 <span id="name-error" class="error-message">{{ $errors->first('name') }}</span>
-                <input type="email" name="email" placeholder="Enter your Gmail address" value="{{ old('email') }}" required oninput="validateGmail(this)">
+                <input type="email" name="email" placeholder="Enter your email address" value="{{ old('email') }}" required oninput="validateGmail(this)">
                 <span id="register-email-error" class="error-message">{{ $errors->first('email') }}</span>
                 <input type="password" name="password" placeholder="Create a password" required>
                 <span id="password-error" class="error-message">{{ $errors->first('password') }}</span>
