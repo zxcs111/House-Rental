@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stay Haven - Admin Dashboard</title>
+    <title>Stay Haven Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('user-template/css/dashboard.css') }}">
 </head>
@@ -61,12 +61,12 @@
                 </div>
                 <div class="user">
                     <div class="user-trigger">
-                        <img class="small-img" src="{{ Auth::guard('admin')->user()->profile_picture_url }}" alt="User">
+                        <img class="small-img" src="{{ Auth::guard('admin')->user()->profile_picture_url ?? asset('user-template/images/default-user.png') }}" alt="User">
                         <span class="name">{{ Auth::guard('admin')->user()->name }}</span>
                     </div>
                     <div class="dropdown">
                         <div class="profile-header">
-                            <img src="{{ Auth::guard('admin')->user()->profile_picture_url }}" alt="Profile">
+                            <img src="{{ Auth::guard('admin')->user()->profile_picture_url ?? asset('user-template/images/default-user.png') }}" alt="Profile">
                             <div class="name">{{ Auth::guard('admin')->user()->name }}</div>
                         </div>
                         <div class="profile-buttons">
@@ -87,35 +87,35 @@
         <div class="stats">
             <div class="card">
                 <h3>Available Properties</h3>
-                <p>{{ isset($listingsData) ? number_format($listingsData['total']) : '0' }}</p>
-                <div class="change {{ isset($listingsData) && $listingsData['percentage_change'] >= 0 ? 'positive' : 'negative' }}">
-                    {{ isset($listingsData) && $listingsData['percentage_change'] >= 0 ? '↑' : '↓' }} {{ isset($listingsData) ? abs($listingsData['percentage_change']) : '0' }}%
+                <p>{{ number_format($listingsData['total'] ?? 0) }}</p>
+                <div class="change {{ ($listingsData['percentage_change'] ?? 0) >= 0 ? 'positive' : 'negative' }}">
+                    {{ ($listingsData['percentage_change'] ?? 0) >= 0 ? '↑' : '↓' }} {{ abs($listingsData['percentage_change'] ?? 0) }}%
                 </div>
-                <div class="info">You approved {{ isset($listingsData) ? $listingsData['new_listings_this_year'] : '0' }} new listings this year</div>
+                <div class="info">You approved {{ $listingsData['new_listings_this_year'] ?? 0 }} new listings this year</div>
             </div>
             <div class="card">
                 <h3>Total Rented Properties</h3>
-                <p>{{ isset($rentedData) ? number_format($rentedData['total']) : '0' }}</p>
-                <div class="change {{ isset($rentedData) && $rentedData['percentage_change'] >= 0 ? 'positive' : 'negative' }}">
-                    {{ isset($rentedData) && $rentedData['percentage_change'] >= 0 ? '↑' : '↓' }} {{ isset($rentedData) ? abs($rentedData['percentage_change']) : '0' }}%
+                <p>{{ number_format($rentedData['total'] ?? 0) }}</p>
+                <div class="change {{ ($rentedData['percentage_change'] ?? 0) >= 0 ? 'positive' : 'negative' }}">
+                    {{ ($rentedData['percentage_change'] ?? 0) >= 0 ? '↑' : '↓' }} {{ abs($rentedData['percentage_change'] ?? 0) }}%
                 </div>
-                <div class="info">{{ isset($rentedData) ? $rentedData['new_rented_this_year'] : '0' }} new rented properties this year</div>
+                <div class="info">{{ $rentedData['new_rented_this_year'] ?? 0 }} new rented properties this year</div>
             </div>
             <div class="card">
                 <h3>Total Users</h3>
-                <p>{{ isset($usersData) ? number_format($usersData['total']) : '0' }}</p>
-                <div class="change {{ isset($usersData) && $usersData['percentage_change'] >= 0 ? 'positive' : 'negative' }}">
-                    {{ isset($usersData) && $usersData['percentage_change'] >= 0 ? '↑' : '↓' }} {{ isset($usersData) ? abs($usersData['percentage_change']) : '0' }}%
+                <p>{{ number_format($usersData['total'] ?? 0) }}</p>
+                <div class="change {{ ($usersData['percentage_change'] ?? 0) >= 0 ? 'positive' : 'negative' }}">
+                    {{ ($usersData['percentage_change'] ?? 0) >= 0 ? '↑' : '↓' }} {{ abs($usersData['percentage_change'] ?? 0) }}%
                 </div>
-                <div class="info">You gained {{ isset($usersData) ? $usersData['new_users_this_year'] : '0' }} new users this year</div>
+                <div class="info">You gained {{ $usersData['new_users_this_year'] ?? 0 }} new users this year</div>
             </div>
             <div class="card">
-                <h3>Total Visits</h3>
-                <p>{{ isset($visitsData) ? number_format($visitsData['total']) : '0' }}</p>
-                <div class="change {{ isset($visitsData) && $visitsData['percentage_change'] >= 0 ? 'positive' : 'negative' }}">
-                    {{ isset($visitsData) && $visitsData['percentage_change'] >= 0 ? '↑' : '↓' }} {{ isset($visitsData) ? abs($visitsData['percentage_change']) : '0' }}%
+                <h3>Total Pending Properties</h3>
+                <p>{{ number_format($pendingPropertiesData['total'] ?? 0) }}</p>
+                <div class="change {{ ($pendingPropertiesData['percentage_change'] ?? 0) >= 0 ? 'positive' : 'negative' }}">
+                    {{ ($pendingPropertiesData['percentage_change'] ?? 0) >= 0 ? '↑' : '↓' }} {{ abs($pendingPropertiesData['percentage_change'] ?? 0) }}%
                 </div>
-                <div class="info">You recorded {{ isset($visitsData) ? $visitsData['new_visits_this_year'] : '0' }} new visits this year</div>
+                <div class="info">You received {{ $pendingPropertiesData['new_pending_this_year'] ?? 0 }} new pending properties this year</div>
             </div>
         </div>
         <div class="charts">
@@ -133,7 +133,6 @@
                     <canvas id="propertyTypesChart" style="max-height: 300px;"></canvas>
                     <div class="available-properties-list">
                         @foreach(['Apartment', 'House', 'Condo', 'Townhouse', 'Duplex', 'Studio'] as $type)
-                            <!-- Property type list remains unchanged -->
                         @endforeach
                     </div>
                 </div>
@@ -145,9 +144,7 @@
                         @foreach($pendingProperties as $property)
                             <div class="property">
                                 <span>{{ $property->title }} - {{ $property->landlord->name ?? 'Unknown Landlord' }}</span>
-                                <a href="{{ route('admin.properties') }}" class="approve-btn">
-                                    <i class="fas fa-home"></i> Go to Properties
-                                </a>
+                                <a href="{{ route('admin.properties') }}" class="approve-btn"><i class="fas fa-home"></i> Go to Properties</a>
                             </div>
                         @endforeach
                     @endif
@@ -171,6 +168,7 @@
             <div class="analytics-report">
                 <h3>Analytics Report</h3>
                 <p>Summary of performance metrics, trends, and insights for the past month. Detailed report available for download.</p>
+                <a href="{{ route('admin.reports') }}" class="btn property-btn"><i class="fas fa-download"></i> Download Report</a>            
             </div>
         </div>
         <!-- Edit Profile Modal -->
@@ -182,7 +180,7 @@
                     @csrf
                     <label for="profile_picture">Profile Picture</label>
                     <div class="profile-picture-preview">
-                        <img id="profile-picture-preview-img" src="{{ Auth::guard('admin')->user()->profile_picture_url }}" alt="Profile Preview">
+                        <img id="profile-picture-preview-img" src="{{ Auth::guard('admin')->user()->profile_picture_url ?? asset('user-template/images/default-user.png') }}" alt="Profile Preview">
                     </div>
                     <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
                     <label for="name">Name</label>

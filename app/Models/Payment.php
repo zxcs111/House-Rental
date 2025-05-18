@@ -24,7 +24,7 @@ class Payment extends Model
         'cancellation_reason',
         'cancellation_status',
         'rejection_reason',
-        'hidden', // Keep for backward compatibility if needed
+        'hidden', 
         'hidden_by_tenant',
         'hidden_by_landlord',
     ];

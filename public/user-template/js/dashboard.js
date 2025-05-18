@@ -1,8 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Access PHP data from global window object
-    const rentedPerMonth = window.rentedPerMonth || {};
-    const rentedPerWeek = window.rentedPerWeek || [];
-    const propertyTypes = window.propertyTypes || {};
+    const rentedPerMonth = window.rentedPerMonth || { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
+    const rentedPerWeek = window.rentedPerWeek || [0, 0, 0];
+    const propertyTypes = window.propertyTypes || {
+        Apartment: 0,
+        House: 0,
+        Condo: 0,
+        Townhouse: 0,
+        Duplex: 0,
+        Studio: 0
+    };
 
     console.log('Dashboard.js loaded');
     console.log('rentedPerMonth:', rentedPerMonth);
@@ -148,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 scales: {
                     y: {
                         beginAtZero: true,
-                        max: Math.max(...Object.values(rentedPerMonth).filter(v => v > 0), 10) + 5,
+                        max: Math.max(...Object.values(rentedPerMonth), 10) + 5,
                         ticks: { stepSize: 5 }
                     }
                 },
@@ -175,11 +182,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         rentedPerMonth[4] || 0,
                         rentedPerMonth[5] || 0
                     ];
-                    chart.options.scales.y.max = Math.max(...Object.values(rentedPerMonth).filter(v => v > 0), 10) + 5;
+                    chart.options.scales.y.max = Math.max(...Object.values(rentedPerMonth), 10) + 5;
                 } else if (tab === 'week') {
                     chart.data.labels = ['May 1-4', 'May 5-11', 'May 12-18'];
                     chart.data.datasets[0].data = rentedPerWeek;
-                    chart.options.scales.y.max = Math.max(...rentedPerWeek.filter(v => v > 0), 5) + 5;
+                    chart.options.scales.y.max = Math.max(...rentedPerWeek, 5) + 5;
                 }
                 chart.update();
                 console.log(`Switched to ${tab} tab`);

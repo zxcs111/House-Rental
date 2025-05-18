@@ -127,12 +127,6 @@ Route::get('/admin/login', [AdminController::class, 'showLoginForm'])->name('adm
 Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.login.submit');
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
-    Route::get('/properties', [AdminController::class, 'properties'])->name('admin.properties');
-    Route::post('/property/{id}/approve', [AdminController::class, 'approveProperty'])->name('admin.property.approve');
-    Route::post('/property/{id}/reject', [AdminController::class, 'rejectProperty'])->name('admin.property.reject');
-});
-
 Route::prefix('admin')->name('admin.')->group(function () {
     
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
