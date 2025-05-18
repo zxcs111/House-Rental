@@ -100,4 +100,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Property::class, 'landlord_id');
     }
+
+    public function getProfilePictureUrlAttribute()
+    {
+        return $this->profile_picture ? asset('storage/' . $this->profile_picture) : null;
+    }
 }

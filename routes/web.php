@@ -147,6 +147,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/total-users/{id}', [TotalUserController::class, 'show'])->name('user-detail');
     Route::get('/total-users/create', [TotalUserController::class, 'create'])->name('create-user');
     Route::post('/total-users/store', [TotalUserController::class, 'store'])->name('store-user');
+    Route::get('/total-users/edit/{id}', [TotalUserController::class, 'edit'])->name('edit-user');
+    Route::put('/total-users/update/{id}', [TotalUserController::class, 'update'])->name('update-user'); 
+    Route::delete('/total-users/delete/{id}', [TotalUserController::class, 'destroy'])->name('delete-user'); 
 
     Route::get('/transactions', [TransactionController::class, 'transactions'])->name('transactions');
 

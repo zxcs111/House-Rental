@@ -1,252 +1,431 @@
-  // Set up CSRF token for AJAX
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
+// Set up CSRF token for AJAX
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
 
-        // Toggle sidebar on mobile
-        const sidebar = document.querySelector('.sidebar');
-        const menuToggle = document.querySelector('.menu-toggle');
-        if (menuToggle && sidebar) {
-            menuToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('open');
-                console.log('Sidebar toggled');
-            });
+// View Details button handling
+const viewDetailsButtons = document.querySelectorAll('.view-details-btn');
 
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', function(event) {
-                if (window.innerWidth <= 768 && sidebar.classList.contains('open') && !sidebar.contains(event.target) && !menuToggle.contains(event.target)) {
-                    sidebar.classList.remove('open');
-                    console.log('Sidebar closed');
-                }
-            });
+viewDetailsButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        const userId = this.getAttribute('data-user-id');
+        if (!userId) {
+            toastr.error('User ID not found.');
+            return;
         }
 
-        // Toggle user dropdown on click
-        const userTrigger = document.querySelector('.user-trigger');
-        if (userTrigger) {
-            userTrigger.addEventListener('click', function() {
-                const user = this.parentElement;
-                user.classList.toggle('active');
-                document.querySelector('.notifications')?.classList.remove('active');
-                console.log('User dropdown toggled');
-            });
+        const modal = document.getElementById('user-details-modal');
+        if (!modal) {
+            toastr.error('Modal element not found.');
+            return;
         }
 
-        // Toggle notification dropdown on click
-        const notificationTrigger = document.querySelector('.notification-trigger');
-        if (notificationTrigger) {
-            notificationTrigger.addEventListener('click', function() {
-                const notifications = this.parentElement;
-                notifications.classList.toggle('active');
-                document.querySelector('.user')?.classList.remove('active');
-                console.log('Notification dropdown toggled');
-            });
+        const userDetailsContent = document.getElementById('user-details-content');
+        if (!userDetailsContent) {
+            toastr.error('User details content element not found.');
+            return;
         }
 
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', function(event) {
-            const user = document.querySelector('.user');
-            const userTrigger = document.querySelector('.user-trigger');
-            const notifications = document.querySelector('.notifications');
-            const notificationTrigger = document.querySelector('.notification-trigger');
+        const requestUrl = userDetailRoute.replace(':id', userId);
 
-            if (user && userTrigger && !userTrigger.contains(event.target) && !user.querySelector('.dropdown').contains(event.target)) {
-                user.classList.remove('active');
-                console.log('User dropdown closed');
-            }
-            if (notifications && notificationTrigger && !notificationTrigger.contains(event.target) && !notifications.querySelector('.notification-dropdown').contains(event.target)) {
-                notifications.classList.remove('active');
-                console.log('Notification dropdown closed');
-            }
-        });
+        $.ajax({
+            url: requestUrl,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    const user = response.data;
 
-        // Modal handling for Edit Profile and Add User
-        const editProfileBtn = document.getElementById('edit-profile-btn');
-        const editProfileModal = document.getElementById('edit-profile-modal');
-        const addUserBtn = document.getElementById('add-user-btn');
-        const addUserModal = document.getElementById('add-user-modal');
-        const closes = document.querySelectorAll('.modal .close');
+                    let detailsHtml = `
+                        <div class="user-profile-header">
+                            ${user.profile_picture ? `<img src="${user.profile_picture}" alt="Profile Picture" class="profile-picture">` : '<div class="profile-placeholder"><i class="fas fa-user"></i></div>'}
+                            <h3>${user.name || 'N/A'}</h3>
+                        </div>
+                        <div class="user-details-grid">
+                            <div class="detail-item">
+                                <strong>Email:</strong>
+                                <span>${user.email || 'N/A'}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Role:</strong>
+                                <span>${user.role || 'User'}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Created At:</strong>
+                                <span>${user.created_at || 'N/A'}</span>
+                            </div>
+                    `;
 
-        if (editProfileBtn && editProfileModal) {
-            editProfileBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                editProfileModal.classList.add('active');
-                document.querySelector('.user')?.classList.remove('active');
-                console.log('Edit profile modal opened');
-            });
-        }
+                    if (user.first_name) {
+                        detailsHtml += `
+                            <div class="detail-item">
+                                <strong>First Name:</strong>
+                                <span>${user.first_name}</span>
+                            </div>`;
+                    }
+                    if (user.last_name) {
+                        detailsHtml += `
+                            <div class="detail-item">
+                                <strong>Last Name:</strong>
+                                <span>${user.last_name}</span>
+                            </div>`;
+                    }
+                    if (user.phone_number) {
+                        detailsHtml += `
+                            <div class="detail-item">
+                                <strong>Phone Number:</strong>
+                                <span>${user.phone_number}</span>
+                            </div>`;
+                    }
+                    if (user.address) {
+                        detailsHtml += `
+                            <div class="detail-item">
+                                <strong>Address:</strong>
+                                <span>${user.address}</span>
+                            </div>`;
+                    }
 
-        if (addUserBtn && addUserModal) {
-            addUserBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                addUserModal.classList.add('active');
-                console.log('Add user modal opened');
-            });
-        }
+                    detailsHtml += '</div>';
 
-        closes.forEach(close => {
-            close.addEventListener('click', () => {
-                editProfileModal?.classList.remove('active');
-                addUserModal?.classList.remove('active');
-                const userModal = document.getElementById('user-details-modal');
-                if (userModal) {
-                    userModal.classList.remove('active');
-                }
-                console.log('Modal closed');
-            });
-        });
-
-        // Close modals when clicking outside
-        document.addEventListener('click', function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.classList.remove('active');
-                console.log('Modal closed by clicking outside');
-            }
-        });
-
-        // Profile picture preview
-        const profilePictureInput = document.getElementById('profile_picture');
-        const profilePicturePreview = document.getElementById('profile-picture-preview-img');
-        if (profilePictureInput && profilePicturePreview) {
-            profilePictureInput.addEventListener('change', function(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        profilePicturePreview.src = e.target.result;
-                        console.log('Profile picture preview updated');
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-        }
-
-        // View Details button handling
-        document.querySelectorAll('.view-details-btn').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                console.log('View Details button clicked');
-                const userId = this.getAttribute('data-user-id');
-                console.log('User ID:', userId);
-
-                const modal = document.getElementById('user-details-modal');
-                if (!modal) {
-                    console.error('User details modal not found');
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'Modal element not found.',
-                        icon: 'error',
-                        confirmButtonColor: '#dc3545'
+                    userDetailsContent.innerHTML = detailsHtml;
+                    modal.classList.add('active');
+                } else {
+                    toastr.error(response.message || 'Failed to load user details.', '', {
+                        timeOut: 2000,
+                        closeButton: true,
+                        progressBar: true
                     });
-                    return;
                 }
-
-                $.ajax({
-                    url: `/total-users/${userId}`,
-                    method: 'GET',
-                    success: function(response) {
-                        console.log('AJAX Success:', response);
-                        if (response.success) {
-                            const user = response.data;
-
-                            // Populate modal fields
-                            document.getElementById('user-name').textContent = user.name || 'N/A';
-                            document.getElementById('user-email').textContent = user.email || 'N/A';
-                            document.getElementById('user-role').textContent = user.role || 'User';
-                            document.getElementById('user-created-at').textContent = user.created_at || 'N/A';
-
-                            // Show modal
-                            console.log('Showing user details modal');
-                            modal.classList.add('active');
-                        } else {
-                            console.error('Response error:', response.message);
-                            Swal.fire({
-                                title: 'Error!',
-                                text: response.message || 'Failed to load user details.',
-                                icon: 'error',
-                                confirmButtonColor: '#dc3545'
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        console.error('AJAX Error:', xhr.status, xhr.responseText);
-                        Swal.fire({
-                            title: 'Error!',
-                            text: xhr.responseJSON?.message || 'Failed to load user details.',
-                            icon: 'error',
-                            confirmButtonColor: '#dc3545'
-                        });
-                    }
+            },
+            error: function(xhr) {
+                let errorMessage = xhr.responseJSON?.message || 'Failed to load user details.';
+                if (xhr.status === 401) {
+                    errorMessage = 'Unauthorized access. Please log in as an admin.';
+                } else if (xhr.status === 404) {
+                    errorMessage = `User with ID ${userId} not found.`;
+                }
+                toastr.error(errorMessage, '', {
+                    timeOut: 2000,
+                    closeButton: true,
+                    progressBar: true
                 });
-            });
+            }
         });
+    });
+});
 
-        // Add User form submission
-        const addUserForm = document.getElementById('add-user-form');
-        if (addUserForm) {
-            addUserForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                console.log('Add User form submitted');
+// Close user details modal
+const userModal = document.getElementById('user-details-modal');
+if (userModal) {
+    userModal.querySelector('.close').addEventListener('click', () => {
+        userModal.classList.remove('active');
+    });
 
-                $.ajax({
-                    url: addUserForm.action,
-                    method: 'POST',
-                    data: $(addUserForm).serialize(),
-                    success: function(response) {
-                        console.log('AJAX Success:', response);
-                        if (response.success) {
-                            Swal.fire({
-                                title: 'Success!',
-                                text: response.message,
-                                icon: 'success',
-                                confirmButtonColor: '#28a745'
-                            }).then(() => {
-                                addUserModal.classList.remove('active');
-                                window.location.reload(); // Refresh to show new user
-                            });
-                        } else {
-                            console.error('Response error:', response.message);
-                            Swal.fire({
-                                title: 'Error!',
-                                text: response.message || 'Failed to create user.',
-                                icon: 'error',
-                                confirmButtonColor: '#dc3545'
-                            });
-                        }
-                    },
-                    error: function(xhr) {
-                        console.error('AJAX Error:', xhr.status, xhr.responseText);
-                        let errorMessage = 'Failed to create user.';
-                        if (xhr.responseJSON && xhr.responseJSON.errors) {
-                            errorMessage = Object.values(xhr.responseJSON.errors).flat().join(' ');
-                        } else if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
-                        }
-                        Swal.fire({
-                            title: 'Error!',
-                            text: errorMessage,
-                            icon: 'error',
-                            confirmButtonColor: '#dc3545'
-                        });
-                    }
-                });
-            });
+    userModal.addEventListener('click', function(event) {
+        if (event.target === this) {
+            this.classList.remove('active');
         }
+    });
+}
 
-        // Close user details modal
+// Modal handling for Add User
+const addUserBtn = document.getElementById('add-user-btn');
+const addUserModal = document.getElementById('add-user-modal');
+const closes = document.querySelectorAll('.modal .close');
+
+if (addUserBtn && addUserModal) {
+    addUserBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        addUserModal.classList.add('active');
+    });
+}
+
+// Close modals when clicking the close button
+closes.forEach(close => {
+    close.addEventListener('click', () => {
+        const addUserModal = document.getElementById('add-user-modal');
+        if (addUserModal) {
+            addUserModal.classList.remove('active');
+        }
         const userModal = document.getElementById('user-details-modal');
         if (userModal) {
-            userModal.querySelector('.close').addEventListener('click', () => {
-                console.log('User modal close button clicked');
-                userModal.classList.remove('active');
-            });
-
-            userModal.addEventListener('click', function(event) {
-                if (event.target === this) {
-                    console.log('Clicked outside user modal');
-                    this.classList.remove('active');
-                }
-            });
+            userModal.classList.remove('active');
         }
+        const editUserModal = document.getElementById('edit-user-modal');
+        if (editUserModal) {
+            editUserModal.classList.remove('active');
+        }
+    });
+});
+
+// Close modals when clicking outside
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('modal')) {
+        event.target.classList.remove('active');
+    }
+});
+
+// Add User form submission with email validation
+const addUserForm = document.getElementById('add-user-form');
+if (addUserForm) {
+    addUserForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const emailInput = document.getElementById('add-user-email');
+        const email = emailInput.value.trim();
+        const isValidEmail = validateEmail(email);
+
+        if (!isValidEmail) {
+            toastr.error('Please enter a valid @gmail.com email with only letters and numbers. No symbols or integers only allowed.', '', {
+                timeOut: 2000,
+                closeButton: true,
+                progressBar: true
+            });
+            return;
+        }
+
+        $.ajax({
+            url: addUserRoute,
+            method: 'POST',
+            data: $(addUserForm).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    toastr.success(response.message || 'User created successfully!', '', {
+                        timeOut: 2000,
+                        closeButton: true,
+                        progressBar: true
+                    });
+                    setTimeout(() => {
+                        addUserModal.classList.remove('active');
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    toastr.error(response.message || 'Failed to create user.', '', {
+                        timeOut: 2000,
+                        closeButton: true,
+                        progressBar: true
+                    });
+                }
+            },
+            error: function(xhr) {
+                let errorMessage = 'Failed to create user.';
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    errorMessage = Object.values(xhr.responseJSON.errors).flat().join(' ');
+                } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                toastr.error(errorMessage, '', {
+                    timeOut: 2000,
+                    closeButton: true,
+                    progressBar: true
+                });
+            }
+        });
+    });
+}
+
+// Email validation function
+function validateEmail(email) {
+    if (!email.toLowerCase().endsWith('@gmail.com')) {
+        return false;
+    }
+
+    const username = email.split('@')[0];
+    const symbolRegex = /[^a-zA-Z0-9]/;
+    if (symbolRegex.test(username)) {
+        return false;
+    }
+
+    const integerRegex = /^[0-9]+$/;
+    if (integerRegex.test(username)) {
+        return false;
+    }
+
+    const emailRegex = /^[a-zA-Z0-9]+@gmail\.com$/;
+    return emailRegex.test(email);
+}
+
+// Edit User button handling
+const editUserButtons = document.querySelectorAll('.edit-user-btn');
+const editUserModal = document.getElementById('edit-user-modal');
+
+editUserButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const userId = this.getAttribute('data-user-id');
+        if (!userId) {
+            toastr.error('User ID not found.');
+            return;
+        }
+
+        const requestUrl = editUserRoute.replace(':id', userId);
+
+        $.ajax({
+            url: requestUrl,
+            method: 'GET',
+            success: function(response) {
+                if (response.success) {
+                    const user = response.data;
+
+                    document.getElementById('edit-user-id').value = user.id;
+                    document.getElementById('edit-user-name').value = user.name;
+                    document.getElementById('edit-user-email').value = user.email;
+                    document.getElementById('edit-user-role').value = user.role;
+                    document.getElementById('edit-user-status').value = user.is_active ? '1' : '0';
+                    document.getElementById('edit-user-password').value = '';
+
+                    editUserModal.classList.add('active');
+                } else {
+                    toastr.error(response.message || 'Failed to load user data.', '', {
+                        timeOut: 2000,
+                        closeButton: true,
+                        progressBar: true
+                    });
+                }
+            },
+            error: function(xhr) {
+                let errorMessage = xhr.responseJSON?.message || 'Failed to load user data.';
+                if (xhr.status === 401) {
+                    errorMessage = 'Unauthorized access. Please log in as an admin.';
+                } else if (xhr.status === 404) {
+                    errorMessage = `User with ID ${userId} not found.`;
+                }
+                toastr.error(errorMessage, '', {
+                    timeOut: 2000,
+                    closeButton: true,
+                    progressBar: true
+                });
+            }
+        });
+    });
+});
+
+// Edit User form submission with email validation
+const editUserForm = document.getElementById('edit-user-form');
+if (editUserForm) {
+    editUserForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const emailInput = document.getElementById('edit-user-email');
+        const email = emailInput.value.trim();
+        const isValidEmail = validateEmail(email);
+
+        if (!isValidEmail) {
+            toastr.error('Please enter a valid @gmail.com email with only letters and numbers. No symbols or integers only allowed.', '', {
+                timeOut: 2000,
+                closeButton: true,
+                progressBar: true
+            });
+            return;
+        }
+
+        const userId = document.getElementById('edit-user-id').value;
+        const requestUrl = updateUserRoute.replace(':id', userId);
+
+        $.ajax({
+            url: requestUrl,
+            method: 'PUT',
+            data: $(editUserForm).serialize(),
+            success: function(response) {
+                if (response.success) {
+                    toastr.success(response.message || 'User updated successfully!', '', {
+                        timeOut: 2000,
+                        closeButton: true,
+                        progressBar: true
+                    });
+                    setTimeout(() => {
+                        editUserModal.classList.remove('active');
+                        window.location.reload();
+                    }, 2000);
+                } else {
+                    toastr.error(response.message || 'Failed to update user.', '', {
+                        timeOut: 2000,
+                        closeButton: true,
+                        progressBar: true
+                    });
+                }
+            },
+            error: function(xhr) {
+                let errorMessage = 'Failed to update user.';
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    errorMessage = Object.values(xhr.responseJSON.errors).flat().join(' ');
+                } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+                toastr.error(errorMessage, '', {
+                    timeOut: 2000,
+                    closeButton: true,
+                    progressBar: true
+                });
+            }
+        });
+    });
+}
+
+// Delete User button handling with SweetAlert2
+const deleteUserButtons = document.querySelectorAll('.delete-user-btn');
+
+deleteUserButtons.forEach(button => {
+    button.addEventListener('click', function(e) {
+        e.preventDefault();
+
+        const userId = this.getAttribute('data-user-id');
+        if (!userId) {
+            toastr.error('User ID not found.');
+            return;
+        }
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You are about to delete this user. This action cannot be undone!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#f44336',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const requestUrl = deleteUserRoute.replace(':id', userId);
+
+                $.ajax({
+                    url: requestUrl,
+                    method: 'DELETE',
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message || 'User deleted successfully!', '', {
+                                timeOut: 2000,
+                                closeButton: true,
+                                progressBar: true
+                            });
+                            setTimeout(() => {
+                                window.location.reload();
+                            }, 2000);
+                        } else {
+                            toastr.error(response.message || 'Failed to delete user.', '', {
+                                timeOut: 2000,
+                                closeButton: true,
+                                progressBar: true
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        let errorMessage = 'Failed to delete user.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        toastr.error(errorMessage, '', {
+                            timeOut: 2000,
+                            closeButton: true,
+                            progressBar: true
+                        });
+                    }
+                });
+            }
+        });
+    });
+});

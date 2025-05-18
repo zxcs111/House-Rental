@@ -18,7 +18,6 @@ class TotalUserController extends Controller
             return redirect()->route('admin.login')->with('error', 'You must log in as an admin to access the dashboard.');
         }
 
-        // Fetch paginated users with optional search
         $search = $request->query('search');
         $query = User::query();
 
@@ -57,13 +56,18 @@ class TotalUserController extends Controller
                 'role' => $user->role ?? 'User',
                 'is_active' => $user->is_active,
                 'created_at' => $user->created_at ? $user->created_at->format('Y-m-d H:i:s') : null,
+                'first_name' => $user->first_name,
+                'last_name' => $user->last_name,
+                'phone_number' => $user->phone_number,
+                'address' => $user->address,
+                'profile_picture' => $user->profile_picture_url, 
+                'email_verified_at' => $user->email_verified_at ? $user->email_verified_at->format('Y-m-d H:i:s') : null, 
             ]
         ]);
     }
 
     public function create()
     {
-        // Not needed for modal-based creation, but kept for compatibility
         if (!Auth::guard('admin')->check()) {
             return redirect()->route('admin.login')->with('error', 'You must log in as an admin to access this page.');
         }
@@ -107,6 +111,87 @@ class TotalUserController extends Controller
                 'email' => $user->email,
                 'role' => $user->role,
             ]
+        ]);
+    }
+
+    public function edit($id)
+    {
+        if (!Auth::guard('admin')->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access.'
+            ], 401);
+        }
+
+        $user = User::findOrFail($id);
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role ?? 'User',
+                'is_active' => $user->is_active,
+            ]
+        ]);
+    }
+
+    public function update(Request $request, $id)
+    {
+        if (!Auth::guard('admin')->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access.'
+            ], 401);
+        }
+
+        $user = User::findOrFail($id);
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'role' => ['required', 'in:Tenant,Landlord'],
+            'password' => ['nullable', Rules\Password::defaults()],
+            'is_active' => ['required', 'boolean'],
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+            'is_active' => $request->is_active,
+            'password' => $request->password ? Hash::make($request->password) : $user->password,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User updated successfully!',
+            'data' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+                'is_active' => $user->is_active,
+            ]
+        ]);
+    }
+
+    public function destroy($id)
+    {
+        if (!Auth::guard('admin')->check()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized access.'
+            ], 401);
+        }
+
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'User deleted successfully!'
         ]);
     }
 }

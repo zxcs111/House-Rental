@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Total Users</title>
+    <title>Stay Haven - Admin Total Users</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('user-template/css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/total-user.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    <!-- Include SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
 </head>
 <body>
     <button class="menu-toggle"><i class="fas fa-bars"></i></button>
@@ -108,6 +109,7 @@
                             <th>Email</th>
                             <th>Role</th>
                             <th>Email Verified</th>
+                            <th>Status</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -129,14 +131,27 @@
                                     @endif
                                 </td>
                                 <td>
+                                    @if($user->is_active)
+                                        <span class="status status-verified">Active</span>
+                                    @else
+                                        <span class="status status-not-verified">Inactive</span>
+                                    @endif
+                                </td>
+                                <td>
                                     <button class="view-details-btn" data-user-id="{{ $user->id }}">
-                                        <i class="fas fa-eye"></i> View Details
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                    <button class="edit-user-btn" data-user-id="{{ $user->id }}">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                    <button class="delete-user-btn" data-user-id="{{ $user->id }}">
+                                        <i class="fas fa-trash-alt"></i> Delete
                                     </button>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" style="text-align: center;">No users found</td>
+                                <td colspan="6" style="text-align: center;">No users found</td>
                             </tr>
                         @endforelse
                     </tbody>
@@ -190,10 +205,7 @@
             <span class="close">×</span>
             <h2>User Details</h2>
             <div id="user-details-content">
-                <p><strong>Name:</strong> <span id="user-name"></span></p>
-                <p><strong>Email:</strong> <span id="user-email"></span></p>
-                <p><strong>Role:</strong> <span id="user-role"></span></p>
-                <p><strong>Created At:</strong> <span id="user-created-at"></span></p>
+                <!-- Content will be dynamically populated by JavaScript -->
             </div>
         </div>
     </div>
@@ -222,9 +234,71 @@
         </div>
     </div>
 
+    <!-- Edit User Modal -->
+    <div id="edit-user-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">×</span>
+            <h2>Edit User</h2>
+            <form id="edit-user-form" method="POST">
+                @csrf
+                <input type="hidden" id="edit-user-id" name="id">
+                <label for="edit-user-name">Name</label>
+                <input type="text" id="edit-user-name" name="name" required>
+                <label for="edit-user-email">Email</label>
+                <input type="email" id="edit-user-email" name="email" required>
+                <label for="edit-user-password">New Password (optional)</label>
+                <input type="password" id="edit-user-password" name="password">
+                <label for="edit-user-role">Role</label>
+                <select id="edit-user-role" name="role" required>
+                    <option value="" disabled>Select Role</option>
+                    <option value="Tenant">Tenant</option>
+                    <option value="Landlord">Landlord</option>
+                </select>
+                <label for="edit-user-status">Status</label>
+                <select id="edit-user-status" name="is_active" required>
+                    <option value="1">Active</option>
+                    <option value="0">Inactive</option>
+                </select>
+                <button type="submit">Update User</button>
+            </form>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('user-template/js/total-user.js') }}"></script>
-    
+    <script src="{{ asset('user-template/js/dashboard.js') }}"></script>
+
+
+    <script>
+        const userDetailRoute = "{{ route('admin.user-detail', ':id') }}";
+        const addUserRoute = "{{ route('admin.store-user') }}";
+        const editUserRoute = "{{ route('admin.edit-user', ':id') }}";
+        const updateUserRoute = "{{ route('admin.update-user', ':id') }}";
+        const deleteUserRoute = "{{ route('admin.delete-user', ':id') }}";
+
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-center",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": 3000,
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut",
+            "backgroundColor": "#ffffff",
+            "color": "#333333",
+            "border": "1px solid #ddd",
+            "boxShadow": "0 4px 6px rgba(0, 0, 0, 0.1)"
+        };
+    </script>
 </body>
 </html>
