@@ -18,7 +18,7 @@
         <a href="{{ route('admin.properties') }}" class="active"><i class="fas fa-home"></i><span>Properties</span></a>
         <a href="{{ route('admin.total-users') }}"><i class="fas fa-users"></i><span>Users</span></a>
         <a href="{{ route('admin.transactions') }}"><i class="fas fa-money-bill-wave"></i><span>Transactions</span></a>
-        <a href="{{ route('admin.reports') }}"><i class="fas fa-file-alt"></i><span>Reports</span></a>
+        <a href="{{ route('admin.reports') }}"><i class="fas fa-file-alt"></i><span>Anayltics</span></a>
     </div>
 
     <div class="content">

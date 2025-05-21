@@ -128,7 +128,6 @@ Route::post('/admin/login', [AdminController::class, 'login'])->name('admin.logi
 Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
 Route::prefix('admin')->name('admin.')->group(function () {
-    
     Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
     Route::post('/profile-update', [DashboardController::class, 'updateProfile'])->name('profile.update');
     Route::post('/notifications/mark-as-read', [DashboardController::class, 'markNotificationsAsRead'])->name('notifications.markAsRead');
@@ -147,9 +146,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     Route::get('/transactions', [TransactionController::class, 'transactions'])->name('transactions');
 
-
     Route::get('/reports', [ReportsController::class, 'reports'])->name('reports');
-    Route::get('/reports/{id}', [ReportsController::class, 'show'])->name('report-detail');
-    Route::get('/reports/create', [ReportsController::class, 'create'])->name('create-report');
-
+    Route::get('/reports/download', [ReportsController::class, 'download'])->name('reports.download');
 });
