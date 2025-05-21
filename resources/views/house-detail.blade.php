@@ -484,7 +484,7 @@
 
     <script>
       window.chatbaseConfig = {
-        chatbotId: "4RSSrtK8VY3M7j0m4Tiye", // Replace with your actual Chatbase chatbot ID
+        chatbotId: "4RSSrtK8VY3M7j0m4Tiye", 
       };
     </script>
     <script src="https://www.chatbase.co/embed.min.js" defer></script>

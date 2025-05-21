@@ -213,6 +213,12 @@
     background-color: #0056b3;
 }
 
+.static-role {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
 .modal {
     display: none;
     position: fixed;

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stay Haven Admin Dashboard</title>
+    <title>Stay Haven - Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('user-template/css/dashboard.css') }}">
 </head>
@@ -198,7 +198,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
     <script>
-        // Pass PHP data to JavaScript
         window.rentedPerMonth = @json($rentedPerMonth);
         window.rentedPerWeek = @json($rentedPerWeek);
         window.propertyTypes = @json($propertyTypes);

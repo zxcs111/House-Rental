@@ -41,6 +41,7 @@ class User extends Authenticatable
         'property_id',
         'email_verification_code',
         'email_verified_at',
+        'stauts',
     ];
 
     protected $hidden = [

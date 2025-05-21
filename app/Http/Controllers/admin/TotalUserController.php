@@ -55,6 +55,7 @@ class TotalUserController extends Controller
                 'email' => $user->email,
                 'role' => $user->role ?? 'User',
                 'is_active' => $user->is_active,
+                'status' => $user->status ?? ($user->is_active ? 'active' : 'inactive'),
                 'created_at' => $user->created_at ? $user->created_at->format('Y-m-d H:i:s') : null,
                 'first_name' => $user->first_name,
                 'last_name' => $user->last_name,
@@ -100,6 +101,7 @@ class TotalUserController extends Controller
             'password' => Hash::make($request->password),
             'role' => $request->role,
             'is_active' => true,
+            'status' => 'active',
         ]);
 
         return response()->json([
@@ -110,6 +112,7 @@ class TotalUserController extends Controller
                 'name' => $user->name,
                 'email' => $user->email,
                 'role' => $user->role,
+                'status' => $user->status,
             ]
         ]);
     }
@@ -133,6 +136,7 @@ class TotalUserController extends Controller
                 'email' => $user->email,
                 'role' => $user->role ?? 'User',
                 'is_active' => $user->is_active,
+                'status' => $user->status ?? ($user->is_active ? 'active' : 'inactive'),
             ]
         ]);
     }
@@ -151,17 +155,18 @@ class TotalUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'role' => ['required', 'in:Tenant,Landlord'],
             'password' => ['nullable', Rules\Password::defaults()],
-            'is_active' => ['required', 'boolean'],
+            'status' => ['required', 'in:active,inactive'],
         ]);
+
+        $isActive = $request->status === 'active' ? 1 : 0;
 
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'role' => $request->role,
-            'is_active' => $request->is_active,
             'password' => $request->password ? Hash::make($request->password) : $user->password,
+            'is_active' => $isActive,
+            'status' => $request->status,
         ]);
 
         return response()->json([
@@ -173,6 +178,7 @@ class TotalUserController extends Controller
                 'email' => $user->email,
                 'role' => $user->role,
                 'is_active' => $user->is_active,
+                'status' => $user->status,
             ]
         ]);
     }

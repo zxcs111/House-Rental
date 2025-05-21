@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="{{ asset('user-template/css/dashboard.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/total-user.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <!-- Include SweetAlert2 CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -121,13 +120,9 @@
                                 <td>{{ $user->role ?? 'User' }}</td>
                                 <td>
                                     @if($user->email_verified_at)
-                                        <span class="status status-verified">
-                                            Verified<br>
-                                        </span>
+                                        <span class="status status-verified">Verified</span>
                                     @else
-                                        <span class="status status-not-verified">
-                                            Not Verified
-                                        </span>
+                                        <span class="status status-not-verified">Not Verified</span>
                                     @endif
                                 </td>
                                 <td>
@@ -249,15 +244,11 @@
                 <label for="edit-user-password">New Password (optional)</label>
                 <input type="password" id="edit-user-password" name="password">
                 <label for="edit-user-role">Role</label>
-                <select id="edit-user-role" name="role" required>
-                    <option value="" disabled>Select Role</option>
-                    <option value="Tenant">Tenant</option>
-                    <option value="Landlord">Landlord</option>
-                </select>
+                <p id="edit-user-role" class="static-role"></p>
                 <label for="edit-user-status">Status</label>
-                <select id="edit-user-status" name="is_active" required>
-                    <option value="1">Active</option>
-                    <option value="0">Inactive</option>
+                <select id="edit-user-status" name="status" required>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
                 </select>
                 <button type="submit">Update User</button>
             </form>
@@ -269,7 +260,6 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="{{ asset('user-template/js/total-user.js') }}"></script>
     <script src="{{ asset('user-template/js/dashboard.js') }}"></script>
-
 
     <script>
         const userDetailRoute = "{{ route('admin.user-detail', ':id') }}";

@@ -73,7 +73,7 @@ canvas {
 .download-report-btn {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #28a745;
     color: #fff;
     border-radius: 5px;
     text-decoration: none;
@@ -83,7 +83,7 @@ canvas {
 }
 
 .download-report-btn:hover {
-    background-color: #0056b3;
+    background-color: #044d15;
 }
 
 /* Larger screens (desktops) */

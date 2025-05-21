@@ -54,6 +54,10 @@ viewDetailsButtons.forEach(button => {
                                 <span>${user.role || 'User'}</span>
                             </div>
                             <div class="detail-item">
+                                <strong>Status:</strong>
+                                <span>${user.status || (user.is_active ? 'Active' : 'Inactive')}</span>
+                            </div>
+                            <div class="detail-item">
                                 <strong>Created At:</strong>
                                 <span>${user.created_at || 'N/A'}</span>
                             </div>
@@ -274,8 +278,8 @@ editUserButtons.forEach(button => {
                     document.getElementById('edit-user-id').value = user.id;
                     document.getElementById('edit-user-name').value = user.name;
                     document.getElementById('edit-user-email').value = user.email;
-                    document.getElementById('edit-user-role').value = user.role;
-                    document.getElementById('edit-user-status').value = user.is_active ? '1' : '0';
+                    document.getElementById('edit-user-role').textContent = user.role || 'User';
+                    document.getElementById('edit-user-status').value = user.status || (user.is_active ? 'active' : 'inactive');
                     document.getElementById('edit-user-password').value = '';
 
                     editUserModal.classList.add('active');
