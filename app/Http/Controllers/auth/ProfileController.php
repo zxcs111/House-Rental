@@ -21,15 +21,11 @@ class ProfileController extends Controller
                             ->with(['property', 'landlord'])
                             ->orderBy('created_at', 'desc');
 
-            // Get the requested page number from the query string
             $requestedPage = $request->query('page', 1);
             
-            // Paginate with 1 item per page
             $payments = $query->paginate(5);
 
-            // Check if the requested page exceeds the total number of pages
             if ($requestedPage > $payments->lastPage()) {
-                // Redirect to the last page
                 return redirect()->route('profile', ['page' => $payments->lastPage()]);
             }
         }
@@ -97,7 +93,6 @@ class ProfileController extends Controller
         $payment = Payment::where('tenant_id', $tenant->id)
                          ->findOrFail($id);
 
-        // Mark the payment as hidden for the tenant
         $payment->hidden_by_tenant = true;
         $payment->save();
 

@@ -103,7 +103,7 @@
             <div class="text w-100 text-center mb-md-5 pb-md-5">
               <h1 class="mb-4">Fast & Easy Way To Rent A Home</h1>
               <p style="font-size: 18px;">A charming neighborhood surrounds our rental home, providing a peaceful atmosphere and essential amenities. It is a tranquil haven, where comfort meets convenience.</p>
-              <a href="https://vimeo.com/45830194" class="icon-wrap popup-vimeo d-flex align-items-center mt-4 justify-content-center">
+              <a href="user-template/images/Stay Haven.mp4" class="icon-wrap popup-vimeo d-flex align-items-center mt-4 justify-content-center">
                 <div class="icon d-flex align-items-center justify-content-center">
                   <span class="ion-ios-play"></span>
                 </div>

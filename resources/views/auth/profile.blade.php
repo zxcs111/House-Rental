@@ -5,21 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Stay Haven - Profile</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome for Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('user-template/css/style.css') }}">
     <link rel="stylesheet" href="{{ asset('user-template/css/profile.css') }}">
 </head>
 <body>
     <div class="container-xl px-4">
-        <!-- Back to Home Button -->
         <a href="{{ route('home') }}" class="btn back-to-home">
             <i class="fas fa-arrow-left"></i> Back to Home
         </a>
         <div class="row profile-row">
-            <!-- Profile Section -->
             <div class="col-xl-4 profile-column">
                 <div class="card mb-4 mb-xl-0">
                     <div class="card-header">Profile Picture</div>
@@ -49,7 +45,6 @@
 
             <!-- Personal Information Section -->
             <div class="col-xl-8 info-column">
-                <!-- Personal Information Card -->
                 <div class="card personal-info-card">
                     <div class="card-header">Personal Information</div>
                     <div class="card-body">
@@ -72,8 +67,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="email">Email</label>
-                                        <input type="email" name="email" id="email" class="form-control" value="{{ Auth::user()->email }}" maxlength="255">
+                                        <label>Email</label>
+                                        <p class="form-control-static">{{ Auth::user()->email }}</p>
                                     </div>
                                     <div class="form-group">
                                         <label for="phone_number">Phone</label>
